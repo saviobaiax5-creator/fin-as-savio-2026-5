@@ -1,0 +1,401 @@
+# PROJETO: SAVIO FINANÇAS
+## IMPLEMENTAÇÃO DE MELHORIAS, RESPONSIVIDADE, LEITURA E EXPERIÊNCIA MULTIDISPOSITIVO
+
+Atue como um engenheiro de software sênior, arquiteto de sistemas, especialista em UX/UI, desenvolvimento frontend e backend, responsividade e segurança de aplicações financeiras.
+
+Sua tarefa é evoluir o projeto **SAVIO FINANÇAS**, implementando as melhorias diretamente no código-fonte existente.
+
+O objetivo é transformar o projeto em um sistema financeiro pessoal profissional, moderno, seguro, responsivo e funcional em computadores, notebooks, tablets e celulares.
+
+**IMPORTANTE:** Não quero apenas sugestões, relatórios ou protótipos visuais. Quero implementação real, com componentes funcionais, integração entre módulos, código organizado e testes.
+
+---
+
+# 1. REGRAS GERAIS DE IMPLEMENTAÇÃO
+
+Antes de modificar qualquer arquivo:
+
+1. Analise toda a estrutura do repositório.
+2. Identifique as tecnologias, componentes, rotas, dependências e funcionalidades existentes.
+3. Preserve as funcionalidades que já funcionam.
+4. Não apague recursos existentes sem justificativa técnica.
+5. Evite duplicação de componentes e códigos.
+6. Não crie botões decorativos sem funcionalidade.
+7. Não utilize dados fictícios como se fossem informações financeiras reais.
+8. Não implemente integrações simuladas como se fossem integrações reais.
+9. Mantenha a identidade visual SAVIO FINANÇAS.
+10. Implemente as melhorias por etapas, verificando cada etapa antes de continuar.
+
+Não faça uma reconstrução desnecessária do sistema. Aproveite a estrutura existente quando tecnicamente adequada.
+
+# 2. RESPONSIVIDADE E RESOLUÇÕES DE TELA
+
+O sistema deverá possuir uma interface adaptável, com organização diferente conforme o tamanho da tela.
+
+Implemente e teste as seguintes resoluções:
+
+## Computadores e notebooks
+- 1920 × 1080 — monitor Full HD.
+- 1600 × 900 — monitor intermediário.
+- 1440 × 900 — notebook.
+- 1366 × 768 — notebook convencional.
+- 1280 × 720 — telas menores.
+
+Comportamento:
+- Menu lateral fixo e organizado.
+- Dashboard com indicadores distribuídos em colunas.
+- Tabelas com boa leitura.
+- Gráficos dimensionados corretamente.
+- Cabeçalho compacto.
+- Área de conteúdo com largura adequada.
+- Aproveitamento inteligente do espaço horizontal.
+
+## Tablets
+- 1024 × 768.
+- 820 × 1180.
+- 768 × 1024.
+
+Comportamento:
+- Menu lateral recolhível.
+- Cards reorganizados.
+- Gráficos adaptados.
+- Formulários em colunas quando houver espaço.
+- Botões com áreas de toque adequadas.
+
+## Celulares
+- 430 × 932.
+- 412 × 915.
+- 390 × 844.
+- 375 × 812.
+- 360 × 800.
+
+Comportamento:
+- Menu lateral substituído por navegação móvel ou menu recolhível.
+- Navegação inferior para os principais módulos.
+- Botão de adicionar lançamento sempre acessível.
+- Cards em uma única coluna.
+- Tabelas convertidas em listas ou cartões quando necessário.
+- Formulários adaptados à largura da tela.
+- Não permitir rolagem horizontal indevida.
+- Não cortar textos, valores, ícones ou botões.
+- Respeitar as áreas seguras dos aparelhos.
+
+Utilize breakpoints consistentes, preferencialmente:
+- Até 480 px: celular pequeno.
+- 481–720 px: celular grande.
+- 721–1024 px: tablet.
+- 1025–1440 px: notebook e desktop.
+- Acima de 1440 px: monitores grandes.
+
+Não dependa exclusivamente desses valores: valide também o comportamento real dos componentes.
+
+# 3. CONTROLE DE TAMANHO E LEITURA DA INTERFACE
+
+Implemente um sistema de ajuste de visualização.
+
+Adicionar nas configurações:
+
+- Compacto.
+- Padrão.
+- Ampliado.
+
+Criar também um controle de zoom da interface:
+
+75% | 90% | 100% | 110% | 125% | 150%.
+
+O ajuste deverá preservar:
+- Alinhamento dos componentes.
+- Proporção dos cards.
+- Legibilidade.
+- Espaçamento.
+- Funcionamento dos botões.
+- Navegação.
+
+Não utilize zoom global que provoque quebra do layout. Prefira variáveis CSS, escalas tipográficas e ajustes responsivos.
+
+Permitir ampliação dos textos e ícones sem comprometer a interface.
+
+# 4. SISTEMA DE LEITURA DE DOCUMENTOS
+
+Criar um módulo profissional denominado:
+
+**CENTRAL DE DOCUMENTOS E LEITURA**
+
+Permitir trabalhar com:
+- PDF.
+- EPUB.
+- Imagens de comprovantes.
+- Extratos bancários.
+- Notas fiscais.
+- Recibos.
+- Documentos financeiros.
+
+## Leitor de PDF
+
+Implementar:
+- Visualização original do documento.
+- Navegação entre páginas.
+- Indicador de página atual e total.
+- Zoom: ajustar à largura, ajustar à página, 75%, 100%, 125%, 150% e 200%.
+- Ampliar e reduzir com botões.
+- Suporte ao zoom pelo mouse e gestos compatíveis no celular.
+- Tela cheia.
+- Pesquisa de palavras no documento.
+- Seleção e cópia de texto quando permitido.
+- Rotação de páginas.
+- Download do arquivo.
+- Impressão.
+- Marcadores e continuidade da última página lida.
+
+## Leitor de EPUB
+
+Implementar:
+- Modo livro.
+- Navegação por capítulos.
+- Sumário clicável.
+- Avançar e retroceder páginas.
+- Deslizar no celular.
+- Ajustar tamanho da fonte.
+- Ajustar espaçamento entre linhas.
+- Alterar margens.
+- Tema claro, escuro e sépia.
+- Salvar posição de leitura.
+- Pesquisa dentro do livro.
+- Retomar leitura de onde parou.
+
+## Comandos de visualização
+
+Adicionar:
+- Ajustar à tela.
+- Ajustar à largura.
+- Ajustar à altura.
+- Zoom manual.
+- Modo de leitura.
+- Tela cheia.
+- Restaurar visualização original.
+
+O leitor deve se adaptar automaticamente ao tamanho da tela.
+
+Não converter desnecessariamente arquivos PDF ou EPUB em imagens, pois isso prejudica a leitura, a pesquisa e a acessibilidade.
+
+Para documentos digitalizados, utilizar OCR quando necessário, mantendo o arquivo original disponível.
+
+# 5. DASHBOARD FINANCEIRO
+
+Melhorar o painel principal com:
+
+- Saldo total.
+- Receitas do mês.
+- Despesas do mês.
+- Resultado mensal.
+- Contas a pagar.
+- Contas a receber.
+- Próximos vencimentos.
+- Faturas de cartões.
+- Evolução financeira.
+- Comparativo mensal.
+- Distribuição de despesas por categoria.
+
+Adicionar filtros por:
+- Hoje.
+- Últimos 7 dias.
+- Últimos 30 dias.
+- Mês atual.
+- Mês anterior.
+- Ano atual.
+- Período personalizado.
+
+Todos os indicadores devem utilizar os dados reais armazenados no banco de dados.
+
+# 6. MOVIMENTAÇÕES FINANCEIRAS
+
+Implementar:
+
+- Cadastro de receitas.
+- Cadastro de despesas.
+- Transferências entre contas.
+- Edição de lançamentos.
+- Cancelamento com histórico.
+- Categorias.
+- Subcategorias.
+- Descrição.
+- Data de competência.
+- Data de pagamento.
+- Valor.
+- Forma de pagamento.
+- Conta relacionada.
+- Anexos.
+
+Criar filtros por período, categoria, conta e tipo de movimentação.
+
+Evitar que transferências entre contas próprias sejam contabilizadas como receitas ou despesas.
+
+# 7. CONTAS, CARTÕES E BOLETOS
+
+## Contas
+- Cadastro de contas bancárias.
+- Carteiras.
+- Saldo inicial.
+- Histórico de movimentações.
+- Conciliação.
+
+## Cartões
+- Limite total.
+- Limite disponível.
+- Faturas.
+- Fechamento.
+- Vencimento.
+- Compras parceladas.
+- Histórico de pagamentos.
+
+## Boletos
+- Cadastro manual.
+- Valor.
+- Vencimento.
+- Situação.
+- Comprovante.
+- Alertas de vencimento.
+
+Não afirmar que um boleto foi pago sem confirmação do usuário ou integração efetiva.
+
+# 8. BANCO DE DADOS E SINCRONIZAÇÃO
+
+Implementar uma arquitetura com:
+
+- PostgreSQL.
+- Drizzle ORM.
+- Backend com API.
+- Autenticação segura.
+- Controle de sessão.
+- Validação dos dados.
+- Proteção dos registros por proprietário.
+- Migrações.
+- Backup e restauração.
+
+Os dados deverão permanecer disponíveis quando o usuário:
+- Fechar o navegador.
+- Trocar de computador.
+- Acessar pelo celular.
+- Entrar novamente na conta.
+
+Utilizar valores monetários com precisão decimal ou centavos inteiros, evitando erros de arredondamento.
+
+Não armazenar senhas em texto puro.
+
+Não deixar credenciais ou chaves secretas no frontend.
+
+# 9. INTELIGÊNCIA ARTIFICIAL
+
+Criar um assistente financeiro opcional.
+
+Permitir:
+- Resumir despesas.
+- Identificar categorias com maiores gastos.
+- Comparar períodos.
+- Analisar documentos.
+- Interpretar extratos.
+- Identificar possíveis duplicidades.
+- Auxiliar na organização financeira.
+
+A IA não poderá inventar saldos, movimentações, pagamentos ou informações bancárias.
+
+Toda informação extraída deverá ser apresentada para conferência antes de ser gravada no sistema.
+
+Se a IA estiver indisponível, o sistema financeiro principal deverá continuar funcionando normalmente.
+
+# 10. IDENTIDADE VISUAL E EXPERIÊNCIA
+
+Manter uma identidade profissional:
+
+- Azul-marinho como cor estrutural.
+- Verde para receitas e indicadores positivos.
+- Vermelho discreto para despesas e alertas.
+- Branco e cinza-claro como base.
+- Tipografia moderna e legível.
+- Ícones padronizados.
+- Cards com bordas discretas.
+- Sombras leves.
+- Espaçamentos consistentes.
+
+Implementar:
+- Tema claro.
+- Tema escuro.
+- Botão de alternância próximo às notificações.
+- Persistência da preferência.
+- Animações discretas.
+- Estados de carregamento.
+- Mensagens de erro claras.
+- Confirmações de operações importantes.
+
+Evitar excesso de cores, informações e elementos decorativos.
+
+# 11. ACESSIBILIDADE E FACILIDADE DE USO
+
+Implementar:
+- Contraste adequado.
+- Navegação por teclado.
+- Identificação dos campos.
+- Textos alternativos.
+- Foco visível.
+- Botões com nomes acessíveis.
+- Áreas de toque adequadas.
+- Mensagens de validação compreensíveis.
+
+A interface deve ser fácil de utilizar mesmo para quem não possui conhecimentos técnicos.
+
+# 12. TESTES OBRIGATÓRIOS
+
+Antes de finalizar:
+
+1. Testar todas as resoluções definidas.
+2. Testar celular na vertical e horizontal.
+3. Testar navegação entre módulos.
+4. Testar formulários.
+5. Testar cadastro, edição e cancelamento.
+6. Testar cálculos financeiros.
+7. Testar persistência dos dados.
+8. Testar autenticação e isolamento dos registros.
+9. Testar abertura de PDF e EPUB.
+10. Testar ampliação e redução da leitura.
+11. Testar tema claro e escuro.
+12. Verificar erros no console.
+13. Executar o processo de build.
+14. Corrigir os problemas encontrados.
+
+# 13. FORMA DE EXECUÇÃO
+
+Trabalhe por etapas, sem tentar implementar todo o sistema de uma só vez.
+
+Para cada etapa:
+
+1. Analise os arquivos relacionados.
+2. Explique brevemente o que será alterado.
+3. Implemente diretamente no repositório.
+4. Mostre os arquivos criados e modificados.
+5. Execute testes.
+6. Corrija erros.
+7. Registre o que foi concluído.
+8. Informe o que ainda está pendente.
+
+Não considere uma funcionalidade concluída apenas porque sua tela foi criada. Ela precisa funcionar de verdade.
+
+Não substitua funcionalidades reais por dados estáticos.
+
+Não remova recursos existentes sem autorização.
+
+# 14. PRIMEIRA TAREFA
+
+Comece pela auditoria do projeto SAVIO FINANÇAS.
+
+Depois, implemente prioritariamente:
+
+1. Estrutura responsiva para todas as resoluções.
+2. Sistema de tema claro e escuro.
+3. Controle de tamanho e legibilidade.
+4. Central de documentos.
+5. Leitor de PDF e EPUB.
+6. Fundação de banco de dados e autenticação.
+
+Entregue um sistema organizado, modular, documentado e preparado para continuar evoluindo.
+
+**OBJETIVO FINAL: SAVIO FINANÇAS — UM SISTEMA FINANCEIRO PESSOAL PRÓPRIO, COMPLETO, SEGURO, RESPONSIVO E FUNCIONAL EM PC, NOTEBOOK, TABLET E CELULAR.**

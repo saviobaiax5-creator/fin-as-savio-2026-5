@@ -1,0 +1,169 @@
+# IMPLEMENTAÇÃO DE ERGONOMIA MOBILE — SAVIO FINANÇAS
+
+Atue como especialista em UX/UI Mobile, ergonomia digital, acessibilidade e desenvolvimento de aplicações financeiras responsivas.
+
+O objetivo é transformar a experiência do SAVIO FINANÇAS no celular, eliminando páginas excessivamente compridas, elementos minimizados e a necessidade constante de rolar a tela para encontrar funcionalidades.
+
+IMPORTANTE: Não quero apenas reduzir o tamanho da versão desktop. Crie uma experiência mobile própria, preservando as funcionalidades e os recursos do computador.
+
+## 1. NAVEGAÇÃO MOBILE FIXA
+
+Implementar uma barra de navegação inferior fixa com cinco posições:
+
+1. Início.
+2. Movimentações.
+3. Adicionar (+).
+4. Contas.
+5. Mais.
+
+Requisitos:
+- Permanecer acessível durante a navegação.
+- Respeitar a área segura inferior do aparelho.
+- Não cobrir botões ou informações.
+- Utilizar ícones acompanhados de textos curtos.
+- Destacar a página selecionada.
+- O botão central de adicionar deve abrir opções de receita, despesa e transferência.
+
+## 2. DASHBOARD SEM EXCESSO DE ROLAGEM
+
+Reorganizar o painel inicial para apresentar:
+
+- Saldo consolidado.
+- Receitas do mês.
+- Despesas do mês.
+- Resultado financeiro.
+- Próximos vencimentos.
+- Últimas movimentações.
+
+Utilizar cards compactos e organização inteligente.
+
+Permitir recolher e expandir informações secundárias.
+
+Não apresentar todos os módulos simultaneamente em uma única página extensa.
+
+## 3. NAVEGAÇÃO POR ABAS
+
+Utilizar abas para organizar conteúdos relacionados.
+
+Exemplo:
+
+CONTAS:
+- Todas.
+- Bancárias.
+- Carteiras.
+- Histórico.
+
+CARTÕES:
+- Cartões.
+- Faturas.
+- Parcelamentos.
+- Limites.
+
+MOVIMENTAÇÕES:
+- Todas.
+- Receitas.
+- Despesas.
+- Transferências.
+
+A troca entre abas deverá acontecer sem recarregar toda a aplicação e, sempre que possível, preservar os filtros selecionados.
+
+## 4. PAINÉIS E JANELAS INTELIGENTES
+
+Implementar:
+- Bottom Sheets para formulários e filtros.
+- Menus expansíveis.
+- Modais adaptados à tela.
+- Detalhes em painéis laterais no desktop e painéis inferiores no celular.
+- Filtros recolhíveis.
+- Menus contextuais acessíveis.
+
+Em formulários longos, organizar os campos em etapas ou seções, evitando uma tela excessivamente comprida.
+
+## 5. CONTROLE DE ROLAGEM
+
+Implementar:
+- Cabeçalho compacto.
+- Navegação fixa.
+- Rolagem independente em listas extensas.
+- Paginação de históricos.
+- Pesquisa rápida.
+- Botão voltar ao topo somente quando necessário.
+- Preservação da posição anterior ao retornar.
+- Ausência de rolagem horizontal indevida.
+
+Não bloquear a rolagem natural do sistema operacional.
+
+Não utilizar altura fixa que esconda informações em aparelhos menores.
+
+## 6. ERGONOMIA E ACESSIBILIDADE
+
+Adotar como referência:
+
+- Áreas de toque preferencialmente entre 44 e 48 pixels CSS.
+- Textos principais de 16 pixels ou mais em formulários.
+- Contraste adequado.
+- Espaçamento suficiente entre botões.
+- Ícones compreensíveis.
+- Identificação textual das ações.
+- Suporte a leitores de tela.
+- Foco visível e navegação por teclado quando aplicável.
+
+Permitir ampliar textos e ajustar a densidade da interface sem perder funcionalidades.
+
+## 7. FORMULÁRIOS FINANCEIROS
+
+Ao adicionar uma receita, despesa ou transferência:
+
+- Abrir formulário adaptado ao celular.
+- Exibir os campos essenciais primeiro.
+- Permitir selecionar conta e categoria.
+- Utilizar teclado numérico para valores.
+- Destacar o botão salvar.
+- Exibir validações próximas aos campos.
+- Evitar que o teclado cubra o campo ativo ou o botão de confirmação.
+
+## 8. RESOLUÇÕES E TESTES
+
+Testar especialmente:
+
+- 360 × 800.
+- 375 × 812.
+- 390 × 844.
+- 412 × 915.
+- 430 × 932.
+
+Testar:
+- Navegação com uma mão.
+- Orientação vertical e horizontal.
+- Barra inferior.
+- Teclado aberto.
+- Formulários.
+- Gráficos.
+- Listas grandes.
+- PDF e EPUB.
+- Ampliação da fonte.
+- Tema claro e escuro.
+
+## 9. VERSÃO DESKTOP
+
+Não prejudicar a experiência do computador.
+
+Manter:
+- Menu lateral.
+- Painéis com múltiplas colunas.
+- Tabelas completas.
+- Gráficos maiores.
+- Filtros avançados.
+- Atalhos de teclado quando apropriado.
+
+## 10. RESULTADO ESPERADO
+
+O SAVIO FINANÇAS deverá ter duas experiências coordenadas:
+
+DESKTOP: painel completo, produtivo e com informações detalhadas.
+
+MOBILE: interface objetiva, intuitiva, acessível e com navegação rápida.
+
+Critério de aprovação: o usuário deve conseguir acessar os principais módulos e executar operações frequentes sem precisar percorrer longas páginas para encontrar comandos.
+
+Implemente diretamente no código existente, teste todas as resoluções e apresente as alterações realizadas.

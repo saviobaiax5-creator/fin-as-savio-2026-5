@@ -1,0 +1,491 @@
+# PROMPT MESTRE: IMPLEMENTAÇÃO DA INICIALIZAÇÃO VAZIA, FIREBASE E BACKUP DUPLO NO FINANCE IA
+
+## 1. Objetivo
+
+Realizar uma atualização estrutural do Finance IA para que o sistema tenha:
+
+- Inicialização vazia para novos usuários e novas instalações.
+- Autenticação de usuários pelo Firebase Authentication.
+- Sincronização dos dados financeiros pelo Firebase Firestore.
+- Persistência local com Dexie/IndexedDB para funcionamento offline.
+- Backup automático ou operacional na nuvem.
+- Exportação e importação manual de backup JSON.
+- Recuperação segura dos dados existentes.
+
+**REGRA INEGOCIÁVEL: NÃO APAGAR, SOBRESCREVER OU DESCARTAR DADOS EXISTENTES ANTES DA CRIAÇÃO E VALIDAÇÃO DE UM BACKUP COMPLETO.**
+
+A implementação deve preservar a arquitetura atual sempre que possível, sem reconstruir o projeto desnecessariamente.
+
+## 2. Diagnóstico obrigatório antes de alterar o código
+
+Antes de programar:
+
+1. Analise toda a estrutura do repositório.
+2. Identifique os pontos de inicialização dos dados.
+3. Localize todos os arquivos responsáveis por persistência, migração, backup, recuperação e configurações.
+4. Analise especialmente:
+   - `src/data/initialData.ts`
+   - `src/App.tsx`
+   - `src/services/storage.ts`
+   - `src/services/indexedDb.ts`
+   - `src/services/storageMigration.ts`
+   - `src/services/backupService.ts`
+   - `src/services/salaryStorage.ts`
+   - `src/components/SettingsView.tsx`
+   - `firebase-applet-config.json`
+   - `.env.example`
+   - `package.json`
+5. Identifique todos os locais em que dados fictícios são utilizados como valores iniciais.
+6. Verifique quais serviços Firebase já existem e quais precisam ser implementados.
+
+Não presuma que a presença da dependência Firebase significa que autenticação e sincronização já estejam funcionando.
+
+Antes de modificar, gere um relatório técnico com:
+- Arquivos que serão alterados.
+- Arquivos que serão criados.
+- Riscos identificados.
+- Estratégia de preservação dos dados.
+- Plano de testes e recuperação.
+
+## 3. Etapa crítica: proteção dos dados existentes
+
+Esta etapa deve acontecer antes de qualquer alteração destrutiva.
+
+Criar um procedimento de proteção que:
+
+1. Leia todos os dados atualmente armazenados no localStorage e IndexedDB.
+2. Identifique contas, transações, salários, cartões, boletos, dívidas, investimentos, documentos, arquivos, orçamentos, regras, configurações e preferências.
+3. Gere um backup JSON completo.
+4. Preserve os snapshots e mecanismos de recuperação existentes.
+5. Registre a quantidade de registros de cada categoria.
+6. Valide a estrutura e a integridade do arquivo exportado.
+7. Permita testar a restauração em uma base isolada, sem alterar os dados originais.
+
+O backup somente poderá ser considerado validado quando:
+- O arquivo puder ser lido.
+- A estrutura estiver completa.
+- Os dados obrigatórios estiverem presentes.
+- As quantidades de registros forem conferidas.
+- A restauração de teste for concluída com sucesso.
+- Os relacionamentos e identificadores forem preservados.
+
+Não basta verificar se o arquivo JSON foi criado.
+
+**Até a conclusão dessa validação, nenhuma rotina poderá apagar os dados originais.**
+
+## 4. Inicialização vazia
+
+Modificar a inicialização do Finance IA para que novos ambientes não recebam informações financeiras fictícias.
+
+Remover os dados demonstrativos utilizados como dados financeiros reais, incluindo:
+- Contas bancárias de exemplo.
+- Saldos fictícios.
+- Transações demonstrativas.
+- Salários e remunerações fictícias.
+- Cartões com limites e faturas inventados.
+- Boletos, dívidas e investimentos de demonstração.
+- Patrimônio e valores financeiros fictícios.
+
+Criar estruturas vazias e tipadas para inicialização:
+
+- Contas: `[]`
+- Transações: `[]`
+- Cartões: `[]`
+- Boletos: `[]`
+- Dívidas: `[]`
+- Ativos: `[]`
+- Documentos: `[]`
+- Salários: fontes, registros e ajustes vazios.
+- Orçamentos: `[]`
+- Regras de categorias: estrutura vazia.
+
+Manter somente configurações técnicas necessárias para o funcionamento do aplicativo.
+
+A tela inicial deve apresentar estados vazios bem elaborados, com orientações para o usuário cadastrar sua primeira conta, salário ou movimentação.
+
+Não exibir R$ 0,00 como se fosse um saldo bancário confirmado quando ainda não existir conta cadastrada. Diferenciar claramente:
+- Nenhum dado cadastrado.
+- Saldo efetivamente igual a zero.
+- Informação ainda não sincronizada.
+
+### Regra de preservação
+
+A inicialização vazia deve ser aplicada a novos usuários e instalações sem dados anteriores.
+
+Para usuários que já possuem informações locais, o sistema deverá reconhecer os registros existentes e preservá-los.
+
+Não substituir automaticamente uma base existente por estruturas vazias.
+
+## 5. Firebase Authentication
+
+Implementar autenticação real com Firebase Authentication.
+
+Criar:
+- Tela de login.
+- Tela de cadastro.
+- Recuperação de senha.
+- Encerramento de sessão.
+- Persistência segura da sessão.
+- Tratamento de erros de autenticação.
+- Estado de carregamento.
+- Proteção das rotas e funcionalidades privadas.
+
+Cada usuário deverá possuir uma identificação única pelo `uid` do Firebase.
+
+Não utilizar dados financeiros compartilhados entre usuários.
+
+Não utilizar uma conta administrativa ou credenciais fixas no frontend.
+
+As configurações públicas do Firebase devem utilizar variáveis de ambiente adequadas ao projeto. Chaves privadas e credenciais administrativas nunca devem ser expostas no código cliente.
+
+## 6. Firebase Firestore e sincronização
+
+Implementar o Firestore como camada de sincronização em nuvem.
+
+Organizar os dados por usuário, utilizando uma estrutura semelhante a:
+
+`users/{uid}/accounts`
+
+`users/{uid}/transactions`
+
+`users/{uid}/creditCards`
+
+`users/{uid}/boletos`
+
+`users/{uid}/debts`
+
+`users/{uid}/assets`
+
+`users/{uid}/documents`
+
+`users/{uid}/salaries`
+
+`users/{uid}/budgets`
+
+`users/{uid}/categoryRules`
+
+`users/{uid}/settings`
+
+A estrutura definitiva deverá respeitar os serviços e os modelos existentes no repositório.
+
+Implementar:
+- Sincronização de dados locais para a nuvem.
+- Recuperação de dados da nuvem em outro navegador.
+- Atualização entre dispositivos.
+- Controle de alterações.
+- Identificação de registros modificados.
+- Tratamento de conflitos.
+- Exclusão sincronizada com mecanismos de segurança.
+- Indicadores de sincronização.
+- Tratamento de falhas e retomada de operações.
+
+Não permitir que uma base local vazia sobrescreva automaticamente uma base existente na nuvem.
+
+### Política de sincronização
+
+Adotar uma estratégia segura:
+
+1. Usuário autenticado sem dados locais e sem dados na nuvem: iniciar vazio.
+2. Usuário autenticado com dados na nuvem e sem dados locais: recuperar os dados da nuvem.
+3. Usuário com dados locais e sem dados na nuvem: oferecer migração para a nuvem após backup validado.
+4. Usuário com dados locais e dados na nuvem: comparar versões e identificar conflitos antes de mesclar.
+5. Usuário sem conexão: continuar trabalhando com os dados locais e registrar operações pendentes.
+
+Nunca substituir registros apenas porque um dispositivo possui uma versão mais recente do aplicativo.
+
+### Segurança
+
+Criar regras do Firestore que garantam que cada usuário possa acessar exclusivamente os próprios registros.
+
+As regras devem validar a autenticação e a correspondência entre o `uid` autenticado e o proprietário dos dados.
+
+Não confiar somente em verificações feitas no React.
+
+Validar as regras com testes de acesso autorizado e não autorizado.
+
+## 7. Dexie e funcionamento offline
+
+Não remover o Dexie nem substituir toda a persistência local.
+
+Manter o IndexedDB como camada local para:
+- Acesso rápido aos dados.
+- Funcionamento offline.
+- Armazenamento temporário.
+- Fila de sincronização.
+- Recuperação após falhas de conexão.
+
+Criar ou adaptar um serviço central de sincronização, evitando que cada componente implemente sua própria comunicação com o Firebase.
+
+A sincronização deve ser idempotente: executar a mesma operação mais de uma vez não poderá criar registros duplicados.
+
+Preservar os identificadores existentes dos registros financeiros.
+
+Não recriar IDs de contas, transações, cartões ou lançamentos durante a migração.
+
+## 8. Backup duplo: nuvem + JSON
+
+Implementar as duas modalidades.
+
+### A. Backup na nuvem
+
+Criar mecanismo de backup associado ao usuário autenticado.
+
+Deve permitir:
+- Salvar uma cópia dos dados na nuvem.
+- Registrar data e hora.
+- Identificar a versão do backup.
+- Verificar integridade.
+- Recuperar versões anteriores.
+- Exibir o último backup concluído.
+- Informar falhas de backup.
+
+O backup na nuvem não deve ser confundido com a simples sincronização dos dados.
+
+Criar uma estratégia de retenção de versões, considerando limites de armazenamento e custos do Firebase.
+
+### B. Backup JSON
+
+Preservar e aprimorar a funcionalidade já existente de exportação e importação.
+
+O arquivo deve conter:
+- Contas.
+- Transações.
+- Cartões.
+- Boletos.
+- Dívidas.
+- Ativos.
+- Salários.
+- Documentos e referências aos arquivos.
+- Orçamentos.
+- Regras de categorias.
+- Configurações relevantes.
+- Metadados de versão.
+- Data de criação do backup.
+
+A importação deve:
+- Validar o arquivo antes de alterar os dados.
+- Verificar compatibilidade de versão.
+- Identificar registros duplicados.
+- Apresentar um resumo da operação.
+- Criar snapshot de segurança antes da restauração.
+- Permitir recuperação em caso de falha.
+
+Nunca executar importação destrutiva silenciosamente.
+
+### C. Interface de backup
+
+Na área de configurações, apresentar:
+
+- Backup na nuvem.
+- Exportar backup JSON.
+- Importar backup JSON.
+- Restaurar backup.
+- Data do último backup.
+- Situação da sincronização.
+- Resultado da validação.
+
+Deixar claro quando o backup estiver pendente, concluído ou apresentar erro.
+
+## 9. Corrigir o procedimento de reinicialização
+
+Revisar a função `handleResetData()` e todas as rotinas relacionadas.
+
+O comportamento atual de reinicialização não deve continuar reintroduzindo os dados fictícios.
+
+Criar uma opção de reinicialização realmente vazia, mas protegida por confirmação.
+
+Antes de reiniciar:
+1. Solicitar confirmação explícita.
+2. Informar quais dados serão afetados.
+3. Criar backup completo.
+4. Validar o backup.
+5. Exigir confirmação final.
+6. Executar a operação somente depois dessas etapas.
+
+A reinicialização deverá limpar os dados financeiros do ambiente selecionado, sem apagar automaticamente backups, histórico de recuperação ou dados de outros usuários.
+
+Não confundir:
+- Sair da conta.
+- Limpar dados locais.
+- Restaurar backup.
+- Reiniciar dados financeiros.
+- Excluir definitivamente a conta.
+
+Cada operação deve possuir comportamento próprio e claramente explicado.
+
+## 10. Migração dos dados atuais
+
+Criar uma rotina de migração segura para usuários que já utilizam o Finance IA.
+
+A migração deve:
+- Identificar dados reais existentes.
+- Preservar IDs.
+- Preservar relacionamentos.
+- Preservar datas e valores.
+- Evitar duplicações.
+- Manter os dados locais até a confirmação da migração.
+- Criar relatório de sucesso e falhas.
+- Permitir nova tentativa sem duplicar registros.
+
+Dados demonstrativos identificados no projeto não devem ser enviados como informações financeiras reais.
+
+Não excluir registros existentes somente por terem descrições semelhantes a exemplos. A identificação de dados demonstrativos deve considerar sua origem e contexto, sem classificar automaticamente dados pessoais como fictícios.
+
+## 11. Experiência do usuário
+
+A interface deve apresentar:
+
+- Usuário autenticado.
+- Estado da conexão.
+- Estado da sincronização.
+- Última sincronização.
+- Backup mais recente.
+- Alertas de conflito.
+- Operações pendentes.
+- Opção de sincronizar novamente.
+
+Criar mensagens simples e claras.
+
+Exemplos:
+
+"Seus dados estão salvos neste dispositivo."
+
+"Sincronização com a nuvem concluída."
+
+"Existem alterações aguardando sincronização."
+
+"Foi encontrado um conjunto de dados anterior. Faça o backup antes de continuar."
+
+"Não foi possível validar o backup. Seus dados originais foram preservados."
+
+Não apresentar uma sincronização como concluída quando o Firebase ainda não confirmou a gravação.
+
+## 12. Testes obrigatórios
+
+Executar testes automatizados e testes de integração para:
+
+1. Novo usuário começa com dados vazios.
+2. Novo usuário não recebe contas ou salários fictícios.
+3. Dados locais anteriores são preservados.
+4. Backup JSON é exportado corretamente.
+5. Backup JSON é validado.
+6. Backup JSON pode ser restaurado.
+7. Usuário consegue autenticar.
+8. Usuário consegue recuperar a senha.
+9. Dados são enviados ao Firestore.
+10. Dados são recuperados em outro navegador.
+11. Dois usuários não conseguem acessar os dados um do outro.
+12. Aplicativo continua funcionando offline.
+13. Operações pendentes são sincronizadas após reconexão.
+14. A sincronização não duplica registros.
+15. Conflitos não provocam perda de dados.
+16. Reinicialização não restaura dados demonstrativos.
+17. Falhas durante a migração não comprometem os dados originais.
+18. Os serviços financeiros existentes continuam funcionando.
+
+Executar também:
+- Build de produção.
+- TypeScript.
+- Linter.
+- Testes existentes.
+- Testes de segurança das regras do Firestore.
+
+Não considerar a implementação concluída apenas porque o aplicativo compila.
+
+## 13. Estratégia de execução por etapas
+
+Executar nesta ordem:
+
+**FASE 1: Diagnóstico e proteção**
+- Analisar o projeto.
+- Criar ponto de restauração.
+- Gerar backup dos dados existentes.
+- Validar o backup.
+
+**FASE 2: Inicialização vazia**
+- Remover os dados demonstrativos dos fluxos de inicialização.
+- Criar estados vazios.
+- Corrigir a reinicialização.
+- Testar sem alterar os dados existentes.
+
+**FASE 3: Autenticação**
+- Configurar Firebase Authentication.
+- Criar login, cadastro e recuperação de senha.
+- Proteger as áreas privadas.
+
+**FASE 4: Sincronização**
+- Implementar Firestore.
+- Integrar Dexie.
+- Criar fila offline.
+- Implementar controle de conflitos.
+
+**FASE 5: Backup duplo**
+- Implementar backup na nuvem.
+- Aprimorar JSON.
+- Validar restauração.
+- Criar interface de gerenciamento.
+
+**FASE 6: Migração**
+- Migrar dados locais somente após validação.
+- Conferir quantidades e integridade.
+- Manter cópia original até a confirmação.
+
+**FASE 7: Auditoria final**
+- Executar todos os testes.
+- Verificar segurança.
+- Validar uso em navegadores diferentes.
+- Documentar limitações e procedimentos de recuperação.
+
+## 14. Regras para preservar o projeto
+
+- Não reconstruir o Finance IA do zero.
+- Não remover funcionalidades existentes.
+- Não alterar cálculos financeiros sem necessidade.
+- Não modificar arbitrariamente os modelos de dados.
+- Não quebrar transferências, parcelamentos, faturas e relacionamentos.
+- Não apagar históricos.
+- Não trocar IDs existentes.
+- Não remover o funcionamento offline.
+- Não substituir serviços existentes sem justificar tecnicamente.
+- Não expor credenciais ou dados financeiros.
+- Não simular sucesso de sincronização.
+- Não utilizar dados fictícios como dados reais.
+- Não realizar migração destrutiva sem backup validado.
+
+Criar commits ou pontos de restauração separados por fase, com mensagens claras.
+
+## 15. Critérios para considerar concluído
+
+A implementação só estará concluída quando:
+
+- Novos usuários começarem com o Finance IA vazio.
+- Nenhum dado financeiro fictício for inserido automaticamente.
+- Usuários puderem criar e acessar suas próprias contas.
+- Os dados sincronizarem entre navegadores autenticados.
+- O funcionamento offline continuar disponível.
+- O backup na nuvem estiver funcional.
+- A exportação e importação JSON estiverem funcionais.
+- A recuperação de dados estiver testada.
+- Os dados antigos tiverem sido preservados e migrados com integridade.
+- O sistema não permitir acesso aos dados de outro usuário.
+- A reinicialização realmente deixar os dados financeiros vazios, sem reintroduzir exemplos.
+- Todos os testes e a auditoria final forem aprovados.
+
+## 16. Entrega obrigatória
+
+Ao finalizar, apresentar um relatório técnico contendo:
+
+1. O que foi alterado.
+2. Arquivos criados.
+3. Arquivos modificados.
+4. Funcionalidades implementadas.
+5. Configurações Firebase necessárias.
+6. Variáveis de ambiente necessárias.
+7. Regras de segurança implantadas.
+8. Resultado dos testes.
+9. Situação da migração dos dados antigos.
+10. Situação dos backups.
+11. Pendências que exigem configuração externa ou validação em ambiente real.
+12. Procedimento de rollback.
+
+**ORIENTAÇÃO FINAL:** a prioridade absoluta é preservar os dados financeiros existentes. Primeiro proteger e validar. Depois corrigir a inicialização. Em seguida implementar autenticação, nuvem e backup duplo. Nunca inverter essa ordem para acelerar a execução.

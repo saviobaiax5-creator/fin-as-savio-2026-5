@@ -1,0 +1,208 @@
+# IMPLEMENTAÇÃO INTEGRADA — FINANCE IA MOBILE 2.1
+## CAPTURA AUTOMÁTICA DE NOTIFICAÇÕES BANCÁRIAS
+
+### PAPEL
+
+Atue como Engenheiro de Software Sênior, especialista em Backend Financeiro, Kotlin Android, React, TypeScript, Capacitor, Dexie, segurança de dados e integrações bancárias.
+
+Sua missão é implementar diretamente no repositório existente do Finance IA uma funcionalidade real de captura e interpretação de notificações bancárias.
+
+### OBJETIVO PRINCIPAL
+
+Permitir que o Finance IA identifique notificações financeiras publicadas por aplicativos bancários autorizados no Android, interprete seus conteúdos e apresente as movimentações em uma central de revisão.
+
+### ETAPA 1 — AUDITORIA
+
+Antes de programar:
+
+1. Inspecionar a estrutura completa do repositório.
+2. Identificar a versão do React, TypeScript e Capacitor.
+3. Verificar se existe projeto Android nativo.
+4. Identificar o applicationId.
+5. Inspecionar Transaction e CreditCard.
+6. Inspecionar BalanceCalculator.
+7. Inspecionar TransferService.
+8. Inspecionar AccountService.
+9. Identificar o banco Dexie e suas versões.
+10. Inspecionar o mecanismo de migração e backup.
+
+Criar ponto de restauração antes das alterações.
+
+### ETAPA 2 — ANDROID NATIVO
+
+Implementar:
+
+- BankNotificationListener.kt
+- BankPackageRegistry.kt
+- NotificationFilter.kt
+- NotificationEvent.kt
+- NotificationQueue.kt
+- NotificationAccess.kt
+
+Utilizar NotificationListenerService.
+
+Criar controle de autorização nas configurações Android.
+
+Não capturar notificações de aplicativos não autorizados.
+
+Não presumir que os identificadores de pacotes bancários estão corretos sem validação.
+
+Não implementar leitura de SMS.
+
+### ETAPA 3 — CAPACITOR
+
+Criar FinanceNotificationPlugin.kt.
+
+Disponibilizar:
+- openNotificationSettings()
+- getPermissionStatus()
+- getPendingEvents()
+- acknowledgeEvents()
+
+Registrar corretamente o plugin na MainActivity, respeitando a versão instalada do Capacitor.
+
+Criar tratamento para dispositivos Web e iOS sem suporte à captura de notificações de terceiros.
+
+### ETAPA 4 — INTERPRETAÇÃO FINANCEIRA
+
+Implementar os arquivos TypeScript fornecidos:
+
+- notification.types.ts
+- notification.parser.ts
+- notification.classifier.ts
+- notification.deduplicator.ts
+
+Reconhecer:
+
+- Compras no cartão de crédito.
+- Compras no débito.
+- Pix recebido.
+- Pix enviado.
+- Pagamentos de fatura.
+- Transferências próprias.
+- Boletos.
+- Tarifas.
+- Estornos e cancelamentos.
+
+Utilizar regras determinísticas antes de recorrer à IA.
+
+Nunca inventar valores, datas, estabelecimentos ou instituições.
+
+Valores devem ser armazenados em centavos.
+
+### ETAPA 5 — DEDUPLICAÇÃO
+
+Implementar prevenção de duplicidade.
+
+Utilizar identificadores de origem, chaves de idempotência e comparação contextual.
+
+Não descartar compras legítimas apenas porque possuem valores iguais.
+
+### ETAPA 6 — PERSISTÊNCIA
+
+Integrar a central de notificações ao Dexie existente.
+
+Criar migração versionada, se necessária.
+
+Preservar:
+- Dados existentes.
+- Histórico financeiro.
+- Identificadores.
+- Relacionamentos.
+- Backups.
+- Restauração.
+
+Criar estados:
+- PENDING.
+- CONFIRMED.
+- DISCARDED.
+
+A fila deve funcionar mesmo quando o Finance IA estiver fechado, dentro das limitações do Android.
+
+### ETAPA 7 — CENTRAL DE REVISÃO
+
+Criar:
+- NotificationInbox.tsx
+- NotificationCard.tsx
+- NotificationSettings.tsx
+
+Permitir:
+- Visualizar movimentações.
+- Conferir valores.
+- Selecionar conta.
+- Selecionar cartão.
+- Selecionar categoria.
+- Corrigir informações.
+- Confirmar.
+- Descartar.
+
+Não criar lançamentos automaticamente sem confirmação.
+
+### ETAPA 8 — INTEGRAÇÃO FINANCEIRA
+
+Utilizar os serviços existentes.
+
+Compras no crédito devem alimentar a fatura correta.
+
+Pix recebido deve ser identificado como entrada.
+
+Pix enviado deve ser identificado como saída.
+
+Transferências próprias não podem gerar receitas ou despesas operacionais.
+
+Pagamentos de faturas não podem duplicar as despesas já registradas pelas compras.
+
+Não modificar os cálculos existentes sem necessidade comprovada.
+
+### ETAPA 9 — SEGURANÇA
+
+- Solicitar autorização explícita.
+- Implementar revogação.
+- Minimizar dados capturados.
+- Criptografar a fila persistente.
+- Não registrar mensagens bancárias em logs.
+- Não transmitir notificações brutas a terceiros por padrão.
+- Não expor tokens ou credenciais no frontend.
+- Implementar política de retenção.
+- Proteger endpoints contra acesso indevido.
+- Garantir que apenas o titular autorizado consulte seus eventos.
+
+### ETAPA 10 — TESTES
+
+Testar em aparelho Android real:
+
+1. Compra aprovada.
+2. Compra recusada.
+3. Pix enviado.
+4. Pix recebido.
+5. Compra no débito.
+6. Compra no crédito.
+7. Pagamento de fatura.
+8. Notificações duplicadas.
+9. Notificações sem valor.
+10. Notificações com conteúdo oculto.
+11. Revogação da permissão.
+12. Reinicialização do aparelho.
+13. Aplicativo fechado.
+14. Aplicativo aberto.
+15. Múltiplas instituições.
+
+Testar também o comportamento Web e iOS sem simular funcionalidades nativas inexistentes.
+
+### ETAPA 11 — ENTREGA
+
+Entregar:
+- Arquivos criados.
+- Arquivos modificados.
+- Migrações realizadas.
+- Testes executados.
+- Resultado da compilação.
+- APK de teste, se o ambiente permitir.
+- Capturas reais da central.
+- Pendências identificadas.
+
+Não declarar a funcionalidade concluída sem testar a captura em aparelho Android real.
+
+Não substituir os serviços financeiros existentes por implementações fictícias.
+
+A implementação deve ser incremental, segura, reversível e compatível com os dados atuais do Finance IA.

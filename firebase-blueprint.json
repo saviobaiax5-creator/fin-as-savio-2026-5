@@ -1,0 +1,283 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "Perfil do Usuário",
+      "description": "Metadados de sessão, revisão de dados e preferências de sincronização isolados por UID.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "activeDatasetRevision": { "type": "number" },
+        "lastSyncAt": { "type": "string" },
+        "lastCloudBackupAt": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["uid", "email", "createdAt", "updatedAt"]
+    },
+    "Account": {
+      "title": "Conta Bancária",
+      "description": "Conta bancária ou carteira vinculada a CPF ou CNPJ.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "entityId": { "type": "string", "enum": ["CPF", "CNPJ"] },
+        "institutionName": { "type": "string" },
+        "accountName": { "type": "string" },
+        "accountType": { "type": "string", "enum": ["checking", "savings", "business", "investment"] },
+        "openingBalanceCents": { "type": "number" },
+        "balanceCents": { "type": "number" },
+        "openingBalance": { "type": "number" },
+        "balance": { "type": "number" },
+        "archived": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "entityId", "institutionName", "accountName", "accountType", "balance", "openingBalance", "createdAt", "updatedAt"]
+    },
+    "Transaction": {
+      "title": "Lançamento Financeiro",
+      "description": "Movimentação de entrada ou saída em centavos e campos de conciliação/estorno.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "entityId": { "type": "string", "enum": ["CPF", "CNPJ"] },
+        "accountId": { "type": "string" },
+        "date": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "account": { "type": "string" },
+        "amountCents": { "type": "number" },
+        "amount": { "type": "number" },
+        "direction": { "type": "string", "enum": ["INCOME", "EXPENSE"] },
+        "status": { "type": "string", "enum": ["PLANNED", "PENDING", "CONFIRMED", "CANCELLED"] },
+        "origin": { "type": "string", "enum": ["MANUAL", "IMPORT", "OPEN_FINANCE", "BOLETO", "BANK_NOTIFICATION"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "entityId", "accountId", "date", "description", "category", "account", "amount", "direction", "status", "origin", "createdAt", "updatedAt"]
+    },
+    "CreditCard": {
+      "title": "Cartão de Crédito",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "entityId": { "type": "string", "enum": ["CPF", "CNPJ"] },
+        "institutionName": { "type": "string" },
+        "cardName": { "type": "string" },
+        "last4": { "type": "string" },
+        "limit": { "type": "number" },
+        "closingDay": { "type": "number" },
+        "dueDay": { "type": "number" },
+        "currentInvoiceAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["OPEN", "CLOSED", "PAID"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "entityId", "institutionName", "cardName", "last4", "limit", "closingDay", "dueDay", "currentInvoiceAmount", "status", "createdAt", "updatedAt"]
+    },
+    "Boleto": {
+      "title": "Boleto e Conta a Pagar",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "beneficiario": { "type": "string" },
+        "pagador": { "type": "string" },
+        "instituicao": { "type": "string" },
+        "linhaDigitavel": { "type": "string" },
+        "vencimento": { "type": "string" },
+        "valorOriginal": { "type": "number" },
+        "descricao": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "PAID"] },
+        "entityId": { "type": "string", "enum": ["CPF", "CNPJ"] },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "beneficiario", "pagador", "instituicao", "linhaDigitavel", "vencimento", "valorOriginal", "descricao", "status", "entityId", "category", "createdAt", "updatedAt"]
+    },
+    "Debt": {
+      "title": "Dívida ou Compromisso",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "entityId": { "type": "string", "enum": ["CPF", "CNPJ"] },
+        "creditorName": { "type": "string" },
+        "description": { "type": "string" },
+        "originalAmount": { "type": "number" },
+        "outstandingAmount": { "type": "number" },
+        "dueDay": { "type": "number" },
+        "status": { "type": "string", "enum": ["ACTIVE", "PAID", "RENEGOTIATED"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "entityId", "creditorName", "description", "originalAmount", "outstandingAmount", "dueDay", "status", "createdAt", "updatedAt"]
+    },
+    "Asset": {
+      "title": "Patrimônio e Investimento",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "entityId": { "type": "string", "enum": ["CPF", "CNPJ"] },
+        "assetType": { "type": "string" },
+        "institutionName": { "type": "string" },
+        "description": { "type": "string" },
+        "currentValue": { "type": "number" },
+        "valuationDate": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "entityId", "assetType", "institutionName", "description", "currentValue", "valuationDate", "createdAt", "updatedAt"]
+    },
+    "DocumentMetadata": {
+      "title": "Metadados de Documento",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["PDF", "EPUB", "Imagem"] },
+        "date": { "type": "string" },
+        "size": { "type": "string" },
+        "status": { "type": "string", "enum": ["PENDING", "PROCESSED"] },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "name", "type", "date", "size", "status", "createdAt", "updatedAt"]
+    },
+    "SalaryDatasetDoc": {
+      "title": "Módulo de Salários",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "sources": { "type": "array" },
+        "records": { "type": "array" },
+        "adjustments": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "sources", "records", "adjustments", "createdAt", "updatedAt"]
+    },
+    "CategoryBudget": {
+      "title": "Orçamento por Categoria",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "entityScope": { "type": "string", "enum": ["CPF", "CNPJ", "CONSOLIDATED"] },
+        "category": { "type": "string" },
+        "limitCents": { "type": "number" },
+        "limitAmount": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "entityScope", "category", "limitCents", "limitAmount", "createdAt", "updatedAt"]
+    },
+    "CategoryRule": {
+      "title": "Regra de Categorização",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "keyword": { "type": "string" },
+        "category": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "keyword", "category", "createdAt", "updatedAt"]
+    },
+    "UserSettingsDoc": {
+      "title": "Preferências de Interface",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "theme": { "type": "string", "enum": ["light", "dark"] },
+        "density": { "type": "string", "enum": ["compact", "standard", "enlarged"] },
+        "zoom": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "theme", "density", "zoom", "createdAt", "updatedAt"]
+    },
+    "CloudBackupSnapshot": {
+      "title": "Snapshot de Backup na Nuvem",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ownerUid": { "type": "string" },
+        "app": { "type": "string" },
+        "backupVersion": { "type": "number" },
+        "schemaVersion": { "type": "number" },
+        "integrityHash": { "type": "string" },
+        "counts": { "type": "object" },
+        "payloadJson": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "ownerUid", "app", "backupVersion", "schemaVersion", "integrityHash", "counts", "payloadJson", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Perfil privado e revisões de sincronização do usuário autenticado."
+    },
+    "/users/{uid}/accounts/{accountId}": {
+      "schema": { "$ref": "#/entities/Account" },
+      "description": "Contas bancárias isoladas por usuário."
+    },
+    "/users/{uid}/transactions/{txId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "Lançamentos financeiros isolados por usuário."
+    },
+    "/users/{uid}/creditCards/{cardId}": {
+      "schema": { "$ref": "#/entities/CreditCard" },
+      "description": "Cartões de crédito isolados por usuário."
+    },
+    "/users/{uid}/boletos/{boletoId}": {
+      "schema": { "$ref": "#/entities/Boleto" },
+      "description": "Boletos e obrigações isolados por usuário."
+    },
+    "/users/{uid}/debts/{debtId}": {
+      "schema": { "$ref": "#/entities/Debt" },
+      "description": "Dívidas isoladas por usuário."
+    },
+    "/users/{uid}/assets/{assetId}": {
+      "schema": { "$ref": "#/entities/Asset" },
+      "description": "Ativos patrimoniais isolados por usuário."
+    },
+    "/users/{uid}/documents/{docId}": {
+      "schema": { "$ref": "#/entities/DocumentMetadata" },
+      "description": "Metadados de documentos sem blobs binários."
+    },
+    "/users/{uid}/salaries/{salaryDocId}": {
+      "schema": { "$ref": "#/entities/SalaryDatasetDoc" },
+      "description": "Dados do módulo salarial isolados por usuário."
+    },
+    "/users/{uid}/budgets/{budgetId}": {
+      "schema": { "$ref": "#/entities/CategoryBudget" },
+      "description": "Orçamentos por categoria isolados por usuário."
+    },
+    "/users/{uid}/categoryRules/{ruleId}": {
+      "schema": { "$ref": "#/entities/CategoryRule" },
+      "description": "Regras personalizadas de categorização."
+    },
+    "/users/{uid}/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/UserSettingsDoc" },
+      "description": "Preferências visuais sincronizadas por usuário."
+    },
+    "/users/{uid}/backups/{backupId}": {
+      "schema": { "$ref": "#/entities/CloudBackupSnapshot" },
+      "description": "Backups completos na nuvem (retenção dos 5 mais recentes)."
+    }
+  }
+}

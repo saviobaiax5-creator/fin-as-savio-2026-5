@@ -1,0 +1,490 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny across the entire database
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Core Authentication & Validation Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isVerifiedOwner(uid) {
+      return isOwner(uid) && request.auth.token.email_verified == true;
+    }
+
+    function isValidId(id) {
+      return id is string
+        && id.size() >= 1
+        && id.size() <= 128
+        && !(id in ['.', '..'])
+        && !id.matches('.*[/\\\\].*');
+    }
+
+    function isBoundedStr(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    function isOptionalBoundedStr(data, field, maxLen) {
+      return !(field in data) || (data[field] is string && data[field].size() <= maxLen);
+    }
+
+    function isFiniteNumberRange(val, minVal, maxVal) {
+      return (val is int || val is float) && val >= minVal && val <= maxVal;
+    }
+
+    function isEntityScopePair(val) {
+      return val is string && (val == 'CPF' || val == 'CNPJ');
+    }
+
+    function preservesImmutableOwnerAndCreated(uid, docId) {
+      return request.resource.data.ownerUid == uid
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.id == docId
+        && request.resource.data.id == resource.data.id
+        && request.resource.data.createdAt == resource.data.createdAt;
+    }
+
+    function hasValidBaseEntity(data, uid, docId) {
+      return data.id == docId
+        && data.ownerUid == uid
+        && isBoundedStr(data.createdAt, 10, 64)
+        && isBoundedStr(data.updatedAt, 10, 64)
+        && (!('revision' in data) || isFiniteNumberRange(data.revision, 0, 1000000000));
+    }
+
+    // --- Validator Functions ---
+    function isValidUserProfile(data, uid) {
+      return data.keys().hasAll(['uid', 'email', 'createdAt', 'updatedAt'])
+        && data.keys().hasOnly([
+          'uid', 'email', 'displayName', 'photoURL',
+          'activeDatasetRevision', 'lastSyncAt', 'lastCloudBackupAt',
+          'createdAt', 'updatedAt'
+        ])
+        && data.uid == uid
+        && isBoundedStr(data.email, 3, 254)
+        && isOptionalBoundedStr(data, 'displayName', 120)
+        && isOptionalBoundedStr(data, 'photoURL', 500)
+        && (!('activeDatasetRevision' in data) || isFiniteNumberRange(data.activeDatasetRevision, 0, 1000000000))
+        && isOptionalBoundedStr(data, 'lastSyncAt', 64)
+        && isOptionalBoundedStr(data, 'lastCloudBackupAt', 64)
+        && isBoundedStr(data.createdAt, 10, 64)
+        && isBoundedStr(data.updatedAt, 10, 64);
+    }
+
+    function isValidAccount(data, uid, accountId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'entityId', 'institutionName', 'accountName',
+          'accountType', 'balance', 'openingBalance', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'entityId', 'institutionName', 'accountName',
+          'accountType', 'openingBalanceCents', 'balanceCents',
+          'projectedBalanceCents', 'projectedBalance', 'balance',
+          'openingBalance', 'archived', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, accountId)
+        && isEntityScopePair(data.entityId)
+        && isBoundedStr(data.institutionName, 1, 120)
+        && isBoundedStr(data.accountName, 1, 120)
+        && data.accountType in ['checking', 'savings', 'business', 'investment']
+        && isFiniteNumberRange(data.balance, -1000000000, 1000000000)
+        && isFiniteNumberRange(data.openingBalance, -1000000000, 1000000000)
+        && (!('openingBalanceCents' in data) || isFiniteNumberRange(data.openingBalanceCents, -100000000000, 100000000000))
+        && (!('balanceCents' in data) || isFiniteNumberRange(data.balanceCents, -100000000000, 100000000000))
+        && (!('projectedBalanceCents' in data) || isFiniteNumberRange(data.projectedBalanceCents, -100000000000, 100000000000))
+        && (!('projectedBalance' in data) || isFiniteNumberRange(data.projectedBalance, -1000000000, 1000000000))
+        && (!('archived' in data) || data.archived is bool);
+    }
+
+    function isValidTransaction(data, uid, txId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'entityId', 'accountId', 'date', 'description',
+          'category', 'account', 'amount', 'direction', 'status', 'origin',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'entityId', 'accountId', 'creditCardId', 'date',
+          'description', 'category', 'account', 'amountCents', 'amount',
+          'direction', 'status', 'origin', 'isInternalTransfer', 'operationType',
+          'counterparty', 'externalId', 'salaryRecordId', 'transferId',
+          'idempotencyKey', 'reversedTransactionId', 'reversalTransactionId',
+          'cancelledAt', 'cancellationReason', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, txId)
+        && isEntityScopePair(data.entityId)
+        && isBoundedStr(data.accountId, 1, 128)
+        && isBoundedStr(data.date, 8, 32)
+        && isBoundedStr(data.description, 1, 300)
+        && isBoundedStr(data.category, 1, 120)
+        && isBoundedStr(data.account, 0, 200)
+        && isFiniteNumberRange(data.amount, 0, 1000000000)
+        && (!('amountCents' in data) || isFiniteNumberRange(data.amountCents, 0, 100000000000))
+        && data.direction in ['INCOME', 'EXPENSE']
+        && data.status in ['PLANNED', 'PENDING', 'CONFIRMED', 'CANCELLED']
+        && data.origin in ['MANUAL', 'IMPORT', 'OPEN_FINANCE', 'BOLETO', 'BANK_NOTIFICATION']
+        && (!('isInternalTransfer' in data) || data.isInternalTransfer is bool)
+        && isOptionalBoundedStr(data, 'creditCardId', 128)
+        && isOptionalBoundedStr(data, 'operationType', 40)
+        && isOptionalBoundedStr(data, 'counterparty', 200)
+        && isOptionalBoundedStr(data, 'externalId', 200)
+        && isOptionalBoundedStr(data, 'salaryRecordId', 128)
+        && isOptionalBoundedStr(data, 'transferId', 128)
+        && isOptionalBoundedStr(data, 'idempotencyKey', 160)
+        && isOptionalBoundedStr(data, 'reversedTransactionId', 128)
+        && isOptionalBoundedStr(data, 'reversalTransactionId', 128)
+        && isOptionalBoundedStr(data, 'cancelledAt', 64)
+        && isOptionalBoundedStr(data, 'cancellationReason', 300);
+    }
+
+    function isValidCreditCard(data, uid, cardId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'entityId', 'institutionName', 'cardName',
+          'last4', 'limit', 'closingDay', 'dueDay', 'currentInvoiceAmount',
+          'status', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'entityId', 'institutionName', 'cardName',
+          'last4', 'limit', 'closingDay', 'dueDay', 'currentInvoiceAmount',
+          'status', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, cardId)
+        && isEntityScopePair(data.entityId)
+        && isBoundedStr(data.institutionName, 1, 120)
+        && isBoundedStr(data.cardName, 1, 120)
+        && isBoundedStr(data.last4, 1, 8)
+        && isFiniteNumberRange(data.limit, 0, 100000000)
+        && isFiniteNumberRange(data.closingDay, 1, 31)
+        && isFiniteNumberRange(data.dueDay, 1, 31)
+        && isFiniteNumberRange(data.currentInvoiceAmount, 0, 100000000)
+        && data.status in ['OPEN', 'CLOSED', 'PAID'];
+    }
+
+    function isValidBoleto(data, uid, boletoId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'beneficiario', 'pagador', 'instituicao',
+          'linhaDigitavel', 'vencimento', 'valorOriginal', 'descricao',
+          'status', 'entityId', 'category', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'beneficiario', 'pagador', 'instituicao',
+          'linhaDigitavel', 'vencimento', 'valorOriginal', 'descricao',
+          'status', 'entityId', 'category', 'paidAt', 'paidAmount',
+          'paidAccountId', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, boletoId)
+        && isEntityScopePair(data.entityId)
+        && isBoundedStr(data.beneficiario, 1, 160)
+        && isBoundedStr(data.pagador, 1, 160)
+        && isBoundedStr(data.instituicao, 1, 120)
+        && isBoundedStr(data.linhaDigitavel, 0, 120)
+        && isBoundedStr(data.vencimento, 8, 32)
+        && isFiniteNumberRange(data.valorOriginal, 0, 100000000)
+        && isBoundedStr(data.descricao, 0, 300)
+        && data.status in ['PENDING', 'PAID']
+        && isBoundedStr(data.category, 1, 120)
+        && isOptionalBoundedStr(data, 'paidAt', 64)
+        && (!('paidAmount' in data) || isFiniteNumberRange(data.paidAmount, 0, 100000000))
+        && isOptionalBoundedStr(data, 'paidAccountId', 128);
+    }
+
+    function isValidDebt(data, uid, debtId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'entityId', 'creditorName', 'description',
+          'originalAmount', 'outstandingAmount', 'dueDay', 'status',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'entityId', 'creditorName', 'description',
+          'originalAmount', 'outstandingAmount', 'installmentAmount',
+          'dueDay', 'status', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, debtId)
+        && isEntityScopePair(data.entityId)
+        && isBoundedStr(data.creditorName, 1, 160)
+        && isBoundedStr(data.description, 0, 300)
+        && isFiniteNumberRange(data.originalAmount, 0, 1000000000)
+        && isFiniteNumberRange(data.outstandingAmount, 0, 1000000000)
+        && (!('installmentAmount' in data) || isFiniteNumberRange(data.installmentAmount, 0, 100000000))
+        && isFiniteNumberRange(data.dueDay, 1, 31)
+        && data.status in ['ACTIVE', 'PAID', 'RENEGOTIATED'];
+    }
+
+    function isValidAsset(data, uid, assetId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'entityId', 'assetType', 'institutionName',
+          'description', 'currentValue', 'valuationDate', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'entityId', 'assetType', 'institutionName',
+          'description', 'currentValue', 'valuationDate', 'revision',
+          'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, assetId)
+        && isEntityScopePair(data.entityId)
+        && data.assetType in ['Reserva', 'Renda Fixa', 'Renda Variável', 'Fundos', 'Produtos Boticário', 'Outros']
+        && isBoundedStr(data.institutionName, 1, 120)
+        && isBoundedStr(data.description, 1, 300)
+        && isFiniteNumberRange(data.currentValue, 0, 1000000000)
+        && isBoundedStr(data.valuationDate, 8, 32);
+    }
+
+    function isValidDocumentMeta(data, uid, docId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'name', 'type', 'date', 'size', 'status',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'name', 'type', 'date', 'size', 'status',
+          'hasBlob', 'fileId', 'mimeType', 'textContent',
+          'extractedTransactionsCount', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, docId)
+        && isBoundedStr(data.name, 1, 200)
+        && data.type in ['PDF', 'EPUB', 'Imagem']
+        && isBoundedStr(data.date, 8, 32)
+        && isBoundedStr(data.size, 1, 40)
+        && data.status in ['PENDING', 'PROCESSED']
+        && (!('hasBlob' in data) || data.hasBlob is bool)
+        && isOptionalBoundedStr(data, 'fileId', 160)
+        && isOptionalBoundedStr(data, 'mimeType', 120)
+        && isOptionalBoundedStr(data, 'textContent', 12500)
+        && (!('extractedTransactionsCount' in data) || isFiniteNumberRange(data.extractedTransactionsCount, 0, 10000));
+    }
+
+    function isValidSalaryDoc(data, uid, salaryDocId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'sources', 'records', 'adjustments', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'sources', 'records', 'adjustments', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, salaryDocId)
+        && data.sources is list && data.sources.size() <= 200
+        && data.records is list && data.records.size() <= 2000
+        && data.adjustments is list && data.adjustments.size() <= 500;
+    }
+
+    function isValidBudget(data, uid, budgetId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'entityScope', 'category', 'limitCents', 'limitAmount',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'entityScope', 'category', 'limitCents', 'limitAmount',
+          'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, budgetId)
+        && data.entityScope in ['CPF', 'CNPJ', 'CONSOLIDATED']
+        && isBoundedStr(data.category, 1, 120)
+        && isFiniteNumberRange(data.limitCents, 0, 100000000000)
+        && isFiniteNumberRange(data.limitAmount, 0, 1000000000);
+    }
+
+    function isValidCategoryRule(data, uid, ruleId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'keyword', 'category', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'keyword', 'category', 'direction', 'revision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, ruleId)
+        && isBoundedStr(data.keyword, 1, 120)
+        && isBoundedStr(data.category, 1, 120)
+        && (!('direction' in data) || data.direction in ['INCOME', 'EXPENSE']);
+    }
+
+    function isValidSettingsDoc(data, uid, settingId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'theme', 'density', 'zoom', 'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'theme', 'density', 'zoom',
+          'lastSyncAt', 'datasetRevision', 'createdAt', 'updatedAt'
+        ])
+        && hasValidBaseEntity(data, uid, settingId)
+        && data.theme in ['light', 'dark']
+        && data.density in ['compact', 'standard', 'enlarged']
+        && isBoundedStr(data.zoom, 2, 12)
+        && isOptionalBoundedStr(data, 'lastSyncAt', 64)
+        && (!('datasetRevision' in data) || isFiniteNumberRange(data.datasetRevision, 0, 1000000000));
+    }
+
+    function isValidBackupDoc(data, uid, backupId) {
+      return data.keys().hasAll([
+          'id', 'ownerUid', 'app', 'backupVersion', 'schemaVersion',
+          'createdAt', 'integrityHash', 'counts', 'payloadJson'
+        ])
+        && data.keys().hasOnly([
+          'id', 'ownerUid', 'app', 'backupVersion', 'schemaVersion',
+          'createdAt', 'updatedAt', 'reason', 'deviceLabel',
+          'integrityHash', 'counts', 'payloadJson', 'byteSize'
+        ])
+        && data.id == backupId
+        && data.ownerUid == uid
+        && data.app == 'FINANCE_IA'
+        && isFiniteNumberRange(data.backupVersion, 1, 100)
+        && isFiniteNumberRange(data.schemaVersion, 1, 100)
+        && isBoundedStr(data.createdAt, 10, 64)
+        && isOptionalBoundedStr(data, 'updatedAt', 64)
+        && isOptionalBoundedStr(data, 'reason', 64)
+        && isOptionalBoundedStr(data, 'deviceLabel', 120)
+        && isBoundedStr(data.integrityHash, 8, 128)
+        && data.counts is map
+        && isBoundedStr(data.payloadJson, 2, 850000)
+        && (!('byteSize' in data) || isFiniteNumberRange(data.byteSize, 2, 850000));
+    }
+
+    // --- User Profile Document (strict owner-only PII, no directory list) ---
+    match /users/{uid} {
+      allow get: if isOwner(uid) && isValidId(uid);
+      allow list: if false;
+      allow create: if isVerifiedOwner(uid)
+        && isValidId(uid)
+        && isValidUserProfile(request.resource.data, uid);
+      allow update: if isVerifiedOwner(uid)
+        && isValidId(uid)
+        && isValidUserProfile(request.resource.data, uid)
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.createdAt == resource.data.createdAt;
+      allow delete: if isVerifiedOwner(uid) && isValidId(uid);
+
+      match /accounts/{accountId} {
+        allow get: if isOwner(uid) && isValidId(accountId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(accountId)
+          && isValidAccount(request.resource.data, uid, accountId);
+        allow update: if isVerifiedOwner(uid) && isValidId(accountId)
+          && isValidAccount(request.resource.data, uid, accountId)
+          && preservesImmutableOwnerAndCreated(uid, accountId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(accountId);
+      }
+
+      match /transactions/{txId} {
+        allow get: if isOwner(uid) && isValidId(txId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(txId)
+          && isValidTransaction(request.resource.data, uid, txId);
+        allow update: if isVerifiedOwner(uid) && isValidId(txId)
+          && isValidTransaction(request.resource.data, uid, txId)
+          && preservesImmutableOwnerAndCreated(uid, txId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(txId);
+      }
+
+      match /creditCards/{cardId} {
+        allow get: if isOwner(uid) && isValidId(cardId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(cardId)
+          && isValidCreditCard(request.resource.data, uid, cardId);
+        allow update: if isVerifiedOwner(uid) && isValidId(cardId)
+          && isValidCreditCard(request.resource.data, uid, cardId)
+          && preservesImmutableOwnerAndCreated(uid, cardId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(cardId);
+      }
+
+      match /boletos/{boletoId} {
+        allow get: if isOwner(uid) && isValidId(boletoId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(boletoId)
+          && isValidBoleto(request.resource.data, uid, boletoId);
+        allow update: if isVerifiedOwner(uid) && isValidId(boletoId)
+          && isValidBoleto(request.resource.data, uid, boletoId)
+          && preservesImmutableOwnerAndCreated(uid, boletoId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(boletoId);
+      }
+
+      match /debts/{debtId} {
+        allow get: if isOwner(uid) && isValidId(debtId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(debtId)
+          && isValidDebt(request.resource.data, uid, debtId);
+        allow update: if isVerifiedOwner(uid) && isValidId(debtId)
+          && isValidDebt(request.resource.data, uid, debtId)
+          && preservesImmutableOwnerAndCreated(uid, debtId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(debtId);
+      }
+
+      match /assets/{assetId} {
+        allow get: if isOwner(uid) && isValidId(assetId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(assetId)
+          && isValidAsset(request.resource.data, uid, assetId);
+        allow update: if isVerifiedOwner(uid) && isValidId(assetId)
+          && isValidAsset(request.resource.data, uid, assetId)
+          && preservesImmutableOwnerAndCreated(uid, assetId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(assetId);
+      }
+
+      match /documents/{docId} {
+        allow get: if isOwner(uid) && isValidId(docId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(docId)
+          && isValidDocumentMeta(request.resource.data, uid, docId);
+        allow update: if isVerifiedOwner(uid) && isValidId(docId)
+          && isValidDocumentMeta(request.resource.data, uid, docId)
+          && preservesImmutableOwnerAndCreated(uid, docId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(docId);
+      }
+
+      match /salaries/{salaryDocId} {
+        allow get: if isOwner(uid) && isValidId(salaryDocId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(salaryDocId)
+          && isValidSalaryDoc(request.resource.data, uid, salaryDocId);
+        allow update: if isVerifiedOwner(uid) && isValidId(salaryDocId)
+          && isValidSalaryDoc(request.resource.data, uid, salaryDocId)
+          && preservesImmutableOwnerAndCreated(uid, salaryDocId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(salaryDocId);
+      }
+
+      match /budgets/{budgetId} {
+        allow get: if isOwner(uid) && isValidId(budgetId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(budgetId)
+          && isValidBudget(request.resource.data, uid, budgetId);
+        allow update: if isVerifiedOwner(uid) && isValidId(budgetId)
+          && isValidBudget(request.resource.data, uid, budgetId)
+          && preservesImmutableOwnerAndCreated(uid, budgetId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(budgetId);
+      }
+
+      match /categoryRules/{ruleId} {
+        allow get: if isOwner(uid) && isValidId(ruleId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(ruleId)
+          && isValidCategoryRule(request.resource.data, uid, ruleId);
+        allow update: if isVerifiedOwner(uid) && isValidId(ruleId)
+          && isValidCategoryRule(request.resource.data, uid, ruleId)
+          && preservesImmutableOwnerAndCreated(uid, ruleId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(ruleId);
+      }
+
+      match /settings/{settingId} {
+        allow get: if isOwner(uid) && isValidId(settingId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(settingId)
+          && isValidSettingsDoc(request.resource.data, uid, settingId);
+        allow update: if isVerifiedOwner(uid) && isValidId(settingId)
+          && isValidSettingsDoc(request.resource.data, uid, settingId)
+          && preservesImmutableOwnerAndCreated(uid, settingId);
+        allow delete: if isVerifiedOwner(uid) && isValidId(settingId);
+      }
+
+      match /backups/{backupId} {
+        allow get: if isOwner(uid) && isValidId(backupId);
+        allow list: if isOwner(uid) && resource.data.ownerUid == request.auth.uid;
+        allow create: if isVerifiedOwner(uid) && isValidId(backupId)
+          && isValidBackupDoc(request.resource.data, uid, backupId);
+        allow update: if false; // Backups are immutable snapshots
+        allow delete: if isVerifiedOwner(uid) && isValidId(backupId);
+      }
+    }
+  }
+}

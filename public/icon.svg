@@ -1,0 +1,55 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-label="Sávio Finanças" role="img">
+  <defs>
+    <linearGradient id="sf-icon-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#082B5C" />
+      <stop offset="100%" stop-color="#061B3B" />
+    </linearGradient>
+    <linearGradient id="sf-icon-gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FFD85A" />
+      <stop offset="100%" stop-color="#F5B719" />
+    </linearGradient>
+  </defs>
+
+  <rect width="128" height="128" rx="28" fill="url(#sf-icon-bg)" />
+
+  <rect x="22" y="66" width="15" height="27" rx="4" fill="#FFFFFF" />
+  <rect x="44" y="52" width="15" height="41" rx="4" fill="#FFFFFF" />
+  <rect x="66" y="36" width="15" height="57" rx="4" fill="#FFFFFF" />
+
+  <path
+    d="M17 91 C39 75 58 73 78 57 C88 49 96 41 108 28"
+    fill="none"
+    stroke="url(#sf-icon-gold)"
+    stroke-width="9"
+    stroke-linecap="round"
+  />
+
+  <path
+    d="M91 27 L111 24 L108 44"
+    fill="none"
+    stroke="#F5B719"
+    stroke-width="8"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <path
+    d="M17 101 C40 89 61 89 83 98"
+    fill="none"
+    stroke="#00A65A"
+    stroke-width="7"
+    stroke-linecap="round"
+  />
+
+  <circle cx="91" cy="91" r="17" fill="url(#sf-icon-gold)" />
+
+  <text
+    x="91"
+    y="99"
+    text-anchor="middle"
+    font-size="25"
+    font-weight="bold"
+    font-family="Inter, Segoe UI, Arial, sans-serif"
+    fill="#082B5C"
+  >$</text>
+</svg>

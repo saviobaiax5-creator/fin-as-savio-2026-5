@@ -1,0 +1,11 @@
+{
+	"appId": "br.com.financeia.mobile",
+	"appName": "Sávio Finanças",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https"
+	},
+	"android": {
+		"allowMixedContent": false
+	}
+}

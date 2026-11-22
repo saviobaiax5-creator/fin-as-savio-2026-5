@@ -1,0 +1,378 @@
+# IMPLEMENTAÇÃO DO MÓDULO SALÁRIOS E EVOLUÇÃO DA RENDA
+## SAVIO FINANA IA
+
+**OBJETIVO:** Criar um módulo independente, editável e integrado ao sistema financeiro, para cadastrar, acompanhar, calcular e comparar a evolução dos salários e demais fontes de renda ao longo dos meses e anos.
+
+Não tratar salário apenas como uma transação comum. Criar um histórico próprio, com informações estruturadas e possibilidade de edição.
+
+Analisar a arquitetura atual antes de modificar os arquivos. Utilizar React, TypeScript, Vite e os mecanismos de persistência já existentes.
+
+## 1. CRIAR UMA NOVA ABA
+
+Adicionar ao menu principal:
+
+**Salários e Rendas**
+
+Criar as seguintes áreas:
+
+1. Visão geral.
+2. Cadastro de salários.
+3. Histórico mensal.
+4. Evolução anual.
+5. Reajustes salariais.
+6. Outras fontes de renda.
+7. Relatórios e comparativos.
+
+## 2. CADASTRO EDITÁVEL DE SALÁRIOS
+
+Permitir cadastrar quantas fontes de renda forem necessárias.
+
+Exemplos iniciais da planilha de referência:
+
+- Câmara Municipal de Paragominas.
+- UNIP.
+- UNIGRANDE.
+- CEI.
+- SENAR.
+- Outras atividades profissionais.
+
+Cada cadastro deve possuir:
+
+```typescript
+export interface SalarySource {
+  id: string;
+  name: string;
+  institution: string;
+  incomeType:
+    | "salary"
+    | "teaching"
+    | "commission"
+    | "freelance"
+    | "bonus"
+    | "other";
+
+  paymentFrequency:
+    | "monthly"
+    | "weekly"
+    | "occasional";
+
+  active: boolean;
+  startDate: string;
+  endDate?: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+Permitir adicionar, editar, arquivar e consultar cada fonte de renda.
+
+Não excluir o histórico financeiro quando uma fonte for arquivada.
+
+## 3. REGISTRO MENSAL EDITÁVEL
+
+Criar estrutura para registrar os valores de cada mês:
+
+```typescript
+export interface SalaryRecord {
+  id: string;
+  sourceId: string;
+
+  referenceMonth: string;
+  paymentDate?: string;
+
+  grossAmount?: number;
+  deductions: number;
+  netAmount: number;
+
+  status:
+    | "expected"
+    | "received"
+    | "partially_received"
+    | "cancelled";
+
+  description?: string;
+  notes?: string;
+
+  createdAt: string;
+  updatedAt: string;
+}
+```
+
+Permitir registrar:
+
+- Salário bruto.
+- Descontos.
+- Salário líquido.
+- Data prevista.
+- Data efetiva do recebimento.
+- Situação do pagamento.
+- Observações.
+
+O salário líquido pode ser calculado automaticamente quando salário bruto e descontos estiverem preenchidos.
+
+Permitir edição manual do valor líquido, identificando que foi informado manualmente.
+
+Não presumir que o valor recebido seja sempre igual ao salário bruto.
+
+## 4. TABELA MENSAL
+
+Criar uma tabela editável com os meses nas colunas e as fontes de renda nas linhas.
+
+Exemplo ilustrativo:
+
+| Fonte de renda | Jan | Fev | Mar | Abr | Total |
+|---|---:|---:|---:|---:|---:|
+| Câmara | 3.924,87 | 3.924,87 | 3.924,87 | 4.029,02 | 15.803,63 |
+| UNIP | 450,48 | 450,48 | 248,15 | 248,15 | 1.397,26 |
+| UNIGRANDE | 401,63 | 361,62 | 763,25 | 0,00 | 1.526,50 |
+| CEI | 500,00 | 500,00 | 500,00 | 500,00 | 2.000,00 |
+
+Os valores acima são apenas exemplos de apresentação. Os valores efetivos devem vir dos registros importados ou cadastrados.
+
+Funcionalidades:
+
+- Alterar valores diretamente na tabela.
+- Adicionar novas fontes.
+- Criar novos meses.
+- Navegar entre anos.
+- Consultar totais por instituição.
+- Consultar total mensal.
+- Consultar total anual.
+- Identificar meses sem pagamento.
+- Diferenciar valores previstos e efetivamente recebidos.
+
+Não preencher meses ausentes com valores inventados.
+
+## 5. EVOLUÇÃO SALARIAL
+
+Criar gráficos utilizando Recharts.
+
+### Gráfico 1: Evolução mensal
+
+Exibir a soma dos salários líquidos recebidos em cada mês.
+
+### Gráfico 2: Evolução anual
+
+Comparar os totais recebidos em cada ano.
+
+### Gráfico 3: Evolução por instituição
+
+Mostrar quanto cada fonte representa na renda total.
+
+### Gráfico 4: Variação mensal
+
+Calcular o crescimento ou redução em relação ao mês anterior.
+
+Fórmula:
+
+```typescript
+export function calculateMonthlyVariation(
+  current: number,
+  previous: number
+): number | null {
+  if (previous === 0) return null;
+
+  return ((current - previous) / previous) * 100;
+}
+```
+
+### Gráfico 5: Comparação anual
+
+Comparar o mesmo período de anos diferentes.
+
+Não comparar um ano completo com um ano incompleto sem informar a diferença.
+
+## 6. INDICADORES FINANCEIROS
+
+Criar cards com:
+
+- Renda mensal atual.
+- Total recebido no mês.
+- Total recebido no ano.
+- Média mensal anual.
+- Maior renda mensal.
+- Menor renda mensal.
+- Crescimento em relação ao mês anterior.
+- Crescimento em relação ao ano anterior.
+- Quantidade de fontes de renda ativas.
+
+Separar claramente renda prevista, recebida, bruta e líquida.
+
+## 7. REAJUSTES SALARIAIS
+
+Criar uma funcionalidade para registrar reajustes.
+
+Cada reajuste deverá possuir:
+
+- Instituição.
+- Valor anterior.
+- Novo valor.
+- Percentual de reajuste.
+- Data de vigência.
+- Descrição.
+
+Fórmula:
+
+```typescript
+export function calculateSalaryAdjustment(
+  oldAmount: number,
+  newAmount: number
+): number | null {
+  if (oldAmount <= 0) return null;
+
+  return ((newAmount - oldAmount) / oldAmount) * 100;
+}
+```
+
+Manter o histórico dos reajustes.
+
+Não alterar automaticamente os registros dos meses anteriores quando houver um novo reajuste.
+
+## 8. DÉCIMO TERCEIRO, FÉRIAS E RENDAS EXTRAS
+
+Permitir registrar separadamente:
+
+- Décimo terceiro.
+- Férias.
+- Adicional de férias.
+- Bonificações.
+- Comissões.
+- Serviços extras.
+- Rendimentos eventuais.
+
+Esses valores devem aparecer nos relatórios de renda, mas não devem ser confundidos com salário mensal recorrente.
+
+Permitir visualizar:
+
+1. Renda recorrente.
+2. Renda extraordinária.
+3. Renda total.
+
+## 9. INTEGRAÇÃO COM A PLANILHA EXCEL
+
+Integrar o módulo ao importador Excel.
+
+Utilizar como referência a planilha `planilha savio 2026.xlsx`, especialmente a seção SALARIO.
+
+Identificar as fontes existentes:
+
+- Câmara de Paragominas.
+- UNIP.
+- UNIGRANDE.
+- Décimo terceiro da Câmara.
+- Décimo terceiro da UNIP.
+- Salário Soter/CEI.
+- SENAR.
+- Demais registros de renda encontrados.
+
+Importante:
+
+- Preservar os valores originais.
+- Identificar o ano de referência.
+- Identificar os meses.
+- Não confundir valores com percentuais ou contagens.
+- Não importar totais como novos salários.
+- Não importar dados de outras tabelas da mesma planilha como salários.
+- Não corrigir automaticamente células com erro de fórmula.
+- Apresentar uma prévia antes de importar.
+- Permitir corrigir os registros antes da confirmação.
+- Identificar registros duplicados.
+
+Se houver dados incompletos, manter a informação pendente de revisão.
+
+## 10. INTEGRAÇÃO COM TRANSAÇÕES
+
+Quando um salário for marcado como efetivamente recebido, oferecer a opção de criar uma transação de entrada na conta correspondente.
+
+Criar vínculo entre o registro salarial e a transação gerada.
+
+Impedir que o mesmo salário seja contabilizado duas vezes nos relatórios.
+
+Quando o salário for apenas previsto, não contabilizar como receita efetivamente recebida.
+
+Se a transação for editada ou excluída, manter a consistência do registro salarial.
+
+Transferências entre contas próprias não devem ser classificadas como novos salários.
+
+## 11. PERSISTÊNCIA E SEGURANÇA
+
+Utilizar os mecanismos de armazenamento já existentes.
+
+Não criar uma segunda base financeira independente.
+
+Garantir:
+
+- Identificadores únicos.
+- Histórico de alterações.
+- Validação dos valores.
+- Proteção contra duplicidade.
+- Backup antes de importações.
+- Recuperação de registros.
+- Preservação dos dados existentes.
+
+## 12. RESPONSIVIDADE
+
+Desktop:
+
+- Tabela completa com meses.
+- Gráficos lado a lado.
+- Filtros por ano e instituição.
+
+Celular:
+
+- Cartões mensais.
+- Navegação por ano.
+- Edição simples dos valores.
+- Gráficos adaptados à largura da tela.
+- Sem rolagem horizontal desnecessária.
+
+Manter o padrão visual, cores e tema atual do SAVIO FINANA IA.
+
+## 13. TESTES
+
+Criar testes Vitest para:
+
+- Cadastro de fontes de renda.
+- Edição de salário.
+- Cálculo de salário líquido.
+- Soma mensal.
+- Soma anual.
+- Média mensal.
+- Variação percentual.
+- Reajustes.
+- Décimo terceiro.
+- Férias.
+- Valores ausentes.
+- Duplicidade.
+- Integração com transações.
+- Importação de Excel.
+- Preservação dos registros antigos.
+
+Executar:
+
+```bash
+npm run test
+npm run lint
+npm run build
+```
+
+Corrigir todos os erros encontrados.
+
+## 14. CRITÉRIOS DE ACEITAÇÃO
+
+O módulo somente será considerado concluído quando:
+
+1. For possível cadastrar e editar fontes de renda.
+2. For possível registrar salários mês a mês.
+3. For possível consultar anos anteriores.
+4. Os totais mensais e anuais forem calculados corretamente.
+5. Os gráficos utilizarem dados reais cadastrados.
+6. For possível visualizar a evolução de cada instituição.
+7. Reajustes não alterarem o histórico passado.
+8. Décimo terceiro e férias forem separados da renda recorrente.
+9. A planilha Excel puder ser importada com revisão.
+10. Os salários recebidos puderem ser vinculados às transações sem duplicação.
+11. A interface funcionar em computador e celular.
+
+**INSTRUÇÃO FINAL:** Implemente diretamente no repositório. Não se limite a criar a interface visual. Desenvolva o cadastro, edição, armazenamento, cálculos, gráficos, integração com Excel e testes. Preserve todos os módulos existentes.

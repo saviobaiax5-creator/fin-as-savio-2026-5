@@ -1,0 +1,132 @@
+# CRIAÇÃO E DESENVOLVIMENTO DO FINANCE IA — PLATAFORMA FINANCEIRA INTELIGENTE MOBILE FIRST
+
+Desenvolva uma aplicação web completa chamada **FINANCE IA**, destinada ao gerenciamento financeiro pessoal (CPF) e empresarial (MEI/CNPJ), integrada com inteligência artificial para leitura, interpretação, classificação e organização automática de informações financeiras.
+
+A aplicação deverá ser desenvolvida desde o início com arquitetura **MOBILE FIRST**, priorizando o uso em smartphones Android e iOS, sem deixar de oferecer uma versão completa para computadores e tablets.
+
+O objetivo é criar um sistema financeiro inteligente, moderno, intuitivo, personalizável e de fácil utilização, que funcione como um aplicativo financeiro de bolso.
+
+Não quero apenas um protótipo visual ou telas demonstrativas. Quero a construção efetiva da aplicação, com funcionalidades reais, banco de dados persistente, integrações e estrutura preparada para publicação online.
+
+# 1. ARQUITETURA MOBILE FIRST
+
+Desenvolva primeiro a experiência para smartphones.
+
+A interface deverá ser projetada para telas pequenas, com navegação simples, botões acessíveis pelo toque, formulários compactos e informações organizadas verticalmente.
+
+O sistema deverá:
+- Funcionar em celulares Android e iOS.
+- Adaptar-se automaticamente a diferentes tamanhos de tela.
+- Permitir instalação na tela inicial do celular por meio de PWA.
+- Ter aparência e navegação semelhantes às de um aplicativo nativo.
+- Abrir em tela cheia quando instalado, conforme suporte do dispositivo.
+- Permitir utilização tanto na vertical quanto na horizontal, quando necessário.
+- Manter as funcionalidades disponíveis nas versões mobile, tablet e desktop.
+
+Não desenvolver uma interface desktop simplesmente reduzida para celular. Criar uma experiência mobile própria, com navegação e organização adaptadas ao uso por toque.
+
+# 2. IDENTIDADE VISUAL E NAVEGAÇÃO
+
+Criar uma identidade visual profissional, moderna e executiva para o FINANCE IA.
+
+Utilizar:
+- Layout limpo e organizado.
+- Cores sóbrias e elegantes.
+- Ícones intuitivos.
+- Cartões financeiros.
+- Gráficos responsivos.
+- Tipografia legível.
+- Espaçamentos adequados.
+- Botões com áreas de toque confortáveis.
+- Menus simples.
+- Alertas visuais discretos.
+
+No celular, utilizar uma barra de navegação inferior fixa com cinco opções principais:
+
+1. Início.
+2. Movimentações.
+3. Adicionar (+).
+4. Documentos.
+5. Perfil.
+
+O botão central de adição deverá abrir ações rápidas:
+
+- Nova receita.
+- Nova despesa.
+- Nova transferência.
+- Fotografar boleto.
+- Digitalizar documento.
+- Importar PDF.
+- Importar extrato.
+
+Criar também uma área de pesquisa geral e uma central de notificações.
+
+# 3. DASHBOARD FINANCEIRO
+
+Criar um painel inicial com informações financeiras resumidas e atualizadas.
+
+Apresentar:
+- Saldo total.
+- Receitas do mês.
+- Despesas do mês.
+- Saldo disponível.
+- Contas a pagar.
+- Valores a receber.
+- Boletos pendentes.
+- Faturas de cartões.
+- Dívidas.
+- Investimentos.
+- Reserva financeira.
+- Últimas movimentações.
+- Evolução financeira mensal.
+
+Permitir alternar entre três visualizações:
+
+- Financeiro pessoal — CPF.
+- Financeiro empresarial — MEI/CNPJ.
+- Visão consolidada.
+
+No celular, apresentar os indicadores em cartões organizados verticalmente e gráficos compactos. No computador, permitir visualizações mais amplas, com múltiplas colunas e tabelas detalhadas.
+
+# 4. MÓDULOS FINANCEIROS
+
+Desenvolver os seguintes módulos:
+
+1. Dashboard.
+2. Financeiro pessoal.
+3. Financeiro empresarial.
+4. Receitas.
+5. Despesas.
+6. Contas bancárias.
+7. Cartões de crédito.
+8. Faturas.
+9. Parcelamentos.
+10. Boletos e contas a pagar.
+11. Dívidas e compromissos futuros.
+12. Planejamento financeiro.
+13. Investimentos e reservas.
+14. Relatórios.
+15. Leitor inteligente de documentos.
+16. Inteligência artificial.
+17. Configurações.
+
+Permitir cadastrar, editar, excluir e consultar informações, respeitando as regras de segurança e integridade dos registros.
+
+# 5. LEITOR INTELIGENTE DE DOCUMENTOS
+
+Criar uma central de documentos com funcionamento otimizado para celulares.
+
+O usuário deverá conseguir enviar documentos de três maneiras:
+
+**A. Importação de arquivos**
+- PDF.
+- PNG.
+- JPG.
+- JPEG.
+- Outros formatos compatíveis que possam ser processados com segurança.
+
+**B. Galeria do celular**
+- Selecionar fotografias existentes.
+- Importar imagens de documentos.
+- Enviar várias imagens.
+- Visual

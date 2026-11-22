@@ -1,0 +1,972 @@
+# PROMPT DE IMPLEMENTAÇÃO — REFORMULAÇÃO UX/UI MOBILE DO FINANCE IA
+
+## 1. OBJETIVO DO PROJETO
+
+Atue como um Engenheiro de Software Sênior, Product Designer e Especialista em UX/UI Mobile.
+
+Sua tarefa é implementar uma reformulação da interface do aplicativo **FINANCE IA**, utilizando como referência visual as imagens conceituais apresentadas anteriormente.
+
+O aplicativo deve evoluir para uma experiência verdadeiramente Mobile First, priorizando:
+
+- Ergonomia física e zona natural do polegar.
+- Navegação inferior intuitiva.
+- Redução de cliques.
+- Melhor legibilidade.
+- Organização das informações financeiras.
+- Formulários confortáveis.
+- Responsividade em diferentes tamanhos de smartphones.
+- Aparência profissional de aplicativo bancário moderno.
+
+### REGRA FUNDAMENTAL
+
+Não recrie o projeto do zero.
+
+Trabalhe sobre o código-fonte existente, preservando:
+- Todas as funcionalidades financeiras.
+- Estrutura CPF e CNPJ.
+- Cadastro de receitas e despesas.
+- Contas bancárias.
+- Cartões de crédito.
+- Boletos.
+- Dívidas.
+- Patrimônio.
+- Planejamento financeiro.
+- Scanner OCR.
+- Importação de extratos.
+- Inteligência artificial.
+- Relatórios.
+- Configurações.
+- Integrações existentes.
+- Dados armazenados no localStorage.
+- Estrutura de tipos e interfaces TypeScript.
+
+Antes de alterar qualquer arquivo, examine suas dependências e identifique os componentes que utilizam suas propriedades.
+
+Não remova funcionalidades para facilitar a adaptação mobile.
+
+---
+
+# 2. PADRÃO VISUAL OBRIGATÓRIO
+
+Mantenha a identidade visual original do FINANCE IA.
+
+### Paleta de cores
+
+- Azul-marinho principal: #14263d.
+- Azul secundário: #1d3552.
+- Verde de sucesso: #059669.
+- Fundo geral: #f3f5f8.
+- Cartões: #ffffff.
+- Texto principal: #172536.
+- Texto secundário: #64748b.
+- Bordas: #e5eaf0.
+- Vermelho: utilizar somente para despesas, erros e alertas.
+
+Não introduza cores aleatórias nem altere desnecessariamente a identidade visual.
+
+### Tipografia
+
+Adotar:
+
+- Títulos principais: 22–26 px.
+- Títulos de cartões: 16–18 px.
+- Textos normais: 14–16 px.
+- Textos auxiliares: 12–14 px.
+- Botões: 14–16 px.
+
+Evitar textos de 10 px em funcionalidades importantes.
+
+### Ergonomia
+
+Utilizar como referência:
+
+- Área mínima de toque: 44 × 44 px.
+- Botões principais: 48–56 px de altura.
+- Campos de entrada: 48–56 px.
+- Margens laterais: 16–20 px.
+- Espaçamento entre controles: 8–12 px.
+- Navegação inferior: 64–76 px, além da área segura do dispositivo.
+
+---
+
+# 3. REFORMULAÇÃO DO CABEÇALHO
+
+Arquivo:
+
+`src/components/Header.tsx`
+
+O cabeçalho atual apresenta muitos elementos horizontais:
+
+- Nome do aplicativo.
+- Nome da tela.
+- Seletor CPF/CNPJ.
+- Período.
+- Novo lançamento.
+- Notificações.
+
+Essa estrutura deve ser reorganizada para celulares.
+
+### Comportamento desktop
+
+Preservar o cabeçalho atual em telas maiores, com todos os controles.
+
+### Comportamento mobile
+
+Criar uma versão compacta com:
+
+1. Nome FINANCE IA.
+2. Nome da seção atual.
+3. Ícone de notificações.
+4. Seletor de titularidade CPF/CNPJ/Consolidado em uma segunda linha.
+5. Seletor de período compacto, quando necessário.
+
+O botão Novo Lançamento deve ficar disponível prioritariamente na navegação inferior.
+
+### Código de referência para a estrutura responsiva
+
+```tsx
+<header className="
+  sticky top-0 z-30
+  bg-white border-b border-[#e5eaf0]
+  shadow-sm
+  px-4 md:px-8
+">
+  <div className="
+    min-h-16 flex items-center
+    justify-between gap-3
+  ">
+    <div className="min-w-0">
+      <span className="text-xs text-slate-400">
+        FINANCE IA
+      </span>
+
+      <h2 className="
+        text-base md:text-lg
+        font-bold text-[#14263d]
+        truncate
+      ">
+        {tabTitles[currentTab]}
+      </h2>
+    </div>
+
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        aria-label="Notificações"
+        className="
+          min-w-11 min-h-11
+          grid place-items-center
+          rounded-xl hover:bg-slate-100
+        "
+      >
+        <Bell size={21} />
+      </button>
+    </div>
+  </div>
+
+  <div className="
+    flex items-center justify-between
+    gap-2 pb-3
+  ">
+    {/* Manter o seletor CPF/CNPJ */}
+    {/* Manter o seletor de período */}
+  </div>
+</header>
+```
+
+Importante: o código acima é uma estrutura de referência. Adaptar os seletores existentes, preservando seus estados e callbacks.
+
+---
+
+# 4. REFORMULAÇÃO DA NAVEGAÇÃO INFERIOR
+
+Arquivo:
+
+`src/components/MobileBottomNav.tsx`
+
+A navegação atual deve ser substituída por uma barra inferior mais ergonômica.
+
+### Nova organização
+
+Cinco posições:
+
+1. Início.
+2. Movimentações.
+3. Adicionar.
+4. Boletos.
+5. Mais.
+
+O botão Adicionar deve receber destaque visual.
+
+O botão Mais deve abrir um Bottom Sheet com os demais módulos.
+
+### Código de referência
+
+```tsx
+import React, { useState } from 'react';
+
+import {
+  Home,
+  ArrowLeftRight,
+  Plus,
+  Receipt,
+  Menu,
+  X,
+  Wallet,
+  CreditCard,
+  Landmark,
+  ChartNoAxesCombined,
+  FileText,
+  Brain,
+  Settings,
+  Package,
+  CalendarDays
+} from 'lucide-react';
+
+interface MobileBottomNavProps {
+  currentTab: string;
+  setCurrentTab: (tab: string) => void;
+  onOpenNew: () => void;
+}
+
+export const MobileBottomNav: React.FC<
+  MobileBottomNavProps
+> = ({
+  currentTab,
+  setCurrentTab,
+  onOpenNew
+}) => {
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const modules = [
+    { id: 'accounts', label: 'Contas bancárias', icon: Landmark },
+    { id: 'cards', label: 'Cartões', icon: CreditCard },
+    { id: 'debts', label: 'Dívidas', icon: Wallet },
+    { id: 'planning', label: 'Planejamento', icon: CalendarDays },
+    { id: 'assets', label: 'Patrimônio', icon: Package },
+    { id: 'documents', label: 'Documentos e Scanner', icon: FileText },
+    { id: 'imports', label: 'Extratos e Open Finance', icon: Receipt },
+    { id: 'ai', label: 'Inteligência Artificial', icon: Brain },
+    { id: 'reports', label: 'Relatórios', icon: ChartNoAxesCombined },
+    { id: 'settings', label: 'Configurações', icon: Settings }
+  ];
+
+  const navigate = (tab: string) => {
+    setCurrentTab(tab);
+    setMoreOpen(false);
+  };
+
+  return (
+    <>
+      <nav
+        className="
+          md:hidden fixed bottom-0 inset-x-0 z-40
+          bg-white border-t border-slate-200
+          grid grid-cols-5 items-center
+          px-2 pt-2
+          pb-[calc(8px+env(safe-area-inset-bottom))]
+          shadow-[0_-4px_18px_rgba(0,0,0,0.06)]
+        "
+        aria-label="Navegação principal"
+      >
+        <button
+          onClick={() => navigate('dashboard')}
+          className="min-h-12 flex flex-col items-center justify-center gap-1"
+        >
+          <Home size={22} />
+          <span className="text-xs font-medium">Início</span>
+        </button>
+
+        <button
+          onClick={() => navigate('cpf')}
+          className="min-h-12 flex flex-col items-center justify-center gap-1"
+        >
+          <ArrowLeftRight size={22} />
+          <span className="text-xs font-medium">Movimentações</span>
+        </button>
+
+        <button
+          onClick={onOpenNew}
+          className="
+            w-14 h-14 -mt-5 mx-auto
+            rounded-full bg-[#14263d]
+            text-white shadow-lg
+            grid place-items-center
+            active:scale-95 transition
+          "
+          aria-label="Adicionar lançamento"
+        >
+          <Plus size={27} />
+        </button>
+
+        <button
+          onClick={() => navigate('boletos')}
+          className="min-h-12 flex flex-col items-center justify-center gap-1"
+        >
+          <Receipt size={22} />
+          <span className="text-xs font-medium">Boletos</span>
+        </button>
+
+        <button
+          onClick={() => setMoreOpen(true)}
+          className="min-h-12 flex flex-col items-center justify-center gap-1"
+          aria-label="Abrir outros módulos"
+          aria-expanded={moreOpen}
+        >
+          <Menu size={22} />
+          <span className="text-xs font-medium">Mais</span>
+        </button>
+      </nav>
+
+      {moreOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          <button
+            className="absolute inset-0 bg-slate-950/50"
+            onClick={() => setMoreOpen(false)}
+            aria-label="Fechar menu"
+          />
+
+          <section
+            className="
+              absolute bottom-0 inset-x-0
+              bg-white rounded-t-3xl
+              p-5 pb-[calc(24px+env(safe-area-inset-bottom))]
+              max-h-[85dvh] overflow-y-auto
+              animate-in slide-in-from-bottom
+            "
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mais funcionalidades"
+          >
+            <div className="flex justify-between items-center mb-5">
+              <h2 className="text-lg font-bold text-[#14263d]">
+                Mais funcionalidades
+              </h2>
+
+              <button
+                onClick={() => setMoreOpen(false)}
+                className="min-w-11 min-h-11 grid place-items-center"
+                aria-label="Fechar"
+              >
+                <X size={22} />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {modules.map((module) => {
+                const Icon = module.icon;
+
+                return (
+                  <button
+                    key={module.id}
+                    onClick={() => navigate(module.id)}
+                    className="
+                      min-h-16 p-3
+                      border border-slate-200
+                      rounded-xl
+                      flex items-center gap-3
+                      text-left
+                      hover:bg-slate-50
+                      active:scale-[0.98]
+                    "
+                  >
+                    <Icon
+                      size={22}
+                      className="text-emerald-600 shrink-0"
+                    />
+
+                    <span className="text-sm font-medium">
+                      {module.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+      )}
+    </>
+  );
+};
+```
+
+### Integração obrigatória
+
+No arquivo `App.tsx`, manter a utilização do componente e verificar que:
+
+- O módulo Boletos seja acessível pela navegação.
+- O botão Mais abra a gaveta inferior.
+- Os módulos secundários continuem funcionando.
+- O botão central abra o modal de lançamento.
+- A navegação desktop permaneça independente.
+
+Não criar dois estados diferentes para controlar a mesma tela.
+
+---
+
+# 5. TRANSFORMAR O MODAL DE LANÇAMENTO EM BOTTOM SHEET
+
+Arquivo:
+
+`src/components/TransactionModal.tsx`
+
+Esta é uma das principais alterações.
+
+O modal atual é centralizado, apresenta campos pequenos e utiliza duas colunas.
+
+No celular, transformar o formulário em uma gaveta inferior.
+
+### Nova apresentação
+
+Cabeçalho:
+- Novo lançamento financeiro.
+- Botão fechar.
+
+Corpo:
+- Natureza: Receita ou Despesa.
+- Titularidade: CPF ou CNPJ.
+- Descrição.
+- Categoria.
+- Valor.
+- Data.
+- Conta bancária.
+
+Rodapé:
+- Cancelar.
+- Salvar lançamento.
+
+### Estrutura CSS/JSX recomendada
+
+```tsx
+<div className="
+  fixed inset-0 z-50
+  bg-slate-950/60
+  flex items-end md:items-center
+  justify-center
+">
+  <div
+    className="
+      bg-white w-full
+      md:max-w-lg
+      rounded-t-3xl md:rounded-2xl
+      max-h-[94dvh]
+      flex flex-col
+      overflow-hidden
+      shadow-2xl
+    "
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="transaction-title"
+  >
+
+    <header className="
+      shrink-0 bg-[#14263d]
+      text-white p-5
+      flex justify-between items-center
+    ">
+      <h2
+        id="transaction-title"
+        className="text-lg font-bold"
+      >
+        Novo lançamento
+      </h2>
+
+      <button
+        onClick={onClose}
+        className="min-w-11 min-h-11 grid place-items-center"
+        aria-label="Fechar formulário"
+      >
+        <X size={22} />
+      </button>
+    </header>
+
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col min-h-0 flex-1"
+    >
+
+      <div className="
+        flex-1 overflow-y-auto
+        p-5 space-y-4
+        overscroll-contain
+      ">
+
+        {/* Manter todos os campos atuais */}
+
+      </div>
+
+      <footer className="
+        shrink-0 p-4
+        border-t border-slate-200
+        bg-white
+        pb-[calc(16px+env(safe-area-inset-bottom))]
+        flex gap-3
+      ">
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="
+            flex-1 min-h-12
+            border border-slate-300
+            rounded-xl font-semibold
+          "
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="submit"
+          className="
+            flex-[1.5] min-h-12
+            bg-[#14263d]
+            text-white rounded-xl
+            font-bold
+          "
+        >
+          Salvar lançamento
+        </button>
+
+      </footer>
+
+    </form>
+  </div>
+</div>
+```
+
+### Modificações adicionais obrigatórias
+
+1. Utilizar uma coluna no celular.
+2. Preservar duas colunas em telas maiores, quando adequado.
+3. Aumentar os campos para 48–56 px.
+4. Utilizar fonte de 14–16 px nos campos.
+5. Manter os botões no rodapé.
+6. Permitir rolagem independente do conteúdo.
+7. Ajustar a visualização quando o teclado virtual aparecer.
+8. Preservar as validações atuais.
+9. Preservar os callbacks `onSave` e `onClose`.
+10. Manter os valores preenchidos se houver erro de validação.
+
+O estado `defaultEntity` também deve ser sincronizado quando o modal for aberto para CPF ou CNPJ, evitando que o formulário mantenha a titularidade da abertura anterior.
+
+Utilizar `type="button"` em todos os botões que não enviam o formulário.
+
+Para valores monetários, manter precisão de centavos e evitar conversões incorretas entre vírgula e ponto.
+
+---
+
+# 6. REORGANIZAR O DASHBOARD
+
+Arquivo:
+
+`src/components/DashboardView.tsx`
+
+O Dashboard deve apresentar uma hierarquia de leitura simples.
+
+### Ordem das informações
+
+1. Saldo consolidado.
+2. Receitas do período.
+3. Despesas do período.
+4. Próximos vencimentos.
+5. Últimas movimentações.
+6. Gráficos e indicadores complementares.
+
+### Layout desejado
+
+No celular:
+
+- Saldo consolidado ocupando a largura disponível.
+- Receitas e despesas em dois cartões.
+- Vencimentos em lista vertical.
+- Movimentações em cartões.
+- Gráficos com largura responsiva.
+
+### Regras
+
+Não exibir todos os indicadores com o mesmo destaque.
+
+O saldo consolidado deve ser o principal elemento visual.
+
+Utilizar informações resumidas e permitir que o usuário expanda os detalhes.
+
+Não eliminar os indicadores financeiros existentes. Apenas reorganizar sua apresentação.
+
+---
+
+# 7. TRANSFORMAR TABELAS EM CARTÕES NO CELULAR
+
+Aplicar a adaptação nos seguintes componentes:
+
+- `CpfView.tsx`
+- `CnpjView.tsx`
+- `AccountsView.tsx`
+- `DebtsView.tsx`
+- `AssetsView.tsx`
+- `BoletosView.tsx`
+- `ReportsView.tsx`
+
+### Regra de apresentação
+
+Desktop:
+- Preservar tabelas existentes quando forem adequadas.
+
+Mobile:
+- Converter registros em cartões verticais.
+- Evitar rolagem horizontal.
+- Mostrar primeiro as informações mais importantes.
+- Deixar detalhes secundários expansíveis.
+
+### Exemplo de movimentação
+
+```tsx
+<div className="
+  bg-white rounded-2xl
+  border border-slate-200
+  p-4 space-y-3
+">
+
+  <div className="flex justify-between gap-3">
+    <div>
+      <h3 className="font-semibold text-[#14263d]">
+        Mercado e alimentação
+      </h3>
+
+      <p className="text-sm text-slate-500">
+        21/11/2026 · Alimentação
+      </p>
+    </div>
+
+    <span className="
+      text-xs font-semibold
+      bg-red-50 text-red-700
+      px-2 py-1 rounded-lg
+      h-fit
+    ">
+      Despesa
+    </span>
+  </div>
+
+  <p className="text-xl font-bold text-[#172536]">
+    R$ 245,90
+  </p>
+
+  <div className="
+    flex justify-between items-center
+    border-t pt-3
+  ">
+    <span className="text-sm text-slate-500">
+      Banco Inter
+    </span>
+
+    <button className="
+      min-h-11 px-3
+      text-sm font-semibold
+      text-emerald-700
+    ">
+      Ver detalhes
+    </button>
+  </div>
+
+</div>
+```
+
+Importante: utilizar os dados reais dos registros. O exemplo acima é apenas um modelo de apresentação.
+
+---
+
+# 8. REORGANIZAÇÃO DO MÓDULO DE BOLETOS
+
+Arquivo:
+
+`src/components/BoletosView.tsx`
+
+Dar prioridade à identificação rápida dos compromissos financeiros.
+
+Organizar em três categorias:
+
+1. Boletos vencidos.
+2. Boletos próximos do vencimento.
+3. Boletos futuros.
+
+Cada cartão deve mostrar:
+
+- Nome do beneficiário.
+- Valor.
+- Data de vencimento.
+- CPF ou CNPJ vinculado.
+- Situação.
+- Contador de dias.
+- Ações disponíveis.
+
+### Contador regressivo
+
+Utilizar a função já existente:
+
+`src/utils/countdown.ts`
+
+Não criar uma segunda função com a mesma finalidade.
+
+O contador deverá apresentar:
+
+- Vencido há X dias.
+- Vence hoje.
+- Vence amanhã.
+- Vence em X dias.
+
+Preservar a lógica de status e pagamento.
+
+Não marcar um boleto como pago apenas por abrir seus detalhes.
+
+---
+
+# 9. MELHORIAS DE CSS GLOBAL
+
+Arquivo:
+
+`src/index.css`
+
+Adicionar regras globais para padronizar os componentes.
+
+```css
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #f3f5f8;
+  color: #172536;
+  font-family: Arial, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+input,
+select,
+textarea {
+  min-height: 48px;
+  font-size: 16px;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #059669;
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  body {
+    overflow-x: hidden;
+  }
+
+  main {
+    padding: 16px !important;
+    padding-bottom: 110px !important;
+  }
+
+  table {
+    max-width: 100%;
+  }
+
+  .mobile-card {
+    width: 100%;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e5eaf0;
+    padding: 16px;
+  }
+
+  .mobile-touch {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
+
+Atenção: verificar conflitos com as classes Tailwind existentes antes de aplicar regras globais.
+
+Não utilizar `!important` indiscriminadamente. As regras acima são referências e devem ser integradas sem quebrar a responsividade desktop.
+
+---
+
+# 10. MELHORIAS NO ASSISTENTE DE INTELIGÊNCIA ARTIFICIAL
+
+Arquivo:
+
+`src/components/AiAssistantView.tsx`
+
+A interface de conversa deve funcionar como um aplicativo de mensagens.
+
+Implementar:
+
+- Área de mensagens com rolagem independente.
+- Caixa de texto na parte inferior.
+- Botão de envio com área de toque adequada.
+- Anexos acessíveis.
+- Ajuste quando o teclado virtual aparecer.
+- Quebra automática de mensagens longas.
+- Indicador de processamento.
+- Preservação do histórico conforme a lógica existente.
+
+Não modificar os serviços de inteligência artificial nem as integrações existentes apenas para alterar a interface.
+
+---
+
+# 11. TESTES OBRIGATÓRIOS
+
+Depois de implementar, testar o aplicativo nos seguintes tamanhos de tela:
+
+- 320 px.
+- 360 px.
+- 375 px.
+- 390 px.
+- 414 px.
+- 430 px.
+- 768 px.
+- 1024 px.
+- 1366 px.
+
+Verificar:
+
+1. Se existe rolagem horizontal indevida.
+2. Se a navegação inferior não encobre o conteúdo.
+3. Se o botão Adicionar funciona.
+4. Se o Bottom Sheet abre e fecha corretamente.
+5. Se os formulários continuam salvando.
+6. Se os campos permanecem acessíveis com o teclado aberto.
+7. Se CPF e CNPJ continuam separados.
+8. Se os filtros continuam funcionando.
+9. Se os dados continuam persistindo.
+10. Se as telas desktop continuam funcionando.
+
+Executar:
+
+```bash
+npm run lint
+npm run test
+npm run build
+```
+
+Corrigir os erros encontrados antes de considerar o trabalho concluído.
+
+---
+
+# 12. PROTEÇÃO DOS DADOS E FUNCIONALIDADES
+
+Esta parte é obrigatória.
+
+Não apagar:
+- Dados do localStorage.
+- Registros financeiros.
+- Funções de cálculo.
+- Interfaces TypeScript.
+- Integrações Firebase.
+- Serviços Google.
+- Funções de importação.
+- Validações de boletos.
+- Funções de OCR.
+- Funções de inteligência artificial.
+
+Não alterar os identificadores dos registros existentes.
+
+Não substituir dados reais por dados demonstrativos.
+
+Não criar botões decorativos sem funcionalidade.
+
+Não apresentar uma funcionalidade como implementada se ela não estiver funcionando.
+
+Antes de modificar componentes compartilhados, verificar todos os locais em que são utilizados.
+
+---
+
+# 13. RESULTADO FINAL ESPERADO
+
+Ao terminar, o FINANCE IA deverá apresentar:
+
+**No celular:**
+
+- Cabeçalho compacto.
+- Navegação inferior com cinco posições.
+- Menu Mais em Bottom Sheet.
+- Botão central de lançamento.
+- Formulários verticais e ergonômicos.
+- Cartões financeiros em vez de tabelas horizontais.
+- Dashboard simplificado.
+- Boletos organizados por vencimento.
+- Controles com áreas de toque adequadas.
+- Conteúdo adaptado ao teclado virtual.
+- Aparência profissional e consistente.
+
+**No computador:**
+
+- Sidebar original preservada.
+- Cabeçalho desktop preservado.
+- Tabelas disponíveis.
+- Layout amplo.
+- Funcionalidades existentes mantidas.
+
+## 14. INSTRUÇÃO DE EXECUÇÃO PARA A IA
+
+Não responda apenas com sugestões ou explicações.
+
+Implemente efetivamente as alterações no código-fonte do projeto.
+
+Trabalhe arquivo por arquivo, verificando dependências e preservando a arquitetura existente.
+
+Priorize inicialmente:
+
+1. `src/components/Header.tsx`
+2. `src/components/MobileBottomNav.tsx`
+3. `src/components/TransactionModal.tsx`
+4. `src/App.tsx`
+5. `src/components/DashboardView.tsx`
+6. `src/components/BoletosView.tsx`
+7. Componentes de movimentações, contas, dívidas e patrimônio.
+8. `src/components/AiAssistantView.tsx`
+9. `src/index.css`
+
+Depois, execute os testes e corrija eventuais erros de TypeScript, React e CSS.
+
+Ao finalizar, apresente um relatório contendo:
+
+- Arquivos modificados.
+- Melhorias implementadas.
+- Funcionalidades preservadas.
+- Problemas encontrados.
+- Testes executados.
+- Pendências que ainda necessitam de atenção.
+
+**CRITÉRIO DE ACEITAÇÃO:** o aplicativo deve parecer e funcionar como um aplicativo financeiro mobile moderno, e não como uma página desktop simplesmente reduzida para caber na tela do celular.
+
+Preserve integralmente a identidade FINANCE IA e entregue uma interface mais confortável, intuitiva, organizada e profissional.

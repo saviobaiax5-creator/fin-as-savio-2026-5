@@ -1,0 +1,324 @@
+# CRIE E DESENVOLVA UMA APLICAÇÃO WEB COMPLETA CHAMADA FINANCE IA
+
+Quero que você desenvolva do zero uma plataforma inteligente de gestão financeira chamada **FINANCE IA**, utilizando como referência a estrutura de uma planilha financeira pessoal e empresarial.
+
+Não quero apenas uma apresentação, um planejamento, um protótipo visual ou uma demonstração. Quero que você CRIE A APLICAÇÃO, desenvolva suas telas, menus, funcionalidades, banco de dados e integrações, deixando o sistema funcional e preparado para publicação online.
+
+## 1. IDENTIDADE E DESIGN
+
+Crie uma aplicação com aparência profissional, moderna e executiva.
+
+O sistema deverá ter:
+- Design limpo e organizado.
+- Navegação intuitiva.
+- Menu lateral.
+- Painel financeiro principal.
+- Gráficos interativos.
+- Indicadores financeiros.
+- Ícones intuitivos.
+- Interface adaptável para computador, tablet e celular.
+- Personalização de categorias, cores e preferências.
+- Botões funcionais e formulários intuitivos.
+
+Priorize a facilidade de utilização. O usuário não deverá precisar de conhecimentos técnicos para administrar suas finanças.
+
+## 2. ESTRUTURA PRINCIPAL
+
+Crie os seguintes módulos:
+
+1. Dashboard.
+2. Financeiro Pessoal — CPF.
+3. Financeiro Empresarial — MEI/CNPJ.
+4. Receitas.
+5. Despesas.
+6. Contas bancárias.
+7. Cartões de crédito.
+8. Faturas e parcelamentos.
+9. Boletos e contas a pagar.
+10. Dívidas e compromissos futuros.
+11. Planejamento financeiro.
+12. Investimentos e reservas.
+13. Relatórios.
+14. Leitor Inteligente de Documentos.
+15. Inteligência Artificial.
+16. Configurações.
+
+O sistema deverá permitir visualizar separadamente o CPF e o CNPJ, mas também apresentar uma visão financeira consolidada.
+
+## 3. CRIE UM LEITOR INTELIGENTE DE DOCUMENTOS
+
+Esta é uma das funcionalidades mais importantes do projeto.
+
+Desenvolva uma central de documentos capaz de receber arquivos e imagens, interpretar seu conteúdo e transformar as informações em dados financeiros organizados.
+
+O leitor deverá aceitar:
+
+- PDF.
+- PNG.
+- JPG.
+- JPEG.
+- Fotografias feitas diretamente pela câmera do celular.
+
+Implemente OCR para reconhecimento de textos e números em documentos digitalizados.
+
+### Funcionalidade de leitura de PDF
+
+Permita:
+- Importar arquivos PDF.
+- Ler documentos com texto selecionável.
+- Reconhecer PDFs digitalizados.
+- Interpretar documentos com várias páginas.
+- Identificar tabelas, valores, datas e descrições.
+- Extrair informações de extratos bancários e faturas.
+- Apresentar o conteúdo extraído para conferência.
+
+### Scanner de fotografias
+
+Crie uma ferramenta para:
+- Importar imagens PNG e JPEG.
+- Fotografar documentos.
+- Recortar imagens.
+- Girar documentos.
+- Corrigir perspectiva.
+- Melhorar contraste e nitidez.
+- Reconhecer textos por OCR.
+- Extrair informações financeiras automaticamente.
+
+### Leitor pela câmera do celular
+
+Implemente uma funcionalidade que permita abrir a câmera do smartphone dentro do próprio FINANCE IA.
+
+O usuário deverá conseguir fotografar um documento, visualizar a captura, corrigir o enquadramento e enviar para análise.
+
+Permita capturar várias páginas e reuni-las em um único documento.
+
+## 4. CRIE UM ANALISADOR INTELIGENTE DE BOLETOS
+
+Desenvolva uma ferramenta específica para identificar e interpretar boletos bancários.
+
+O sistema deverá aceitar boletos em PDF, fotografias e imagens.
+
+Identifique e extraia:
+
+- Beneficiário.
+- CPF/CNPJ do beneficiário, quando disponível.
+- Pagador.
+- Instituição financeira.
+- Linha digitável.
+- Código de barras.
+- Número do documento.
+- Data de emissão.
+- Data de vencimento.
+- Valor original.
+- Juros e multas.
+- Valor atualizado, quando disponível.
+- Descrição da cobrança.
+
+Implemente validação da linha digitável e do código de barras, quando aplicável.
+
+Identifique possíveis boletos repetidos, cobranças recorrentes e documentos já cadastrados.
+
+Após a leitura, apresente uma tela com todos os dados identificados para que o usuário possa conferir e confirmar.
+
+O sistema deverá permitir transformar o boleto em uma despesa, associando-o a uma categoria, conta financeira e ao CPF ou CNPJ correspondente.
+
+Nunca registre automaticamente um boleto como pago apenas por ter sido importado.
+
+## 5. INTELIGÊNCIA ARTIFICIAL FINANCEIRA
+
+Integre uma inteligência artificial capaz de compreender os dados financeiros registrados no sistema.
+
+Ela deverá:
+- Interpretar documentos.
+- Classificar receitas e despesas.
+- Sugerir categorias.
+- Identificar cobranças recorrentes.
+- Identificar possíveis duplicidades.
+- Analisar gastos.
+- Comparar períodos.
+- Identificar aumento de despesas.
+- Auxiliar no planejamento financeiro.
+- Responder perguntas sobre os dados cadastrados.
+
+Exemplos de perguntas:
+
+"Quanto gastei neste mês?"
+
+"Quais boletos estão próximos do vencimento?"
+
+"Quanto tenho de despesas no meu CPF?"
+
+"Quanto o MEI faturou?"
+
+"Quais são minhas despesas fixas?"
+
+"Quanto tenho de dívidas?"
+
+"Qual cartão possui a maior fatura?"
+
+"Quanto posso reservar neste mês?"
+
+As respostas deverão ser fundamentadas nos registros reais do banco de dados. Nunca invente valores ou informações.
+
+## 6. IMPORTAÇÃO DE EXTRATOS
+
+Crie um módulo de importação de extratos bancários.
+
+Permita importar:
+- OFX.
+- CSV.
+- PDF.
+- Outros formatos que possam ser suportados com segurança.
+
+A IA deverá interpretar as movimentações, identificar créditos e débitos e sugerir categorias.
+
+Permita revisar e confirmar os lançamentos antes de salvar.
+
+Implemente mecanismos para evitar duplicidade de transações.
+
+Não contabilize transferências entre contas próprias como receitas ou despesas, evitando distorções nos relatórios.
+
+## 7. CONTROLE DE CARTÕES E FATURAS
+
+Crie um módulo completo para cartões de crédito.
+
+Permita cadastrar:
+- Nome do cartão.
+- Instituição financeira.
+- Limite.
+- Dia de fechamento.
+- Dia de vencimento.
+- Melhor dia de compra.
+- Compras parceladas.
+- Faturas abertas.
+- Faturas fechadas.
+- Pagamentos realizados.
+
+Permita anexar faturas em PDF e utilizar o leitor inteligente para extrair as compras.
+
+## 8. DASHBOARD FINANCEIRO
+
+Crie um painel inicial com:
+
+- Saldo total.
+- Receitas do mês.
+- Despesas do mês.
+- Saldo disponível.
+- Contas a pagar.
+- Valores a receber.
+- Boletos pendentes.
+- Faturas de cartões.
+- Dívidas.
+- Investimentos.
+- Reserva financeira.
+- Evolução do patrimônio.
+- Comparativo mensal.
+
+Permita alternar entre a visão CPF, CNPJ e consolidada.
+
+## 9. BANCO DE DADOS E FUNCIONAMENTO REAL
+
+Implemente uma estrutura de banco de dados persistente.
+
+Utilize PostgreSQL e Supabase, quando disponíveis e adequados ao ambiente de desenvolvimento.
+
+Crie tabelas organizadas para:
+- Usuários.
+- Contas.
+- Categorias.
+- Receitas.
+- Despesas.
+- Transferências.
+- Cartões.
+- Faturas.
+- Parcelamentos.
+- Boletos.
+- Documentos.
+- Dívidas.
+- Investimentos.
+- Metas financeiras.
+- Histórico de operações.
+
+Configure autenticação, permissões de acesso e políticas de segurança.
+
+Os dados não poderão ficar limitados ao armazenamento temporário do navegador.
+
+## 10. PERSONALIZAÇÃO
+
+Permita que o usuário:
+- Cadastre novas categorias.
+- Edite categorias existentes.
+- Crie contas e cartões.
+- Adicione fontes de renda.
+- Cadastre despesas recorrentes.
+- Configure vencimentos.
+- Crie metas.
+- Personalize o dashboard.
+- Configure notificações.
+- Organize os módulos conforme sua necessidade.
+
+## 11. SEGURANÇA
+
+Implemente boas práticas de segurança, incluindo autenticação, proteção dos arquivos, controle de acesso individual, criptografia quando aplicável e backups.
+
+Respeite a LGPD.
+
+Não solicite nem armazene senhas bancárias, CVV ou números completos de cartões.
+
+## 12. ORIENTAÇÕES PARA A CRIAÇÃO
+
+Execute o desenvolvimento de maneira prática e progressiva.
+
+Não pare na descrição do projeto.
+
+Crie efetivamente:
+- A estrutura de pastas.
+- Os arquivos da aplicação.
+- As telas.
+- Os componentes.
+- Os formulários.
+- Os menus.
+- O banco de dados.
+- As integrações.
+- O leitor de documentos.
+- O analisador de boletos.
+- O painel financeiro.
+- Os recursos de inteligência artificial.
+
+Todos os botões deverão executar suas respectivas ações.
+
+Não crie funcionalidades fictícias apenas para dar aparência de sistema completo.
+
+Quando uma integração depender de chave de API ou configuração externa, prepare a estrutura e informe exatamente o que precisa ser configurado.
+
+Não invente resultados de leitura documental. Se houver incerteza, solicite confirmação do usuário.
+
+## 13. ORDEM DE EXECUÇÃO
+
+Desenvolva nesta sequência:
+
+FASE 1 — Criar a estrutura visual completa do FINANCE IA.
+
+FASE 2 — Criar os módulos financeiros e os formulários de cadastro.
+
+FASE 3 — Criar o banco de dados e a persistência das informações.
+
+FASE 4 — Desenvolver o leitor de PDF e o scanner de imagens.
+
+FASE 5 — Implementar a captura pela câmera do celular.
+
+FASE 6 — Desenvolver o analisador inteligente de boletos.
+
+FASE 7 — Integrar a inteligência artificial e a classificação automática.
+
+FASE 8 — Implementar relatórios, gráficos, notificações e personalização.
+
+FASE 9 — Realizar testes de funcionamento, segurança e responsividade.
+
+FASE 10 — Preparar a aplicação para publicação online.
+
+**INSTRUÇÃO FINAL: COMECE A CRIAR O FINANCE IA AGORA.**
+
+Não entregue somente sugestões, explicações ou um planejamento. Desenvolva a aplicação funcional, apresente os arquivos criados, informe o que já está funcionando e indique objetivamente as configurações externas que ainda dependem do usuário.
+
+Preserve uma arquitetura que permita continuar personalizando e ampliando o sistema sem precisar reconstruí-lo do zero.

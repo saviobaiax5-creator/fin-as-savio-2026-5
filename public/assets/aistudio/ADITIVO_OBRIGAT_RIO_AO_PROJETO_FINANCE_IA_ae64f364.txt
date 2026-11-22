@@ -1,0 +1,239 @@
+# ADITIVO OBRIGATÓRIO AO PROJETO FINANCE IA
+## CONTROLE INTELIGENTE DE CONTAS, CONTADOR DE HORAS E IDENTIFICAÇÃO DE BOLETOS POR CPF/CNPJ
+
+Incorpore ao FINANCE IA os seguintes recursos como funcionalidades nativas, totalmente integradas à versão MOBILE FIRST.
+
+### 1. CONTADOR INTELIGENTE DE VENCIMENTOS
+
+Desenvolva um mecanismo de contagem regressiva para todas as contas, boletos, faturas, parcelas e compromissos financeiros cadastrados.
+
+Cada compromisso deverá possuir:
+- Data de emissão.
+- Data de cadastro.
+- Data de vencimento.
+- Horário de vencimento, quando informado.
+- Valor original.
+- Valor atualizado, quando disponível.
+- Descrição.
+- Beneficiário.
+- Categoria.
+- Identificação CPF ou CNPJ.
+- Situação do pagamento.
+
+O sistema deverá calcular automaticamente o tempo restante até o vencimento.
+
+Exibir contadores dinâmicos:
+
+- Dias restantes.
+- Horas restantes.
+- Minutos restantes.
+- Tempo de atraso.
+- Dias de atraso.
+- Data do pagamento.
+- Tempo entre emissão e pagamento.
+
+Exemplo de apresentação:
+
+**Conta de internet**
+- Valor: R$ 150,00
+- Vencimento: 25/11/2026
+- Contador: 2 dias e 8 horas restantes.
+- Situação: A vencer.
+
+Quando a data de vencimento chegar, alterar automaticamente o status para vencendo hoje ou vencido, conforme o horário e as regras aplicáveis.
+
+Para contas que informem somente a data, utilizar o final do dia como referência operacional, sem apresentar esse horário estimado como horário oficial de vencimento.
+
+### 2. IDENTIFICADOR E ORGANIZADOR POR DATA
+
+Criar um calendário financeiro inteligente, permitindo visualizar todas as obrigações organizadas por data.
+
+Disponibilizar:
+- Calendário mensal.
+- Calendário semanal.
+- Agenda diária.
+- Lista cronológica de vencimentos.
+- Filtro por período.
+- Filtro por CPF.
+- Filtro por CNPJ.
+- Filtro por categoria.
+- Filtro por situação.
+- Filtro por instituição ou beneficiário.
+
+Criar uma identificação visual automática:
+
+- Verde: conta paga.
+- Azul: conta futura.
+- Amarelo: vencimento próximo.
+- Laranja: vencimento no dia.
+- Vermelho: conta vencida.
+- Cinza: conta cancelada ou desconsiderada.
+
+Permitir visualizar todas as contas de determinado dia e o valor total que deverá ser pago naquela data.
+
+Criar um resumo de compromissos para os próximos 7, 15 e 30 dias.
+
+### 3. LOCALIZADOR INTELIGENTE DE BOLETOS POR CPF E CNPJ
+
+Criar um módulo chamado **Localizador de Cobranças**, com capacidade de identificar boletos, contas e cobranças associados ao usuário.
+
+O sistema deverá trabalhar com dois cadastros independentes:
+
+**Identificação pessoal**
+- CPF.
+- Nome do titular.
+
+**Identificação empresarial**
+- CNPJ.
+- Razão social ou nome empresarial.
+
+Os documentos e cobranças deverão ser classificados conforme o CPF ou CNPJ correspondente.
+
+### 4. MECANISMO DE BUSCA DE COBRANÇAS
+
+Implementar mecanismos de identificação utilizando fontes autorizadas e integrações disponíveis.
+
+Considerar:
+
+1. Integração com serviços bancários que disponibilizem o DDA (Débito Direto Autorizado).
+2. Integrações com instituições financeiras por APIs autorizadas.
+3. Integrações com provedores de Open Finance, conforme disponibilidade e consentimento.
+4. Importação de boletos recebidos por e-mail, quando o usuário autorizar e a integração estiver disponível.
+5. Importação de documentos e arquivos bancários.
+6. Leitura de boletos por fotografia.
+7. Leitura de PDFs.
+8. Cadastro manual de cobranças.
+
+O sistema deverá buscar cobranças vinculadas ao CPF ou CNPJ somente por canais que permitam esse acesso.
+
+Não realizar consultas não autorizadas em sistemas de terceiros, nem presumir que o CPF ou CNPJ isoladamente permite acessar todas as cobranças existentes.
+
+### 5. IDENTIFICAÇÃO AUTOMÁTICA DE BOLETOS
+
+Ao localizar ou importar uma cobrança, comparar:
+
+- CPF/CNPJ do pagador.
+- Nome do pagador.
+- CPF/CNPJ do beneficiário, quando disponível.
+- Nome do beneficiário.
+- Linha digitável.
+- Código de barras.
+- Valor.
+- Data de vencimento.
+- Número do documento.
+
+Identificar se a cobrança pertence ao CPF pessoal ou ao CNPJ empresarial.
+
+Se houver dúvida sobre o titular, solicitar confirmação do usuário.
+
+### 6. PAINEL DE COBRANÇAS ENCONTRADAS
+
+Criar uma tela específica com o título:
+
+**BOLETOS E COBRANÇAS IDENTIFICADOS**
+
+Separar as informações em:
+
+- Cobranças do CPF.
+- Cobranças do CNPJ.
+- Boletos pagos.
+- Boletos pendentes.
+- Boletos vencidos.
+- Boletos próximos do vencimento.
+- Cobranças recorrentes.
+- Cobranças ainda não conferidas.
+
+Para cada cobrança, mostrar valor, beneficiário, data de vencimento, origem da informação e situação.
+
+Permitir abrir o documento original, visualizar os detalhes e cadastrar a despesa.
+
+### 7. ALERTAS E NOTIFICAÇÕES AUTOMÁTICAS
+
+Criar alertas configuráveis para:
+
+- 7 dias antes do vencimento.
+- 3 dias antes.
+- 24 horas antes.
+- 12 horas antes.
+- 6 horas antes.
+- No dia do vencimento.
+- Após o vencimento.
+
+Permitir que o usuário personalize os horários e intervalos.
+
+As notificações deverão funcionar dentro do FINANCE IA e, quando houver suporte e autorização, por notificações push no celular.
+
+### 8. CONTROLE DE PAGAMENTOS E BAIXA AUTOMÁTICA
+
+Criar um mecanismo para atualizar a situação das contas.
+
+Estados possíveis:
+
+- Identificada.
+- Aguardando conferência.
+- Pendente.
+- Agendada.
+- Próxima do vencimento.
+- Vencendo hoje.
+- Vencida.
+- Paga.
+- Cancelada.
+- Em contestação.
+
+Quando houver integração bancária autorizada capaz de confirmar o pagamento, permitir atualizar automaticamente a situação.
+
+Quando não houver confirmação externa, permitir baixa manual mediante confirmação do usuário.
+
+Não considerar uma cobrança paga apenas porque ela desapareceu de uma lista ou porque sua data de vencimento passou.
+
+### 9. PREVENÇÃO DE DUPLICIDADES
+
+Implementar comparação inteligente para impedir que o mesmo boleto seja cadastrado diversas vezes.
+
+Utilizar, quando disponíveis:
+- Linha digitável.
+- Código de barras.
+- Identificador do documento.
+- Beneficiário.
+- Valor.
+- Vencimento.
+- CPF/CNPJ do pagador.
+
+Se houver possibilidade de duplicidade, apresentar um alerta antes de salvar.
+
+### 10. INTEGRAÇÃO COM O DASHBOARD MOBILE
+
+Na tela inicial do FINANCE IA, criar uma área chamada:
+
+**CENTRAL DE VENCIMENTOS**
+
+Exibir:
+- Total de contas a pagar.
+- Valor total pendente.
+- Quantidade de boletos vencidos.
+- Quantidade de boletos próximos do vencimento.
+- Próximo vencimento.
+- Contador regressivo.
+- Total de compromissos dos próximos 7 dias.
+
+Criar acesso rápido para visualizar as contas do CPF e do CNPJ separadamente.
+
+### 11. INSTRUÇÃO DE IMPLEMENTAÇÃO
+
+Essas funcionalidades deverão ser integradas aos módulos já existentes do FINANCE IA.
+
+Não criar sistemas isolados ou bancos de dados duplicados.
+
+Todos os boletos, cobranças, contas e faturas deverão compartilhar uma estrutura centralizada de compromissos financeiros.
+
+O sistema deverá atualizar os contadores conforme o horário atual, respeitando o fuso horário configurado pelo usuário.
+
+Implementar testes para verificar:
+- Cálculo correto dos vencimentos.
+- Identificação de contas atrasadas.
+- Identificação de boletos duplicados.
+- Separação CPF/CNPJ.
+- Atualização dos pagamentos.
+- Funcionamento em dispositivos móveis.
+
+**RESULTADO ESPERADO:** transformar o FINANCE IA em um organizador financeiro inteligente que acompanhe cada conta, informe exatamente quanto tempo falta para o vencimento, identifique cobranças vinculadas ao CPF e CNPJ por fontes autorizadas e mantenha todas as obrigações organizadas em um calendário financeiro.

@@ -1,0 +1,66 @@
+# IMPLEMENTAÇÃO FINAL: COMPILAÇÃO E VALIDAÇÃO ANDROID NATIVO
+
+Atue como engenheiro de software especializado em Android, Capacitor, Node.js, Firebase e integração contínua.
+
+## Objetivo
+Eliminar as pendências de compilação e preparação do aplicativo Android nativo, garantindo que o projeto esteja tecnicamente preparado para gerar APK e AAB e realizar testes em dispositivos físicos.
+
+### ETAPA 1. Auditoria
+- Analise a estrutura atual do projeto.
+- Verifique package.json, capacitor.config, dependências e plugins.
+- Identifique incompatibilidades.
+- Verifique configurações Android existentes.
+- Preserve as funcionalidades e os dados existentes.
+
+### ETAPA 2. Preparação Android
+- Configurar compatibilidade entre JDK, Gradle e Android SDK.
+- Verificar AndroidManifest.xml.
+- Revisar permissões necessárias.
+- Configurar corretamente os plugins Capacitor.
+- Executar npx cap sync android.
+
+### ETAPA 3. Compilação automatizada
+Implementar GitHub Actions para:
+- Preparar ambiente Android.
+- Instalar dependências.
+- Executar verificações de build.
+- Compilar APK de depuração.
+- Preparar geração de APK de produção e AAB.
+- Publicar os artefatos gerados.
+
+### ETAPA 4. Testes
+Criar testes para:
+- Autenticação.
+- Persistência local.
+- Sincronização Firebase.
+- Integridade dos dados.
+- Funcionamento offline.
+- Recuperação após reinicialização.
+- Permissões Android.
+- Funcionamento dos recursos em segundo plano.
+
+### ETAPA 5. Captura em segundo plano
+Auditar especificamente as limitações do Android para captura de informações em segundo plano.
+
+Verificar permissões, serviços, restrições de bateria e compatibilidade com diferentes versões do Android.
+
+Não simular testes bancários reais. Não declarar captura funcional sem validação em dispositivo físico e autorização adequada.
+
+### ETAPA 6. Relatório final
+Apresentar:
+- Arquivos modificados.
+- Problemas encontrados e corrigidos.
+- Resultado da compilação.
+- Caminho dos APKs/AABs gerados.
+- Testes aprovados e reprovados.
+- Pendências que ainda exigem aparelho físico.
+
+## REGRAS IMPORTANTES
+1. Não apagar dados existentes.
+2. Não substituir configurações funcionais sem justificativa.
+3. Não utilizar dados fictícios para simular testes aprovados.
+4. Não declarar compilação concluída sem gerar e verificar o artefato.
+5. Não declarar testes físicos concluídos sem executá-los.
+6. Preservar Firebase, autenticação e sincronização existentes.
+
+O resultado esperado é um projeto Android preparado para compilação automatizada e validação real, com relatório transparente do que foi efetivamente concluído.
