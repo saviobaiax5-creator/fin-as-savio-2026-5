@@ -23,6 +23,7 @@ dotenv.config();
 const GEMINI_MODEL = (process.env.GEMINI_MODEL || 'gemini-4-hydrogen').trim();
 const AI_RATE_LIMIT_PER_MIN = Math.max(5, Number(process.env.AI_RATE_LIMIT_PER_MIN) || 25);
 const AI_REQUEST_TIMEOUT_MS = 25000;
+const AI_OCR_TIMEOUT_MS = 55000;
 
 const apiKey = process.env.GEMINI_API_KEY;
 const ai = apiKey
@@ -69,14 +70,29 @@ function formatAiErrorResponse(err: unknown): { status: number; message: string 
       message: 'Limite de requisições da IA atingido no momento (429). Aguarde alguns segundos e tente novamente.',
     };
   }
+  if (
+    msg.includes('INVALID_ARGUMENT') ||
+    msg.includes('400') ||
+    msg.includes('Unable to process input image') ||
+    msg.includes('document has no pages')
+  ) {
+    return {
+      status: 400,
+      message: 'Arquivo PDF ou imagem inválido, protegido por senha ou ilegível para leitura visual.',
+    };
+  }
   return { status: 500, message: 'Não foi possível processar a análise no momento. Tente novamente.' };
 }
 
-async function generateWithRetry<T>(fn: () => Promise<T>, maxAttempts = 3): Promise<T> {
+async function generateWithRetry<T>(
+  fn: () => Promise<T>,
+  maxAttempts = 3,
+  timeoutMs = AI_REQUEST_TIMEOUT_MS
+): Promise<T> {
   let lastErr: unknown;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
-      return await withTimeout(fn(), AI_REQUEST_TIMEOUT_MS);
+      return await withTimeout(fn(), timeoutMs);
     } catch (err) {
       lastErr = err;
       if (attempt < maxAttempts && isTransientAiError(err)) {
@@ -109,7 +125,7 @@ async function startServer() {
     next();
   });
 
-  app.use(express.json({ limit: '15mb' }));
+  app.use(express.json({ limit: '24mb' }));
 
   app.get('/api/health', (_req, res) => {
     res.json({ ok: true, aiConfigured: Boolean(ai), model: GEMINI_MODEL });
@@ -207,7 +223,7 @@ async function startServer() {
   app.post('/api/ai/parse-document', async (req, res) => {
     const parsedBody = ParseDocumentSchema.safeParse(req.body);
     if (!parsedBody.success) {
-      return res.status(400).json({ error: 'Envie um arquivo PDF/imagem válido (até 10 MB) ou texto para leitura.' });
+      return res.status(400).json({ error: 'Envie um arquivo PDF/imagem válido (até 15 MB) ou texto para leitura.' });
     }
 
     if (!ai) {
@@ -274,13 +290,14 @@ ${cleanText ? `\nTexto adicional:\n${cleanText}` : ''}`;
 
       parts.push({ text: instruction });
 
-      const response = await generateWithRetry(() =>
-        ai.models.generateContent({
-          model: GEMINI_MODEL,
-          contents: { parts },
-          config: {
-            responseMimeType: 'application/json',
-            responseSchema: {
+      const response = await generateWithRetry(
+        () =>
+          ai.models.generateContent({
+            model: GEMINI_MODEL,
+            contents: { parts },
+            config: {
+              responseMimeType: 'application/json',
+              responseSchema: {
               type: Type.OBJECT,
               properties: {
                 transactions: {
@@ -323,7 +340,9 @@ ${cleanText ? `\nTexto adicional:\n${cleanText}` : ''}`;
               required: ['transactions'],
             },
           },
-        })
+        }),
+        2,
+        AI_OCR_TIMEOUT_MS
       );
 
       const rawJson = JSON.parse((response.text ?? '{}').trim());
@@ -369,28 +388,31 @@ ${cleanText ? `\nTexto adicional:\n${cleanText}` : ''}`;
         text: `Analise o boleto bancário (linha digitável: ${cleanLine}; texto: ${cleanText}) e extraia beneficiário, pagador, instituição, linha digitável, vencimento (YYYY-MM-DD), valorOriginal, descrição e vínculo (CPF ou CNPJ). Nunca invente valores não presentes.`,
       });
 
-      const response = await generateWithRetry(() =>
-        ai.models.generateContent({
-          model: GEMINI_MODEL,
-          contents: { parts },
-          config: {
-            responseMimeType: 'application/json',
-            responseSchema: {
-              type: Type.OBJECT,
-              properties: {
-                beneficiario: { type: Type.STRING },
-                pagador: { type: Type.STRING },
-                instituicao: { type: Type.STRING },
-                linhaDigitavel: { type: Type.STRING },
-                vencimento: { type: Type.STRING },
-                valorOriginal: { type: Type.NUMBER },
-                descricao: { type: Type.STRING },
-                entityId: { type: Type.STRING, enum: ['CPF', 'CNPJ'] },
+      const response = await generateWithRetry(
+        () =>
+          ai.models.generateContent({
+            model: GEMINI_MODEL,
+            contents: { parts },
+            config: {
+              responseMimeType: 'application/json',
+              responseSchema: {
+                type: Type.OBJECT,
+                properties: {
+                  beneficiario: { type: Type.STRING },
+                  pagador: { type: Type.STRING },
+                  instituicao: { type: Type.STRING },
+                  linhaDigitavel: { type: Type.STRING },
+                  vencimento: { type: Type.STRING },
+                  valorOriginal: { type: Type.NUMBER },
+                  descricao: { type: Type.STRING },
+                  entityId: { type: Type.STRING, enum: ['CPF', 'CNPJ'] },
+                },
+                required: ['beneficiario', 'pagador', 'instituicao', 'vencimento', 'valorOriginal', 'descricao', 'entityId'],
               },
-              required: ['beneficiario', 'pagador', 'instituicao', 'vencimento', 'valorOriginal', 'descricao', 'entityId'],
             },
-          },
-        })
+          }),
+        2,
+        AI_OCR_TIMEOUT_MS
       );
 
       const rawJson = JSON.parse((response.text ?? '{}').trim());
@@ -406,6 +428,31 @@ ${cleanText ? `\nTexto adicional:\n${cleanText}` : ''}`;
       res.status(formatted.status).json({ error: formatted.message });
     }
   });
+
+  // Always return JSON errors for /api/* (e.g., PayloadTooLargeError 413 or malformed JSON 400)
+  app.use(
+    '/api',
+    (
+      err: { status?: number; statusCode?: number; type?: string; message?: string },
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction
+    ) => {
+      if (err?.type === 'entity.too.large' || err?.status === 413 || err?.statusCode === 413) {
+        return res.status(413).json({
+          error:
+            'O arquivo enviado excede o limite de tamanho aceito pelo servidor de OCR (máximo 15 MB).',
+        });
+      }
+      if (err?.type === 'entity.parse.failed' || err?.status === 400) {
+        return res.status(400).json({ error: 'Corpo da requisição inválido ao enviar documento.' });
+      }
+      const status = err?.status || err?.statusCode || 500;
+      return res.status(status).json({
+        error: err?.message || 'Erro interno ao processar requisição na API.',
+      });
+    }
+  );
 
   if (process.env.NODE_ENV === 'production' && fs.existsSync(path.resolve('dist'))) {
     app.use(

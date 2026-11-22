@@ -11,6 +11,12 @@ import {
   TransactionReversalRecord,
 } from '../types';
 import type { StoredBankNotificationRecord } from '../domain/notifications/notification.types';
+import type {
+  AccountExtensionMeta,
+  ExtractionBatch,
+  ExtractionRule,
+  InstitutionProfile,
+} from '../types/extractions';
 
 export interface StoredFileRecord {
   id: string;
@@ -100,6 +106,10 @@ export class SavioFinanaDatabase extends Dexie {
   syncQueue!: Table<CloudSyncQueueRecord, string>;
   syncMetadata!: Table<SyncMetadataRecord, string>;
   cloudBackups!: Table<CloudBackupCacheRecord, string>;
+  extractionBatches!: Table<ExtractionBatch, string>;
+  institutions!: Table<InstitutionProfile, string>;
+  accountExtensions!: Table<AccountExtensionMeta, string>;
+  extractionRules!: Table<ExtractionRule, string>;
 
   constructor() {
     super('SavioFinanaDB');
@@ -172,6 +182,32 @@ export class SavioFinanaDatabase extends Dexie {
       syncQueue: 'id, uid, collectionName, entityId, status, updatedAt',
       syncMetadata: 'key',
       cloudBackups: 'id, uid, createdAt',
+    });
+
+    this.version(5).stores({
+      transactions: 'id, entityId, accountId, date, category, status, externalId, transferId',
+      accounts: 'id, entityId, archived',
+      creditCards: 'id, entityId, status',
+      boletos: 'id, entityId, status, vencimento',
+      debts: 'id, entityId, status',
+      assets: 'id, entityId, assetType',
+      documents: 'id, type, status, fileId',
+      files: 'id, documentId, mimeType, createdAt',
+      settings: 'key',
+      backups: 'id, reason, createdAt',
+      recovery: 'id, key, createdAt',
+      auditLogs: 'id, action, entityType, entityId, timestamp',
+      reversals: 'id, originalTransactionId, reversalTransactionId, timestamp',
+      bankNotificationEvents:
+        'id, status, sourceEventKey, fingerprintHash, packageName, receivedAt, retentionExpiresAt',
+      cryptoKeys: 'id',
+      syncQueue: 'id, uid, collectionName, entityId, status, updatedAt',
+      syncMetadata: 'key',
+      cloudBackups: 'id, uid, createdAt',
+      extractionBatches: 'id, status, format, importedAt, confirmedAccountId, contentFingerprint',
+      institutions: 'id, category, status, code',
+      accountExtensions: 'id, institutionId, institutionCategory, holderEntity, status',
+      extractionRules: 'id, institutionId, entityId, category',
     });
   }
 }

@@ -103,7 +103,30 @@ import { BoletosView } from './components/BoletosView';
 import { DebtsView } from './components/DebtsView';
 import { PlanningView } from './components/PlanningView';
 import { AssetsView } from './components/AssetsView';
-import { ImportsView } from './components/ImportsView';
+import { ExtractionsHubView } from './components/extractions/ExtractionsHubView';
+import { TraceabilitySheet } from './components/extractions/TraceabilitySheet';
+import {
+  loadAccountExtensions,
+  loadConsolidationPreferences,
+  loadExtractionBatches,
+  loadExtractionRules,
+  loadRegisteredInstitutions,
+  saveAccountExtensions,
+  saveConsolidationPreferences,
+  saveExtractionBatches,
+  saveExtractionRules,
+  saveRegisteredInstitutions,
+} from './services/extractionStorage';
+import { mergeInstitutionsCatalog } from './domain/extractions/institutionRegistry';
+import { lookupTransactionTraceability } from './domain/extractions/extractionIntegrationService';
+import type {
+  AccountExtensionMeta,
+  ConsolidationPreferences,
+  ExtractionBatch,
+  ExtractionIntegrationCommitResult,
+  ExtractionRule,
+  InstitutionProfile,
+} from './types/extractions';
 import { DocumentsView } from './components/DocumentsView';
 import { AiAssistantView } from './components/AiAssistantView';
 import { ReportsView } from './components/ReportsView';
@@ -445,6 +468,24 @@ export default function App() {
     if (res.error) setStorageWarning((prev) => prev || res.error || null);
     return res.data;
   });
+
+  // Central de Extrações Financeiras, Instituições & Consolidação (Layer A isolated until approval)
+  const [extractionBatches, setExtractionBatches] = useState<ExtractionBatch[]>(() =>
+    loadExtractionBatches()
+  );
+  const [userInstitutions, setUserInstitutions] = useState<InstitutionProfile[]>(() =>
+    loadRegisteredInstitutions()
+  );
+  const [accountExtensions, setAccountExtensions] = useState<AccountExtensionMeta[]>(() =>
+    loadAccountExtensions()
+  );
+  const [extractionRules, setExtractionRules] = useState<ExtractionRule[]>(() =>
+    loadExtractionRules()
+  );
+  const [consolidationPrefs, setConsolidationPrefs] = useState<ConsolidationPreferences>(() =>
+    loadConsolidationPreferences()
+  );
+  const [traceTargetTx, setTraceTargetTx] = useState<Transaction | null>(null);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
 
   // Safe migration on startup: moves legacy base64 docs to SavioFinanaDB and mirrors entities without localStorage.clear()
@@ -587,6 +628,40 @@ export default function App() {
   useEffect(() => {
     persistSafely(STORAGE_KEYS.categoryRules, categoryRules);
   }, [categoryRules]);
+
+  useEffect(() => {
+    saveExtractionBatches(extractionBatches);
+  }, [extractionBatches]);
+
+  useEffect(() => {
+    saveRegisteredInstitutions(userInstitutions);
+  }, [userInstitutions]);
+
+  useEffect(() => {
+    saveAccountExtensions(accountExtensions);
+  }, [accountExtensions]);
+
+  useEffect(() => {
+    saveExtractionRules(extractionRules);
+  }, [extractionRules]);
+
+  useEffect(() => {
+    saveConsolidationPreferences(consolidationPrefs);
+  }, [consolidationPrefs]);
+
+  const allInstitutions = useMemo(
+    () => mergeInstitutionsCatalog(userInstitutions),
+    [userInstitutions]
+  );
+
+  const activeTraceability = useMemo(() => {
+    if (!traceTargetTx) return null;
+    return lookupTransactionTraceability({
+      transaction: traceTargetTx,
+      batches: extractionBatches,
+      institutions: allInstitutions,
+    });
+  }, [traceTargetTx, extractionBatches, allInstitutions]);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -1222,6 +1297,138 @@ export default function App() {
 
   const handleDeleteCategoryRule = (id: string) => {
     setCategoryRules((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  const handleSaveInstitution = (inst: InstitutionProfile) => {
+    setUserInstitutions((prev) => {
+      const idx = prev.findIndex((i) => i.id === inst.id);
+      if (idx >= 0) return prev.map((i, k) => (k === idx ? inst : i));
+      return [inst, ...prev];
+    });
+    setFeedbackBanner(`Instituição "${inst.commercialName}" salva com sucesso.`);
+    setTimeout(() => setFeedbackBanner(null), 3500);
+  };
+
+  const handleSaveAccountExtension = (ext: AccountExtensionMeta) => {
+    setAccountExtensions((prev) => {
+      const idx = prev.findIndex((e) => e.id === ext.id);
+      if (idx >= 0) return prev.map((e, k) => (k === idx ? ext : e));
+      return [ext, ...prev];
+    });
+  };
+
+  const handleCreateAccountFromExtractions = (
+    accData: Omit<Account, 'id'>,
+    extData: Omit<AccountExtensionMeta, 'id' | 'updatedAt'>
+  ): Account => {
+    const openingBalanceCents =
+      typeof accData.openingBalanceCents === 'number' &&
+      Number.isSafeInteger(accData.openingBalanceCents)
+        ? accData.openingBalanceCents
+        : toCents(accData.openingBalance ?? 0);
+    const newAcc: Account = {
+      ...accData,
+      id: generateEntityId('acc'),
+      openingBalanceCents,
+      openingBalance: fromCents(openingBalanceCents),
+    };
+    setAccounts((prev) => [...prev, newAcc]);
+    const fullExt: AccountExtensionMeta = {
+      ...extData,
+      id: newAcc.id,
+      updatedAt: new Date().toISOString(),
+    };
+    setAccountExtensions((prev) => [fullExt, ...prev]);
+    setFeedbackBanner(
+      `Conta "${newAcc.institutionName} · ${newAcc.accountName}" cadastrada e vinculada.`
+    );
+    setTimeout(() => setFeedbackBanner(null), 4000);
+    return newAcc;
+  };
+
+  const handleSaveExtractionRule = (rule: ExtractionRule) => {
+    setExtractionRules((prev) => {
+      const idx = prev.findIndex((r) => r.id === rule.id);
+      if (idx >= 0) return prev.map((r, k) => (k === idx ? rule : r));
+      return [rule, ...prev];
+    });
+    setFeedbackBanner(`Regra aprendida "${rule.keyword}" salva.`);
+    setTimeout(() => setFeedbackBanner(null), 3500);
+  };
+
+  const handleDeleteExtractionRule = (id: string) => {
+    setExtractionRules((prev) => prev.filter((r) => r.id !== id));
+  };
+
+  const handleCommitExtractionIntegration = (result: ExtractionIntegrationCommitResult) => {
+    setExtractionBatches((prev) =>
+      prev.map((b) => (b.id === result.batch.id ? result.batch : b))
+    );
+
+    const existingIds = new Set(transactions.map((t) => t.id));
+    const trulyNewTransactions = result.newTransactions.filter((t) => !existingIds.has(t.id));
+    const updatedTxMap = new Map(result.updatedTransactions.map((t) => [t.id, t]));
+    const nextTransactions = [
+      ...trulyNewTransactions,
+      ...transactions.map((t) => updatedTxMap.get(t.id) ?? t),
+    ];
+
+    const existingAssetIds = new Set(assets.map((a) => a.id));
+    const trulyNewAssets = result.newAssets.filter((a) => !existingAssetIds.has(a.id));
+    const updatedAssetMap = new Map(result.updatedAssets.map((a) => [a.id, a]));
+    const nextAssets = [...assets.map((a) => updatedAssetMap.get(a.id) ?? a), ...trulyNewAssets];
+
+    const updatedCardMap = new Map(result.updatedCreditCards.map((c) => [c.id, c]));
+    const nextCards = creditCards.map((c) => updatedCardMap.get(c.id) ?? c);
+
+    let nextAuditLogs = auditLogs;
+    if (result.integratedCount > 0) {
+      const totalBatchCents = result.newTransactions.reduce(
+        (acc, t) => addMoney(acc, getTransactionAmountCents(t)),
+        cents(0)
+      );
+      const auditEntry: AuditLogEntry = {
+        id: generateEntityId('aud'),
+        action: 'EXTRACTION_BATCH_INTEGRATED',
+        entityType: 'TRANSACTION',
+        entityId: result.batch.id,
+        actor: currentUser?.displayName || currentUser?.email || 'Usuário',
+        timestamp: new Date().toISOString(),
+        reason: `Integração aprovada do arquivo "${result.batch.fileName}": ${result.integratedCount} movimentação(ões) integrada(s).`,
+        amountCents: totalBatchCents,
+        previousState: { batchStatus: 'REVISAO' },
+        nextState: {
+          batchStatus: result.batch.status,
+          integratedCount: result.integratedCount,
+          newTransactions: trulyNewTransactions.length,
+          newAssets: trulyNewAssets.length,
+        },
+      };
+      nextAuditLogs = appendAuditLog(auditEntry);
+      setAuditLogs(nextAuditLogs);
+    }
+
+    setTransactions(nextTransactions);
+    setAssets(nextAssets);
+    setCreditCards(nextCards);
+
+    void commitAtomicMutationBatch({
+      transactions: nextTransactions,
+      assets: nextAssets,
+      creditCards: nextCards,
+      auditLogs: nextAuditLogs,
+    });
+
+    if (result.integratedCount > 0 || result.skippedDuplicateCount > 0) {
+      setFeedbackBanner(
+        `Extração integrada: ${result.integratedCount} aprovada(s) e registrada(s)${
+          result.skippedDuplicateCount > 0
+            ? ` · ${result.skippedDuplicateCount} duplicata(s) protegida(s)`
+            : ''
+        }.`
+      );
+      setTimeout(() => setFeedbackBanner(null), 5000);
+    }
   };
 
   const handleAddBoleto = (bol: Boleto) => {
@@ -1862,6 +2069,10 @@ export default function App() {
     setSalaryData(EMPTY_SALARY_DATASET);
     setBudgets([]);
     setCategoryRules([]);
+    setExtractionBatches([]);
+    setUserInstitutions([]);
+    setAccountExtensions([]);
+    setExtractionRules([]);
     setFeedbackBanner(
       'Dados financeiros zerados com segurança (estado vazio). Um backup validado foi preservado em Configurações.'
     );
@@ -1988,6 +2199,10 @@ export default function App() {
     setSalaryData(EMPTY_SALARY_DATASET);
     setBudgets([]);
     setCategoryRules([]);
+    setExtractionBatches([]);
+    setUserInstitutions([]);
+    setAccountExtensions([]);
+    setExtractionRules([]);
     return { ok: true };
   };
 
@@ -2037,6 +2252,10 @@ export default function App() {
       setSalaryData(EMPTY_SALARY_DATASET);
       setBudgets([]);
       setCategoryRules([]);
+      setExtractionBatches([]);
+      setUserInstitutions([]);
+      setAccountExtensions([]);
+      setExtractionRules([]);
       cloudHydratedForUidRef.current = null;
       setCurrentUser(null);
       return { ok: true };
@@ -2283,6 +2502,7 @@ export default function App() {
               onEditTransaction={openEditModal}
               onDeleteTransaction={handleDeleteTransaction}
               onRestoreTransaction={handleRestoreTransaction}
+              onTraceTransaction={(tx) => setTraceTargetTx(tx)}
             />
           )}
 
@@ -2297,6 +2517,7 @@ export default function App() {
               onEditTransaction={openEditModal}
               onDeleteTransaction={handleDeleteTransaction}
               onRestoreTransaction={handleRestoreTransaction}
+              onTraceTransaction={(tx) => setTraceTargetTx(tx)}
               onNavigate={handleNavigate}
             />
           )}
@@ -2400,14 +2621,31 @@ export default function App() {
             />
           )}
 
-          {currentTab === 'imports' && (
-            <ImportsView
+          {(currentTab === 'imports' || currentTab === 'extractions') && (
+            <ExtractionsHubView
               accounts={derivedAccounts}
+              creditCards={creditCards}
+              assets={assets}
+              debts={debts}
               transactions={transactions}
               categoryRules={categoryRules}
+              batches={extractionBatches}
+              institutions={allInstitutions}
+              accountExtensions={accountExtensions}
+              extractionRules={extractionRules}
+              consolidationPrefs={consolidationPrefs}
+              period={period}
+              onUpdateBatches={setExtractionBatches}
+              onSaveInstitution={handleSaveInstitution}
+              onSaveAccountExtension={handleSaveAccountExtension}
+              onCreateBankAccount={handleCreateAccountFromExtractions}
+              onCommitIntegration={handleCommitExtractionIntegration}
+              onSaveExtractionRule={handleSaveExtractionRule}
+              onDeleteExtractionRule={handleDeleteExtractionRule}
               onAddCategoryRule={handleAddCategoryRule}
               onDeleteCategoryRule={handleDeleteCategoryRule}
-              onImportTransactions={handleImportTransactions}
+              onUpdateConsolidationPrefs={setConsolidationPrefs}
+              onNavigateModule={handleNavigate}
             />
           )}
 
@@ -2534,6 +2772,12 @@ export default function App() {
       <MobileShareSheet
         open={shareSheetOpen}
         onClose={() => setShareSheetOpen(false)}
+      />
+
+      <TraceabilitySheet
+        open={Boolean(traceTargetTx)}
+        onClose={() => setTraceTargetTx(null)}
+        traceability={activeTraceability}
       />
 
       {pendingUndo && (

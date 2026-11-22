@@ -843,6 +843,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 TRANSACTION_CANCELLED: 'Cancelamento',
                 TRANSACTION_RESTORED: 'Restauração',
                 TRANSFER_EXECUTED: 'Transferência interna',
+                EXTRACTION_BATCH_INTEGRATED: 'Extração bancária',
               };
               const badgeClass: Record<AuditLogEntry['action'], string> = {
                 TRANSACTION_REVERSED:
@@ -853,6 +854,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   'bg-sky-50 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300',
                 TRANSFER_EXECUTED:
                   'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300',
+                EXTRACTION_BATCH_INTEGRATED:
+                  'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300',
               };
               return (
                 <div key={entry.id} className="py-3 flex items-start justify-between gap-3 text-xs">

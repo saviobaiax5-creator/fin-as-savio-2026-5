@@ -1,0 +1,742 @@
+# COMANDO DE IMPLEMENTAÇÃO — CENTRAL DE EXTRAÇÕES FINANCEIRAS INTEGRADA AO SÁVIO FINANÇAS
+
+## 1. OBJETIVO PRINCIPAL
+
+Analise, projete, implemente e integre ao sistema Sávio Finanças uma Central de Extrações Financeiras, responsável por importar, interpretar, organizar, rastrear, conferir, conciliar e atualizar as movimentações financeiras provenientes de diferentes instituições e fontes.
+
+A funcionalidade deverá ser integrada a todo o sistema financeiro, mas permanecer isolada em sua estrutura de captura, processamento, armazenamento de documentos originais e controle das extrações.
+
+**Princípio fundamental: a extração deve ser independente na origem, integrada nos resultados e rastreável em todas as etapas.**
+
+Não criar um sistema financeiro paralelo. Não criar uma segunda planilha ou banco de dados independente. A central deverá alimentar os módulos, registros, relatórios, gráficos, saldos e controles já existentes no Sávio Finanças, respeitando os modelos e serviços atuais.
+
+## 2. ARQUITETURA: ISOLAMENTO DA EXTRAÇÃO E INTEGRAÇÃO GLOBAL
+
+Implementar duas camadas claramente separadas:
+
+### CAMADA A — CENTRAL DE EXTRAÇÕES
+
+Responsável exclusivamente por:
+- Receber arquivos, documentos e dados autorizados.
+- Identificar a instituição financeira e a origem.
+- Interpretar os documentos e extrair as movimentações.
+- Preservar os arquivos originais.
+- Registrar os dados brutos e os dados interpretados.
+- Identificar operações desconhecidas.
+- Detectar possíveis duplicidades.
+- Permitir conferência e correção manual.
+- Registrar aprovações, rejeições e histórico.
+- Manter a rastreabilidade de cada movimentação.
+
+A extração não poderá alterar diretamente os lançamentos financeiros definitivos antes da aprovação do usuário.
+
+### CAMADA B — INTEGRAÇÃO COM O SISTEMA FINANCEIRO
+
+Após a aprovação, as operações deverão ser encaminhadas aos módulos correspondentes do Sávio Finanças.
+
+A integração deverá atualizar, conforme a natureza da operação:
+- Contas bancárias e saldos.
+- Receitas e despesas.
+- Cartões de crédito e faturas.
+- Contas a pagar e obrigações financeiras.
+- Investimentos e aplicações.
+- Posições patrimoniais.
+- Corretoras nacionais e internacionais.
+- Criptoativos e exchanges.
+- Carteiras digitais.
+- Transferências entre contas próprias.
+- Rendimentos, dividendos, juros e proventos.
+- Relatórios financeiros.
+- Fluxo de caixa.
+- Dashboard e indicadores.
+- Histórico geral de movimentações.
+- Patrimônio consolidado.
+
+A integração deverá utilizar os serviços e modelos existentes, evitando duplicação de funcionalidades e estruturas.
+
+## 3. FONTES DE EXTRAÇÃO
+
+A central deverá permitir cadastrar e identificar diferentes origens financeiras.
+
+### 3.1. Contas bancárias
+- Bancos tradicionais e digitais.
+- Contas de pessoa física (CPF).
+- Contas de pessoa jurídica (CNPJ).
+- Contas correntes e poupança.
+- Extratos completos e períodos específicos.
+- PIX enviados e recebidos.
+- TED, DOC, transferências e pagamentos.
+- Tarifas, juros e rendimentos.
+
+### 3.2. Cartões de crédito
+- Faturas fechadas e abertas.
+- Compras nacionais e internacionais.
+- Compras parceladas.
+- Pagamentos de fatura.
+- Estornos e cancelamentos.
+- Juros, IOF, tarifas e encargos.
+- Cashback.
+- Limite disponível e utilizado, quando informado.
+- Identificação do estabelecimento e data da compra.
+
+### 3.3. Corretoras nacionais
+- Notas de corretagem.
+- Extratos de movimentações.
+- Ações.
+- Fundos imobiliários (FIIs).
+- ETFs.
+- Tesouro Direto.
+- CDB, RDB, LCI e LCA.
+- Fundos de investimento.
+- Dividendos e JCP.
+- Juros e rendimentos.
+- Compras, vendas, aplicações e resgates.
+- Taxas, emolumentos e impostos.
+
+### 3.4. Corretoras internacionais
+- Ações estrangeiras.
+- ETFs.
+- REITs.
+- Bonds.
+- Dividendos e juros.
+- Compras e vendas.
+- Depósitos e retiradas.
+- Conversões cambiais.
+- Taxas e retenções tributárias.
+- Moeda original e valor convertido em reais.
+
+### 3.5. Exchanges e carteiras de criptomoedas
+- Bitcoin e demais criptoativos.
+- Compras e vendas.
+- Conversões entre moedas digitais.
+- Depósitos e retiradas.
+- Transferências entre carteiras próprias.
+- Staking e recompensas.
+- Taxas de rede e da exchange.
+- Quantidade exata de ativos.
+- Identificação da rede blockchain.
+- Hash da transação, quando disponível.
+- Endereços de origem e destino, quando disponíveis.
+
+### 3.6. Carteiras digitais
+- Carteiras de pagamento.
+- Contas digitais.
+- PIX.
+- Transferências.
+- Pagamentos.
+- Recebimentos.
+- Rendimentos e cashback.
+
+## 4. FORMATOS DE IMPORTAÇÃO
+
+Implementar suporte conforme a disponibilidade e a estrutura dos documentos de cada instituição:
+
+- OFX.
+- CSV.
+- XLSX.
+- XLS.
+- PDF.
+- XML.
+- JSON.
+- Imagens e fotografias de documentos.
+- OCR para documentos digitalizados.
+- Integrações por APIs oficiais e autorizadas, preferencialmente somente leitura.
+
+A arquitetura deverá permitir criar novos leitores e adaptadores por instituição sem modificar o núcleo da extração.
+
+Não presumir que todas as instituições disponibilizam os mesmos formatos. Quando um formato não puder ser interpretado com segurança, informar o problema e permitir revisão manual.
+
+## 5. RASTREABILIDADE COMPLETA DAS MOVIMENTAÇÕES
+
+Esta é uma das funcionalidades mais importantes do projeto.
+
+Cada movimentação extraída deverá possuir um identificador único e um histórico que permita descobrir:
+
+- De qual instituição veio.
+- De qual conta, cartão, corretora, exchange ou carteira veio.
+- Qual arquivo originou a movimentação.
+- Qual foi a data e hora da importação.
+- Qual período do extrato foi importado.
+- Qual foi o formato do arquivo.
+- Qual foi o registro original no documento.
+- Quais dados foram identificados automaticamente.
+- Quais campos foram corrigidos manualmente.
+- Quem realizou a revisão, quando aplicável.
+- Quando a operação foi aprovada.
+- Em qual módulo foi integrada.
+- Qual registro financeiro recebeu a operação.
+- Se foi posteriormente editada, estornada ou conciliada.
+
+Criar um recurso de consulta chamado **Rastrear movimentação**.
+
+Ao abrir uma movimentação no sistema, o usuário deverá conseguir visualizar sua origem e acessar o respectivo lote de extração e documento original, quando disponível.
+
+O caminho de rastreabilidade deverá ser:
+
+INSTITUIÇÃO → CONTA OU ORIGEM → ARQUIVO ORIGINAL → LOTE DE EXTRAÇÃO → MOVIMENTAÇÃO EXTRAÍDA → REVISÃO → APROVAÇÃO → LANÇAMENTO INTEGRADO → RELATÓRIOS E SALDOS.
+
+A origem da operação deverá permanecer vinculada ao lançamento mesmo depois da integração.
+
+## 6. CONTROLE DE DUPLICIDADES E CONCILIAÇÃO
+
+Implementar um mecanismo central de identificação de duplicidades.
+
+Comparar, conforme a fonte:
+- Identificador da transação.
+- Instituição e conta de origem.
+- Data e horário.
+- Valor e moeda.
+- Descrição.
+- Identificação do estabelecimento.
+- Identificador de parcela.
+- Hash de transação blockchain.
+- Outros identificadores fornecidos pela instituição.
+
+Não utilizar somente data e valor para descartar movimentações. Operações legítimas podem possuir valores iguais.
+
+Classificar os resultados como:
+- Possível duplicidade.
+- Duplicidade confirmada.
+- Operação inédita.
+- Operação relacionada a outro lançamento.
+- Transferência própria aguardando conciliação.
+
+Permitir que o usuário examine e decida sobre os casos duvidosos.
+
+A conciliação deverá reconhecer transferências entre contas próprias, bancos, corretoras e carteiras digitais, relacionando as duas pontas da operação sem gerar receita ou despesa artificial.
+
+## 7. REGRAS CONTÁBEIS E FINANCEIRAS
+
+A extração deverá interpretar a natureza econômica da movimentação antes de encaminhá-la aos módulos.
+
+Regras obrigatórias:
+
+1. Compra de ações, fundos ou criptoativos não deverá ser classificada automaticamente como despesa de consumo. Deve atualizar o investimento ou a posição patrimonial e registrar os custos pertinentes.
+2. Venda de ativos deverá separar o valor bruto, os custos, os impostos e o resultado da operação, sem classificar automaticamente todo o valor recebido como receita.
+3. Resgate de aplicação deverá separar o principal resgatado dos rendimentos.
+4. O pagamento de fatura de cartão deverá baixar a obrigação correspondente, sem duplicar as despesas já registradas pelas compras.
+5. Compras parceladas deverão preservar o valor total, a quantidade de parcelas, o valor de cada parcela e a identificação da fatura correspondente.
+6. Estornos deverão ser vinculados à operação original sempre que possível.
+7. Transferências entre contas próprias não deverão ser consideradas receitas ou despesas.
+8. Conversões cambiais e de criptoativos deverão preservar os ativos e moedas de origem e destino, bem como taxas e custos.
+9. Dividendos, JCP, juros, staking, cashback e rendimentos deverão possuir classificações próprias.
+10. O CDI deverá ser tratado como indexador de rendimento, e não como movimentação financeira independente.
+11. Operações internacionais deverão preservar o valor e a moeda originais, além do valor convertido em reais e da taxa de câmbio utilizada, quando disponíveis.
+12. Movimentações com dados incompletos ou interpretação incerta deverão permanecer pendentes de revisão.
+
+Não alterar os critérios de cálculo já existentes no Sávio Finanças sem auditoria e autorização.
+
+## 8. INTEGRAÇÃO COM TODOS OS MÓDULOS
+
+Após a aprovação, a movimentação deverá atualizar o módulo correspondente.
+
+Criar um serviço central de integração responsável por:
+- Identificar a natureza da operação.
+- Localizar a conta ou ativo relacionado.
+- Verificar se já existe lançamento equivalente.
+- Aplicar a regra de integração correspondente.
+- Registrar a relação entre a movimentação extraída e o lançamento financeiro.
+- Atualizar os indicadores e saldos por meio dos serviços existentes.
+- Registrar o resultado da integração.
+- Permitir rastreamento e auditoria posterior.
+
+A integração deverá ser transacional ou utilizar mecanismos equivalentes de consistência e idempotência, conforme a arquitetura atual do projeto.
+
+Se ocorrer falha durante a integração, não deixar o sistema com atualização parcial ou lançamentos duplicados. Registrar a falha e permitir reprocessamento seguro.
+
+## 9. ATUALIZAÇÃO DA BASE FINANCEIRA EXISTENTE
+
+O objetivo é atualizar a base financeira que já existe no sistema.
+
+Não criar outra planilha, outra base patrimonial ou outro cadastro paralelo de contas.
+
+Os registros aprovados deverão ser incorporados aos modelos existentes, mantendo:
+- Identificadores originais.
+- Relacionamentos.
+- Categorias.
+- Contas.
+- Saldos.
+- Histórico.
+- Classificações.
+- Datas.
+- Valores.
+- Moedas.
+- Referências de origem.
+
+Quando a estrutura atual não possuir um campo necessário, analisar a necessidade de uma migração compatível, sem apagar dados ou quebrar registros anteriores.
+
+## 10. INTERFACE DA CENTRAL
+
+Criar uma aba principal denominada **Extrações Financeiras**.
+
+Organizar a interface em:
+1. Visão geral.
+2. Contas bancárias.
+3. Cartões de crédito.
+4. Corretoras nacionais.
+5. Corretoras internacionais.
+6. Criptoativos e exchanges.
+7. Carteiras digitais.
+8. Revisão e aprovação.
+9. Conciliação.
+10. Histórico de extrações.
+
+Na visão geral, apresentar:
+- Total de arquivos importados.
+- Movimentações identificadas.
+- Movimentações pendentes.
+- Movimentações aprovadas.
+- Movimentações integradas.
+- Possíveis duplicidades.
+- Operações não reconhecidas.
+- Erros de processamento.
+
+Criar filtros por instituição, conta, período, tipo de operação, status e moeda.
+
+A interface deverá ser responsiva, com atenção especial ao celular. Evitar tabelas excessivamente largas, rolagem horizontal e excesso de informações simultâneas. Utilizar cartões compactos, filtros recolhíveis e detalhes expansíveis.
+
+Manter integralmente a identidade visual do Sávio Finanças.
+
+## 11. SEGURANÇA E PROTEÇÃO DOS DADOS
+
+- Não solicitar senhas bancárias.
+- Não armazenar credenciais bancárias em arquivos de extração.
+- Não solicitar chaves privadas ou frases-semente de criptomoedas.
+- Utilizar APIs oficiais e autorizadas somente quando disponíveis.
+- Preferir integrações somente leitura.
+- Proteger documentos originais e dados financeiros.
+- Respeitar a autenticação e as regras de acesso existentes.
+- Evitar exposição de CPF, CNPJ, números de contas e dados sensíveis.
+- Registrar operações de importação, revisão e aprovação.
+- Não executar compras, vendas, transferências ou pagamentos em instituições financeiras.
+
+## 12. PRESERVAÇÃO DA ARQUITETURA EXISTENTE
+
+Antes de implementar, auditar o repositório e identificar:
+- Estrutura atual de pastas.
+- Componentes e rotas.
+- Modelos financeiros.
+- Serviços de receitas e despesas.
+- Contas bancárias.
+- Cartões e faturas.
+- Investimentos e patrimônio.
+- Firebase.
+- IndexedDB/Dexie.
+- Sincronização e backup.
+- Autenticação.
+- Relatórios e dashboard.
+
+A implementação deverá reutilizar a infraestrutura existente.
+
+Não substituir Firebase, IndexedDB/Dexie, autenticação, sincronização, backup ou serviços financeiros sem necessidade comprovada.
+
+Não apagar registros, não recriar bancos de dados, não alterar cálculos financeiros por conveniência e não utilizar dados fictícios para simular integrações.
+
+A extração deverá ser um módulo independente, mas integrada aos serviços e modelos já existentes.
+
+## 13. TESTES OBRIGATÓRIOS
+
+Criar testes para verificar:
+
+- Importação de arquivos de cada formato suportado.
+- Reconhecimento de diferentes instituições.
+- Extração correta de entradas e saídas.
+- Identificação de operações desconhecidas.
+- Preservação do arquivo original.
+- Detecção de duplicidades.
+- Aprovação manual.
+- Integração nos módulos corretos.
+- Atualização dos saldos.
+- Conciliação de transferências próprias.
+- Tratamento de compras parceladas.
+- Pagamento de fatura sem duplicidade.
+- Aplicações e resgates.
+- Rendimentos e dividendos.
+- Operações internacionais e moedas diferentes.
+- Precisão decimal de criptoativos.
+- Rastreabilidade entre documento, extração e lançamento.
+- Reprocessamento após falha sem duplicar registros.
+- Sincronização e funcionamento offline, conforme os recursos atuais.
+
+## 14. CRITÉRIOS DE ACEITAÇÃO
+
+A implementação somente poderá ser considerada concluída quando:
+
+1. A extração funcionar de maneira independente dos lançamentos definitivos.
+2. Todas as movimentações aprovadas forem encaminhadas aos módulos corretos.
+3. Cada lançamento integrado mantiver sua origem rastreável.
+4. O usuário conseguir consultar o documento original e o histórico da movimentação.
+5. A importação de um mesmo arquivo não gerar lançamentos duplicados.
+6. Transferências próprias não gerarem receitas ou despesas artificiais.
+7. Cartões, investimentos, corretoras, criptoativos e bancos forem tratados conforme suas naturezas.
+8. A base financeira existente for atualizada sem criação de estruturas paralelas desnecessárias.
+9. Os saldos, relatórios e indicadores refletirem as movimentações aprovadas.
+10. Os testes demonstrarem consistência e preservação dos dados existentes.
+
+## 15. ORIENTAÇÃO FINAL À IA DE PROGRAMAÇÃO
+
+Não comece criando somente uma tela de upload.
+
+Primeiro, faça uma auditoria técnica do projeto. Depois, apresente o mapa de integração entre a Central de Extrações e os módulos financeiros existentes.
+
+Implemente por etapas, com serviços, modelos, validações, interface, persistência, integração e testes.
+
+Não invente APIs, formatos ou integrações que não estejam disponíveis. Para cada instituição, identifique os formatos realmente suportados e implemente adaptadores específicos.
+
+Não considere uma movimentação concluída apenas porque foi extraída. Ela só poderá atualizar definitivamente o sistema após validação e aprovação do usuário.
+
+**RESULTADO ESPERADO:** o Sávio Finanças deverá possuir uma central única capaz de importar movimentações de diferentes fontes, manter cada extração isolada e identificada, permitir conferência e aprovação, integrar os dados em todo o sistema e oferecer rastreabilidade completa de cada movimentação, desde o documento original até seu reflexo nos saldos, patrimônio, relatórios e histórico financeiro.                                                                                                                                                                            # COMPLEMENTO DO PROJETO — CADASTRO DE INSTITUIÇÕES, IDENTIFICAÇÃO DE CONTAS E CONSOLIDAÇÃO FINANCEIRA
+
+## 1. OBJETIVO
+
+Implementar no Sávio Finanças um sistema de cadastro e identificação de instituições financeiras e contas, permitindo diferenciar claramente:
+
+- Bancos físicos (instituições com atendimento e estrutura bancária física).
+- Bancos digitais e virtuais.
+- Contas de pagamento e carteiras digitais.
+- Corretoras de investimentos nacionais.
+- Corretoras de investimentos internacionais.
+- Exchanges de criptomoedas.
+- Cartões de crédito.
+- Outras instituições financeiras.
+
+A classificação deverá ser utilizada em todo o sistema, especialmente na Central de Extrações Financeiras.
+
+O usuário deverá conseguir identificar cada instituição, cadastrar várias contas, selecionar quais deseja acompanhar e escolher quais valores serão somados nos painéis consolidados.
+
+## 2. CADASTRO DE INSTITUIÇÕES E CONTAS
+
+Criar uma área denominada **Instituições e Contas**, com cadastro independente da instituição e das contas vinculadas.
+
+### 2.1. Identificação da instituição
+
+Campos:
+- Nome da instituição.
+- Nome comercial.
+- Tipo de instituição.
+- País.
+- Logotipo ou ícone.
+- Site oficial, quando disponível.
+- Situação: ativa ou inativa.
+- Observações.
+
+### 2.2. Classificação obrigatória
+
+Criar categorias distintas:
+
+**A. Bancos físicos**
+Instituições bancárias com estrutura de atendimento físico. Exemplos: Banco do Brasil, Caixa Econômica Federal, Bradesco, Itaú e Santander.
+
+**B. Bancos digitais**
+Instituições que operam predominantemente por canais digitais. Exemplos: Nubank, Inter, C6 Bank e Neon.
+
+**C. Instituições de pagamento e carteiras digitais**
+Exemplos: Mercado Pago, PicPay e outras carteiras de pagamento.
+
+**D. Corretoras nacionais**
+Instituições utilizadas para investimentos no mercado brasileiro.
+
+**E. Corretoras internacionais**
+Instituições utilizadas para investimentos em mercados estrangeiros.
+
+**F. Exchanges de criptomoedas**
+Plataformas de negociação e custódia de criptoativos.
+
+**G. Cartões de crédito**
+Identificar o emissor, a bandeira e o cartão, permitindo relacionar o cartão à instituição financeira correspondente.
+
+Importante: a classificação deverá representar a natureza da instituição e não somente o nome comercial. Uma instituição pode oferecer diferentes produtos e serviços. Permitir que uma instituição possua mais de uma conta ou produto cadastrado.
+
+### 2.3. Cadastro individual de contas e produtos
+
+Cada conta ou produto deverá possuir:
+- Identificador único.
+- Nome personalizado pelo usuário.
+- Instituição vinculada.
+- Categoria da instituição.
+- Tipo de conta ou produto.
+- Titularidade: CPF ou CNPJ.
+- Identificação do titular, com proteção dos dados pessoais.
+- Agência, quando aplicável.
+- Número da conta, com exibição mascarada.
+- Moeda principal.
+- Data de abertura, se informada.
+- Saldo inicial, quando aplicável.
+- Saldo atual.
+- Situação: ativa, inativa ou encerrada.
+- Observações.
+
+Para cartões de crédito, incluir:
+- Nome personalizado do cartão.
+- Emissor.
+- Bandeira.
+- Final do cartão (últimos quatro dígitos).
+- Limite total.
+- Limite disponível, quando informado.
+- Melhor dia de compra, se aplicável.
+- Dia de vencimento.
+- Conta utilizada para pagamento da fatura.
+- Situação do cartão.
+
+Para corretoras, incluir:
+- Nome da corretora.
+- País.
+- Moeda de referência.
+- Conta de investimento.
+- Tipos de ativos negociados.
+- Saldo financeiro.
+- Posição de investimentos.
+
+Para exchanges, incluir:
+- Nome da exchange.
+- País.
+- Conta vinculada.
+- Ativos custodiados.
+- Moedas disponíveis.
+- Redes utilizadas, quando aplicável.
+
+Não misturar conta bancária, cartão de crédito, conta de investimento e carteira de criptoativos como se fossem o mesmo tipo de registro.
+
+## 3. IDENTIFICAÇÃO VISUAL
+
+Criar uma identificação visual padronizada para cada categoria.
+
+Utilizar ícones, cores e etiquetas para facilitar a identificação nas telas.
+
+Exemplos:
+- Banco físico: ícone de banco e etiqueta "BANCO FÍSICO".
+- Banco digital: ícone digital e etiqueta "BANCO DIGITAL".
+- Carteira digital: ícone de carteira e etiqueta "CARTEIRA DIGITAL".
+- Corretora nacional: ícone de investimentos e etiqueta "CORRETORA NACIONAL".
+- Corretora internacional: etiqueta "CORRETORA INTERNACIONAL".
+- Exchange: ícone de criptoativos e etiqueta "EXCHANGE".
+- Cartão de crédito: ícone de cartão e etiqueta "CARTÃO DE CRÉDITO".
+
+Permitir o uso de logotipos oficiais quando disponíveis e licenciados. Se não houver logotipo, utilizar ícones padronizados.
+
+A identificação deverá aparecer no cadastro, na Central de Extrações, nos filtros, nos relatórios, no histórico e nos detalhes das movimentações.
+
+## 4. CENTRAL DE CONSOLIDAÇÃO FINANCEIRA
+
+Criar na Central de Extrações uma área denominada **Consolidação Financeira**.
+
+Essa área deverá permitir ao usuário selecionar quais instituições e contas deseja considerar nos cálculos.
+
+O sistema deverá oferecer dois modos principais:
+
+### MODO 1 — VISUALIZAÇÃO INDIVIDUAL
+
+Permitir selecionar uma instituição ou conta e visualizar exclusivamente seus dados.
+
+Exemplos:
+- Consultar somente o saldo do Banco do Brasil.
+- Consultar somente o saldo do Nubank.
+- Consultar somente os investimentos da corretora.
+- Consultar somente a fatura do cartão.
+- Consultar somente os criptoativos de uma exchange.
+
+Apresentar os valores, movimentações, receitas, despesas, obrigações e saldos da origem selecionada.
+
+### MODO 2 — VISUALIZAÇÃO CONSOLIDADA
+
+Permitir selecionar duas ou mais contas e somar os valores compatíveis.
+
+Exemplos:
+- Somar os saldos de todos os bancos físicos.
+- Somar os saldos de todos os bancos digitais.
+- Somar bancos físicos e digitais.
+- Somar os investimentos de todas as corretoras.
+- Somar os criptoativos de todas as exchanges.
+- Somar as dívidas de todos os cartões.
+- Somar todas as obrigações financeiras.
+- Visualizar o patrimônio financeiro consolidado.
+
+Criar também a opção **Selecionar todas as contas**, com possibilidade de desmarcar individualmente as que não devem participar da consolidação.
+
+A seleção deverá ser flexível e permitir combinações personalizadas.
+
+## 5. FILTROS E SELEÇÃO DE CONTAS
+
+Na Central de Consolidação, criar filtros por:
+
+- Tipo de instituição.
+- Instituição.
+- Conta.
+- Cartão.
+- Corretora.
+- Exchange.
+- Moeda.
+- Período.
+- Situação da conta.
+
+Permitir marcar e desmarcar cada conta individualmente.
+
+Criar comandos:
+- Selecionar todas.
+- Desmarcar todas.
+- Somente bancos físicos.
+- Somente bancos digitais.
+- Somente corretoras.
+- Somente cartões.
+- Somente exchanges.
+- Somente contas ativas.
+
+A seleção deverá atualizar automaticamente os indicadores e valores exibidos.
+
+Apresentar a quantidade de contas selecionadas e as categorias incluídas na consolidação.
+
+## 6. DIFERENCIAR SALDOS, INVESTIMENTOS E DÍVIDAS
+
+Não realizar uma soma indiscriminada de todos os valores.
+
+Criar indicadores separados:
+
+**A. Disponibilidades financeiras**
+- Saldos bancários.
+- Saldos de contas digitais.
+- Saldos de carteiras de pagamento.
+- Dinheiro disponível em corretoras, quando identificado.
+
+**B. Investimentos**
+- Renda fixa.
+- Ações.
+- Fundos imobiliários.
+- ETFs.
+- Tesouro Direto.
+- Investimentos internacionais.
+- Criptoativos.
+- Outros ativos financeiros.
+
+**C. Obrigações e dívidas**
+- Faturas abertas de cartões.
+- Compras parceladas ainda não pagas.
+- Empréstimos.
+- Financiamentos.
+- Outras obrigações cadastradas.
+
+**D. Receitas**
+- Receitas bancárias.
+- Rendimentos.
+- Dividendos.
+- Juros.
+- JCP.
+- Cashback.
+- Outras entradas efetivamente classificadas como receita.
+
+**E. Despesas**
+- Compras.
+- Pagamentos.
+- Tarifas.
+- Juros.
+- Impostos.
+- Outras saídas classificadas como despesas.
+
+**F. Patrimônio consolidado**
+
+Calcular conforme os critérios financeiros existentes, separando ativos e obrigações:
+
+Patrimônio líquido = total de ativos − total de obrigações.
+
+Evitar contabilizar o mesmo valor simultaneamente como saldo disponível e investimento, ou a mesma dívida em mais de um módulo.
+
+## 7. REGRAS DE CONSOLIDAÇÃO
+
+A consolidação deverá respeitar regras específicas:
+
+1. Transferências entre contas próprias não podem aumentar nem reduzir artificialmente o patrimônio consolidado.
+2. O pagamento de uma fatura deverá reduzir o saldo bancário e a obrigação do cartão, sem criar uma segunda despesa.
+3. Compras realizadas no cartão deverão ser registradas como despesas conforme a regra financeira do sistema, e a fatura deverá representar a obrigação correspondente, sem duplicação.
+4. Investimentos deverão ser contabilizados como ativos, e não como despesas de consumo.
+5. O resgate de investimento deverá transferir valores entre categorias patrimoniais, separando o principal e o rendimento.
+6. Criptoativos deverão ser considerados conforme sua quantidade e valor de referência na data da consulta, quando houver cotação disponível.
+7. Contas em moedas diferentes deverão ser convertidas para uma moeda de consolidação selecionada, preservando os valores originais.
+8. Não somar moedas diferentes sem conversão.
+9. Não somar limite de crédito como se fosse saldo bancário.
+10. Não somar limite total de cartão como dívida. Considerar apenas as obrigações efetivamente constituídas.
+11. Não incluir contas encerradas nos totais atuais, salvo quando o usuário solicitar histórico.
+12. Quando uma conta não possuir saldo atualizado, identificar a informação como desatualizada ou desconhecida, sem assumir saldo zero.
+
+## 8. PAINEL DE CONSOLIDAÇÃO
+
+Criar um painel com:
+
+- Total disponível em bancos.
+- Total disponível em contas digitais.
+- Total disponível em corretoras.
+- Total investido.
+- Total em criptoativos.
+- Total de faturas em aberto.
+- Total de dívidas e obrigações.
+- Total de receitas no período.
+- Total de despesas no período.
+- Patrimônio bruto.
+- Patrimônio líquido.
+
+Exibir também uma relação detalhada por instituição e conta.
+
+Ao clicar em qualquer indicador, abrir a composição do valor, mostrando quais contas e registros formam aquele total.
+
+O usuário deverá conseguir alternar entre:
+- Visão individual.
+- Visão por categoria.
+- Visão consolidada.
+- Visão personalizada.
+
+## 9. INTEGRAÇÃO COM AS EXTRAÇÕES
+
+Quando um novo arquivo for importado, a central deverá tentar identificar automaticamente a instituição e a conta de origem.
+
+Se houver mais de uma conta cadastrada na mesma instituição, solicitar a seleção correta quando não for possível identificar com segurança.
+
+Cada extração deverá ficar vinculada à conta correspondente.
+
+Depois da aprovação:
+- Atualizar os registros financeiros existentes.
+- Atualizar os saldos.
+- Atualizar as obrigações.
+- Atualizar os investimentos.
+- Atualizar os relatórios.
+- Atualizar os painéis individuais e consolidados.
+
+Permitir consultar todas as extrações de uma conta específica e também consultar o histórico geral.
+
+## 10. PREFERÊNCIAS DE VISUALIZAÇÃO
+
+Permitir que o usuário configure:
+- Moeda padrão de consolidação.
+- Contas que aparecem inicialmente.
+- Categorias incluídas por padrão.
+- Exibição individual ou consolidada ao abrir a central.
+- Inclusão ou exclusão de contas específicas nos painéis.
+- Preferência de período de consulta.
+
+A seleção de contas para visualização não deverá apagar, alterar ou desativar os registros financeiros. Será apenas um filtro de apresentação e cálculo.
+
+## 11. REQUISITOS DE IMPLEMENTAÇÃO
+
+Antes de criar novos componentes, auditar os cadastros, os modelos de contas, cartões, investimentos e patrimônio já existentes.
+
+Reutilizar os modelos e serviços atuais sempre que possível.
+
+Não criar cadastros duplicados de instituições ou contas. Não criar um segundo mecanismo de saldos. A consolidação deverá consultar a base financeira oficial do sistema.
+
+Implementar testes para:
+- Cadastro de diferentes tipos de instituições.
+- Múltiplas contas na mesma instituição.
+- Cartões vinculados a instituições.
+- Seleção individual e múltipla.
+- Inclusão e exclusão de contas na consolidação.
+- Conversão de moedas.
+- Cálculo de ativos e obrigações.
+- Pagamento de faturas sem duplicidade.
+- Transferências próprias.
+- Atualização após importação aprovada.
+- Preservação dos dados e cálculos existentes.
+
+## RESULTADO ESPERADO
+
+O Sávio Finanças deverá permitir cadastrar e identificar cada banco, banco digital, corretora, exchange, carteira e cartão de crédito de forma independente.
+
+Na Central de Extrações e Consolidação, o usuário poderá escolher uma conta específica, selecionar várias contas ou selecionar todas, visualizando os saldos, investimentos, receitas, despesas e dívidas separadamente ou em totais consolidados.
+
+A consolidação deverá ser transparente: cada total precisa permitir abrir sua composição e identificar exatamente quais instituições, contas e movimentações formaram o valor apresentado.

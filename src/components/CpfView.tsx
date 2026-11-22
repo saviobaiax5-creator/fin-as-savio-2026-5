@@ -9,7 +9,7 @@ import {
 } from '../utils/financeCalculations';
 import { useIsDesktop } from '../hooks/useMediaQuery';
 import { VirtualCardList, computeWindowedRange } from './VirtualList';
-import { Search, Plus, Trash2, Pencil, RotateCcw, X } from 'lucide-react';
+import { Search, Plus, Trash2, Pencil, RotateCcw, X, Eye } from 'lucide-react';
 
 interface CpfViewProps {
   transactions: Transaction[];
@@ -20,6 +20,7 @@ interface CpfViewProps {
   onEditTransaction: (tx: Transaction) => void;
   onDeleteTransaction: (id: string) => void;
   onRestoreTransaction?: (id: string) => void;
+  onTraceTransaction?: (tx: Transaction) => void;
 }
 
 export const CpfView: React.FC<CpfViewProps> = ({
@@ -31,6 +32,7 @@ export const CpfView: React.FC<CpfViewProps> = ({
   onEditTransaction,
   onDeleteTransaction,
   onRestoreTransaction,
+  onTraceTransaction,
 }) => {
   const isDesktop = useIsDesktop();
   const [search, setSearch] = useState('');
@@ -341,6 +343,17 @@ export const CpfView: React.FC<CpfViewProps> = ({
                     </div>
 
                     <div className="flex items-center gap-1">
+                      {onTraceTransaction && (t.origin === 'IMPORT' || t.origin === 'OPEN_FINANCE' || Boolean(t.idempotencyKey || t.externalId)) && (
+                        <button
+                          type="button"
+                          onClick={() => onTraceTransaction(t)}
+                          className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#00A65A] dark:text-slate-400 dark:hover:text-[#00A65A] rounded-lg cursor-pointer"
+                          aria-label={`Rastrear movimentação ${t.description}`}
+                          title="Rastrear movimentação"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => onEditTransaction(t)}
@@ -471,6 +484,17 @@ export const CpfView: React.FC<CpfViewProps> = ({
                         </td>
                         <td className="py-3.5 px-6 text-center">
                           <div className="inline-flex items-center gap-1">
+                            {onTraceTransaction && (t.origin === 'IMPORT' || t.origin === 'OPEN_FINANCE' || Boolean(t.idempotencyKey || t.externalId)) && (
+                              <button
+                                type="button"
+                                onClick={() => onTraceTransaction(t)}
+                                className="p-2 text-slate-400 hover:text-[#00A65A] hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-lg transition-colors cursor-pointer"
+                                aria-label={`Rastrear movimentação ${t.description}`}
+                                title="Rastrear movimentação"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                            )}
                             <button
                               type="button"
                               onClick={() => onEditTransaction(t)}

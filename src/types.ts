@@ -1,6 +1,7 @@
 import type { MoneyCents } from './domain/money/money';
 
-export type EntityScope = 'CPF' | 'CNPJ' | 'CONSOLIDATED';
+export type EntityId = 'CPF' | 'CNPJ';
+export type EntityScope = EntityId | 'CONSOLIDATED';
 export type Direction = 'INCOME' | 'EXPENSE';
 export type TransactionStatus = 'PLANNED' | 'PENDING' | 'CONFIRMED' | 'CANCELLED';
 export type TransactionOrigin = 'MANUAL' | 'IMPORT' | 'OPEN_FINANCE' | 'BOLETO' | 'BANK_NOTIFICATION';
@@ -92,7 +93,12 @@ export interface Transaction {
 
 export interface AuditLogEntry {
   id: string;
-  action: 'TRANSACTION_REVERSED' | 'TRANSACTION_CANCELLED' | 'TRANSACTION_RESTORED' | 'TRANSFER_EXECUTED';
+  action:
+    | 'TRANSACTION_REVERSED'
+    | 'TRANSACTION_CANCELLED'
+    | 'TRANSACTION_RESTORED'
+    | 'TRANSFER_EXECUTED'
+    | 'EXTRACTION_BATCH_INTEGRATED';
   entityType: 'TRANSACTION' | 'TRANSFER';
   entityId: string;
   relatedEntityId?: string;

@@ -1,0 +1,1700 @@
+# ORDEM DE SERVIÇO TÉCNICA
+# DESENVOLVIMENTO DO MÓDULO DE IMPORTAÇÃO INTELIGENTE DE EXTRATOS BANCÁRIOS
+## SÁVIO FINANÇAS
+
+**Projeto:** Sávio Finanças  
+**Módulo:** Importação Inteligente de Extratos e Conciliação Bancária  
+**Natureza:** Implementação incremental integrada à aplicação existente  
+**Abrangência:** Pessoa Física (CPF), Pessoa Jurídica (CNPJ) e visão consolidada  
+**Formatos:** OFX, CSV, XLSX, PDF e imagens de extratos  
+**Política de aprovação:** Revisão e aprovação manual obrigatória de todas as movimentações.
+
+---
+
+# PARTE I — OBJETIVO GERAL
+
+Implementar no Sávio Finanças um sistema inteligente de importação, interpretação, identificação, classificação e conciliação de extratos bancários.
+
+O módulo deverá permitir que o usuário envie arquivos bancários de diferentes instituições financeiras, reconhecendo automaticamente:
+
+1. Instituição financeira.
+2. Titular da conta.
+3. CPF ou CNPJ.
+4. Agência e número da conta.
+5. Tipo de conta bancária.
+6. Período do extrato.
+7. Saldo inicial e saldo final.
+8. Todas as movimentações financeiras.
+9. Entradas e saídas.
+10. PIX recebidos e enviados.
+11. Transferências bancárias.
+12. Pagamentos e recebimentos.
+13. Aplicações e resgates.
+14. CDB, RDB e investimentos.
+15. Rendimentos de contas remuneradas.
+16. Rendimentos vinculados ao CDI.
+17. Cashback e benefícios.
+18. Tarifas, impostos e estornos.
+19. Movimentações não identificadas.
+
+O objetivo é reduzir o trabalho manual de lançamento financeiro, aumentar a precisão dos registros e permitir que o usuário mantenha suas contas bancárias atualizadas por meio da importação de extratos.
+
+IMPORTANTE: O módulo deverá preparar e apresentar os registros para conferência. Nenhuma movimentação poderá ser efetivamente lançada antes da aprovação manual do usuário.
+
+# PARTE II — AUDITORIA OBRIGATÓRIA DO REPOSITÓRIO
+
+Antes de escrever qualquer código, realizar uma análise completa do projeto.
+
+Identificar:
+
+- Framework e linguagem utilizados.
+- Organização de pastas e componentes.
+- Estrutura atual do Dashboard.
+- Modelo de contas bancárias.
+- Modelo de movimentações financeiras.
+- Categorias de receitas e despesas.
+- Serviços de criação e atualização de lançamentos.
+- Serviços de autenticação.
+- Estrutura Firebase.
+- Banco local IndexedDB.
+- Implementação Dexie.
+- Sistema de sincronização.
+- Sistema de backup e restauração.
+- Regras de consolidação financeira.
+- Separação entre CPF e CNPJ.
+- Componentes de importação já existentes.
+- Sistema de notificações e tratamento de erros.
+
+Localizar e estudar os arquivos efetivamente utilizados pelo projeto.
+
+Não presumir nomes ou caminhos de arquivos.
+
+Antes de criar qualquer componente, verificar se já existe funcionalidade semelhante que possa ser ampliada.
+
+## 2.1. Preservação arquitetural
+
+É EXPRESSAMENTE PROIBIDO:
+
+- Reescrever a aplicação inteira.
+- Criar um segundo sistema financeiro paralelo.
+- Criar um segundo mecanismo de persistência.
+- Substituir Firebase.
+- Substituir Dexie ou IndexedDB.
+- Modificar autenticação.
+- Remover funcionalidades existentes.
+- Alterar cálculos financeiros para facilitar a importação.
+- Criar lançamentos fictícios.
+- Modificar registros financeiros existentes.
+- Criar uma estrutura incompatível com os modelos atuais.
+- Modificar regras de segurança sem identificar e justificar a necessidade.
+
+O novo módulo deverá utilizar os serviços existentes para efetivar os lançamentos.
+
+Caso seja necessária alguma extensão dos modelos ou uma migração de banco local, apresentar a justificativa técnica, garantir compatibilidade com registros antigos e utilizar migração incremental e reversível.
+
+# PARTE III — FORMATOS DE ARQUIVOS
+
+Implementar suporte aos cinco formatos definidos.
+
+## 3.1. OFX — prioridade máxima
+
+Implementar leitor nativo de arquivos OFX.
+
+Extrair:
+- Identificador bancário.
+- Identificador da conta.
+- Tipo de conta.
+- Data da movimentação.
+- Data de lançamento.
+- Identificador bancário da transação.
+- Descrição original.
+- Valor.
+- Saldo, quando disponível.
+- Tipo de operação.
+
+Preservar os identificadores originais fornecidos pelo banco.
+
+O identificador da transação bancária deverá ser utilizado na prevenção de duplicidades.
+
+Dar prioridade ao OFX por apresentar informações estruturadas e identificadores de movimentações.
+
+## 3.2. CSV
+
+Implementar leitor compatível com diferentes layouts bancários.
+
+Detectar:
+- Separador de colunas.
+- Codificação do arquivo.
+- Cabeçalhos.
+- Formato de datas.
+- Formato decimal.
+- Valores positivos e negativos.
+- Colunas de descrição e identificação.
+
+Permitir mapeamento manual quando o sistema não reconhecer automaticamente as colunas.
+
+Exibir uma prévia antes do processamento definitivo.
+
+## 3.3. XLSX
+
+Permitir importação de planilhas bancárias.
+
+Identificar:
+- Abas existentes.
+- Cabeçalhos.
+- Colunas.
+- Datas.
+- Valores.
+- Descrições.
+- Saldos.
+
+Permitir selecionar a aba correta quando houver múltiplas planilhas.
+
+Não executar macros ou conteúdo externo das planilhas.
+
+## 3.4. PDF
+
+Implementar extração de informações de PDFs bancários.
+
+O processamento deverá:
+- Extrair texto quando o PDF possuir camada textual.
+- Identificar tabelas e linhas de movimentação.
+- Reconhecer cabeçalhos e rodapés.
+- Identificar saldos.
+- Identificar informações da conta.
+- Reconhecer páginas sequenciais.
+- Evitar duplicar movimentações que aparecem em mais de uma página.
+
+Quando o PDF for digitalizado, utilizar OCR.
+
+## 3.5. Imagens e fotografias
+
+Aceitar:
+- JPG.
+- JPEG.
+- PNG.
+- WEBP.
+
+Implementar OCR para leitura dos extratos fotografados.
+
+Identificar:
+- Data.
+- Histórico.
+- Valores.
+- Sinais de entrada e saída.
+- Identificação bancária.
+- Saldo.
+- Informações da conta.
+
+Permitir conferência visual da imagem original e dos dados extraídos.
+
+Se a leitura apresentar baixa qualidade, solicitar nova imagem ou correção manual.
+
+Não inventar números, datas ou valores que estejam ilegíveis.
+
+# PARTE IV — IDENTIFICAÇÃO DA CONTA BANCÁRIA
+
+Criar um processo inteligente de identificação da conta de origem.
+
+## 4.1. Dados necessários
+
+- Banco ou instituição financeira.
+- Código da instituição, quando disponível.
+- Nome do titular.
+- CPF ou CNPJ.
+- Agência.
+- Número da conta.
+- Dígito verificador.
+- Tipo de conta.
+- Modalidade da conta.
+- Período do extrato.
+- Saldo inicial.
+- Saldo final.
+
+## 4.2. Identificação de CPF e CNPJ
+
+O sistema deverá identificar se a conta pertence a uma pessoa física ou jurídica.
+
+CPF:
+- Contas pessoais.
+- Cartões pessoais.
+- Investimentos pessoais.
+- Rendimentos pessoais.
+- Cashback pessoal.
+
+CNPJ:
+- Contas empresariais.
+- Cartões empresariais.
+- Investimentos empresariais.
+- Rendimentos empresariais.
+- Cashback empresarial.
+
+A identificação deverá considerar o documento do titular e os dados bancários disponíveis.
+
+Não utilizar somente o nome do banco como critério.
+
+Não presumir que uma conta seja CPF ou CNPJ com base no nome do usuário.
+
+Se o documento não estiver disponível no extrato, solicitar confirmação.
+
+## 4.3. Associação de contas
+
+Se a conta já existir:
+- Identificar a conta correspondente.
+- Exibir seus dados.
+- Solicitar confirmação da associação.
+
+Se a conta não existir:
+- Oferecer cadastro.
+- Solicitar confirmação.
+- Permitir revisar os dados identificados.
+- Evitar duplicidade de contas.
+
+Nunca cadastrar automaticamente uma conta sem confirmação.
+
+Dados bancários devem ser protegidos e apresentados parcialmente mascarados quando não for necessário exibi-los integralmente.
+
+# PARTE V — CLASSIFICAÇÃO INTELIGENTE DAS MOVIMENTAÇÕES
+
+Implementar um mecanismo de classificação que considere descrição original, valor, sinal, contexto, instituição, histórico e características da operação.
+
+Não utilizar apenas palavras-chave.
+
+## 5.1. Receitas
+
+Identificar:
+- PIX recebido.
+- Transferência recebida.
+- Depósito.
+- Recebimento de vendas.
+- Salário.
+- Pagamento recebido.
+- Rendimentos financeiros.
+- Juros.
+- Cashback.
+- Outros créditos.
+
+## 5.2. Despesas
+
+Identificar:
+- PIX enviado.
+- Transferência enviada.
+- Pagamento de boleto.
+- Pagamento de contas.
+- Compras.
+- Saques.
+- Tarifas bancárias.
+- Impostos.
+- Juros pagos.
+- Outros débitos.
+
+## 5.3. Transferências internas
+
+Reconhecer transferências entre contas próprias.
+
+Quando uma saída de uma conta corresponder à entrada de outra conta pertencente ao mesmo CPF ou CNPJ:
+
+- Relacionar as duas operações.
+- Identificar a origem e o destino.
+- Criar vínculo entre as movimentações.
+- Evitar contabilização como receita ou despesa.
+- Atualizar os saldos das contas correspondentes.
+
+Quando somente uma das pontas estiver disponível, classificar como transferência pendente de conciliação.
+
+Não criar artificialmente a movimentação ausente.
+
+## 5.4. Estornos
+
+Reconhecer:
+- Estorno de compra.
+- Estorno de PIX.
+- Estorno de tarifa.
+- Estorno de pagamento.
+- Reversão de lançamento.
+- Devolução de valores.
+
+Quando possível, relacionar o estorno à operação original.
+
+Não tratar automaticamente todo crédito como receita nova.
+
+# PARTE VI — INVESTIMENTOS, CDB, CDI E CONTAS REMUNERADAS
+
+Este módulo deverá possuir regras específicas para movimentações de investimentos.
+
+## 6.1. Produtos financeiros
+
+Reconhecer:
+- CDB.
+- RDB.
+- Poupança.
+- Aplicação automática.
+- Conta remunerada.
+- Fundos de investimento.
+- Outros investimentos identificáveis.
+
+## 6.2. Aplicações
+
+Quando identificar uma aplicação:
+
+- Registrar o valor aplicado.
+- Identificar a conta de origem.
+- Identificar o produto financeiro, quando disponível.
+- Relacionar a aplicação ao investimento.
+- Não registrar como despesa operacional.
+
+## 6.3. Resgates
+
+Quando identificar resgate:
+
+- Identificar o valor principal.
+- Identificar rendimentos, se discriminados.
+- Identificar impostos.
+- Identificar o valor líquido recebido.
+- Relacionar ao investimento correspondente.
+
+Não registrar o principal resgatado como receita.
+
+## 6.4. Rendimentos
+
+Reconhecer:
+- Rendimento CDB.
+- Rendimento RDB.
+- Rendimento CDI.
+- Rendimento de conta remunerada.
+- Juros de aplicações.
+- Rendimento de poupança.
+
+Quando houver informações disponíveis, registrar:
+
+- Valor bruto.
+- IR retido.
+- IOF retido.
+- Outros descontos.
+- Valor líquido.
+- Data do crédito.
+- Produto financeiro.
+- Conta vinculada.
+
+Não presumir a existência de imposto quando não houver informação.
+
+## 6.5. Indexador CDI
+
+Diferenciar o produto financeiro do seu indexador.
+
+Exemplo:
+- Produto: CDB.
+- Indexador: CDI.
+- Remuneração: 100% do CDI, quando informada.
+
+Não criar movimentação financeira independente para o CDI.
+
+O percentual de remuneração não deverá ser estimado pelo sistema quando não estiver disponível.
+
+## 6.6. Cashback
+
+Criar categoria própria para:
+
+- Cashback de compras.
+- Cashback promocional.
+- Cashback de cartão.
+- Cashback de conta bancária.
+- Benefícios creditados.
+- Estornos de cashback.
+
+O cashback deverá ser classificado separadamente de rendimentos de investimentos e receitas operacionais.
+
+Quando o cashback representar desconto ou estorno de uma compra, permitir relacioná-lo à operação original, evitando duplicidade de receitas.
+
+# PARTE VII — PROCESSAMENTO E CONCILIAÇÃO
+
+Criar um processo intermediário de importação.
+
+Fluxo:
+
+1. Seleção do arquivo.
+2. Validação do formato.
+3. Extração dos dados.
+4. Identificação da instituição.
+5. Identificação da conta.
+6. Identificação CPF/CNPJ.
+7. Extração das movimentações.
+8. Classificação financeira.
+9. Detecção de duplicidades.
+10. Conciliação dos saldos.
+11. Apresentação da prévia.
+12. Revisão manual.
+13. Aprovação do usuário.
+14. Efetivação dos lançamentos.
+15. Registro do histórico da importação.
+
+Não misturar processamento de arquivo com gravação definitiva de transações.
+
+A etapa de análise deverá ser independente da etapa de aprovação.
+
+# PARTE VIII — DETECÇÃO DE DUPLICIDADES
+
+Implementar prevenção de duplicidades em diferentes níveis.
+
+Prioridade:
+
+1. Identificador original da transação bancária.
+2. Conta bancária.
+3. Data.
+4. Valor.
+5. Descrição normalizada.
+6. Tipo de movimentação.
+7. Identificação do favorecido ou pagador, quando disponível.
+
+Criar uma identificação única para cada movimentação importada.
+
+Comparar os dados com:
+- Movimentações já existentes.
+- Importações anteriores.
+- Histórico da conta.
+- Registros conciliados.
+
+Classificações:
+
+- Nova movimentação.
+- Duplicidade confirmada.
+- Possível duplicidade.
+- Movimentação já registrada manualmente.
+- Movimentação conciliada.
+
+Não excluir automaticamente movimentações semelhantes.
+
+Quando houver dúvida, solicitar conferência.
+
+A importação do mesmo arquivo duas vezes não poderá gerar lançamentos duplicados.
+
+# PARTE IX — INTERFACE DO MÓDULO
+
+Criar uma área chamada:
+
+**Importação Bancária**
+
+A interface deverá seguir a identidade visual oficial do Sávio Finanças.
+
+Cores:
+- Azul-marinho: #082B5C.
+- Azul profundo: #061B3B.
+- Verde: #00A65A.
+- Dourado: #F5B719.
+- Branco: #FFFFFF.
+- Fundo: #F4F7FB.
+- Vermelho: #DC3545.
+
+## 9.1. Tela principal
+
+Apresentar:
+
+- Botão importar extrato.
+- Contas bancárias identificadas.
+- Últimas importações.
+- Quantidade de movimentações processadas.
+- Quantidade de registros pendentes.
+- Quantidade de duplicidades.
+- Quantidade de registros aprovados.
+
+## 9.2. Seleção do arquivo
+
+Criar uma área de envio com suporte aos cinco formatos.
+
+Apresentar:
+- Nome do arquivo.
+- Tipo.
+- Tamanho.
+- Data de processamento.
+- Progresso.
+- Resultado da leitura.
+
+Permitir cancelar o processamento.
+
+## 9.3. Prévia das movimentações
+
+Apresentar uma tabela com:
+
+- Seleção.
+- Data.
+- Descrição original.
+- Favorecido ou pagador.
+- Valor.
+- Entrada ou saída.
+- Categoria sugerida.
+- CPF/CNPJ.
+- Conta bancária.
+- Status de identificação.
+
+Permitir:
+- Editar.
+- Classificar.
+- Associar a uma conta.
+- Relacionar a um investimento.
+- Marcar como transferência.
+- Marcar como duplicidade.
+- Ignorar.
+- Aprovar.
+
+A interface deverá ser responsiva, inclusive em smartphones.
+
+## 9.4. Movimentações não identificadas
+
+Criar uma seção específica:
+
+**Precisa de identificação**
+
+Apresentar os registros que não puderam ser classificados com segurança.
+
+Exibir:
+- Descrição original.
+- Valor.
+- Data.
+- Motivo da dúvida.
+- Sugestão de classificação.
+- Campo de edição.
+- Botão confirmar identificação.
+
+Não forçar classificação automática.
+
+## 9.5. Aprovação
+
+Implementar aprovação manual.
+
+Permitir aprovação individual e aprovação em lote dos registros selecionados, depois da conferência.
+
+Nenhum registro poderá ser efetivado sem uma ação explícita de aprovação.
+
+Não aprovar automaticamente operações classificadas como identificadas.
+
+# PARTE X — APRENDIZADO DAS IDENTIFICAÇÕES
+
+Implementar um mecanismo de regras reutilizáveis.
+
+Quando o usuário corrigir uma classificação, oferecer a possibilidade de salvar uma regra para futuras importações.
+
+Exemplo:
+
+Descrição bancária: determinada identificação de estabelecimento.
+
+Classificação confirmada: alimentação.
+
+Nas próximas importações, o sistema poderá sugerir alimentação para descrições correspondentes.
+
+O aprendizado deverá:
+- Ser baseado em regras explícitas.
+- Considerar a instituição bancária.
+- Considerar o padrão da descrição.
+- Respeitar CPF/CNPJ.
+- Permitir editar e excluir regras.
+- Não transformar uma sugestão em aprovação automática.
+
+Manter separação entre identificação do favorecido, categoria financeira e tipo de operação.
+
+# PARTE XI — MODELO DE DADOS E INTEGRAÇÃO
+
+Antes de implementar qualquer estrutura, examinar os modelos atuais do projeto.
+
+Reaproveitar os modelos e serviços existentes.
+
+O módulo deverá contemplar logicamente as seguintes entidades, adaptando-as à arquitetura existente:
+
+1. Lote de importação.
+2. Arquivo de origem.
+3. Conta bancária identificada.
+4. Movimentação extraída.
+5. Classificação sugerida.
+6. Status de revisão.
+7. Resultado da conciliação.
+8. Relação de duplicidade.
+9. Regras de identificação.
+10. Histórico de aprovação.
+
+Cada movimentação deverá preservar:
+
+- Identificador interno.
+- Identificador bancário original, quando disponível.
+- Conta de origem.
+- Titular CPF/CNPJ.
+- Data da operação.
+- Data de lançamento.
+- Descrição original.
+- Descrição normalizada.
+- Valor.
+- Natureza da movimentação.
+- Categoria.
+- Favorecido ou pagador.
+- Tipo de operação.
+- Status.
+- Origem da importação.
+- Data da aprovação.
+
+Os dados extraídos deverão ser armazenados temporariamente até a aprovação.
+
+Após a aprovação, utilizar os serviços oficiais de criação de movimentações existentes.
+
+Não criar um segundo mecanismo de lançamentos.
+
+## 11.1. Histórico e rastreabilidade
+
+Registrar:
+- Arquivo importado.
+- Conta associada.
+- Período.
+- Quantidade de movimentações.
+- Quantidade aprovada.
+- Quantidade ignorada.
+- Quantidade duplicada.
+- Data da aprovação.
+- Usuário responsável.
+
+Permitir consultar importações anteriores.
+
+Não apagar o histórico quando uma importação for cancelada.
+
+## 11.2. Consistência e recuperação
+
+Implementar:
+- Operações idempotentes.
+- Controle de processamento.
+- Tratamento de falhas parciais.
+- Prevenção de importação duplicada.
+- Recuperação de operações interrompidas.
+- Registro de erros.
+- Compatibilidade com sincronização existente.
+
+A aprovação deverá evitar que uma falha parcial provoque lançamentos duplicados quando o usuário tentar novamente.
+
+# PARTE XII — CONCILIAÇÃO DE SALDOS
+
+Implementar validação matemática do extrato.
+
+Fórmula básica:
+
+Saldo final esperado = saldo inicial + créditos - débitos.
+
+Comparar o resultado com o saldo final informado pelo banco.
+
+Considerar corretamente:
+- Saldos disponíveis.
+- Saldos bloqueados.
+- Lançamentos pendentes.
+- Datas de compensação.
+- Operações que aparecem em períodos diferentes.
+
+Não considerar aplicações e resgates como despesas ou receitas operacionais.
+
+Apresentar:
+
+- Saldo inicial.
+- Total de entradas.
+- Total de saídas.
+- Total de aplicações.
+- Total de resgates.
+- Saldo final calculado.
+- Saldo final informado pelo banco.
+- Diferença encontrada.
+
+Quando houver divergência, apresentar aviso e solicitar revisão.
+
+Não modificar o saldo financeiro do sistema para forçar correspondência com o extrato.
+
+# PARTE XIII — SEGURANÇA E PRIVACIDADE
+
+Os extratos podem conter dados pessoais e bancários sensíveis.
+
+Implementar:
+- Validação de arquivos.
+- Limites de tamanho.
+- Proteção contra arquivos malformados.
+- Processamento seguro.
+- Controle de acesso.
+- Proteção dos dados de CPF/CNPJ.
+- Mascaramento de dados na interface.
+- Eliminação segura de arquivos temporários conforme política definida.
+- Logs sem exposição de informações bancárias completas.
+
+Não armazenar:
+- Senhas bancárias.
+- Credenciais de internet banking.
+- Tokens de acesso bancário.
+- Dados de autenticação de terceiros.
+
+Não enviar extratos para serviços externos de OCR ou IA sem verificar a política de privacidade, segurança e autorização aplicável.
+
+Priorizar processamento local quando tecnicamente viável.
+
+Se houver serviço externo, apresentar claramente a necessidade e as implicações antes de ativá-lo.
+
+# PARTE XIV — TESTES OBRIGATÓRIOS
+
+Criar testes unitários, de integração e funcionais.
+
+## 14.1. Formatos
+
+- OFX válido.
+- OFX incompleto.
+- CSV com separador ponto e vírgula.
+- CSV com separador vírgula.
+- XLSX com múltiplas abas.
+- PDF textual.
+- PDF digitalizado.
+- Imagem legível.
+- Imagem ilegível.
+
+## 14.2. Movimentações
+
+Testar:
+- PIX recebido.
+- PIX enviado.
+- Transferência.
+- Boleto.
+- Compra.
+- Tarifa.
+- Depósito.
+- Saque.
+- Estorno.
+- Cashback.
+- CDB.
+- RDB.
+- Aplicação automática.
+- Resgate.
+- Rendimento CDI.
+- IR e IOF.
+
+## 14.3. CPF e CNPJ
+
+Testar:
+- Conta CPF.
+- Conta CNPJ.
+- Conta já cadastrada.
+- Conta não cadastrada.
+- Documento ausente.
+- Documento inválido.
+- Tentativa de associação incorreta.
+- Consolidação de contas pessoais e empresariais.
+
+## 14.4. Duplicidades e saldos
+
+Testar:
+- Mesmo arquivo importado duas vezes.
+- Movimentação já lançada manualmente.
+- Transferência entre duas contas próprias.
+- Resgate parcial.
+- Rendimento separado do principal.
+- Extrato com divergência de saldo.
+- Importação interrompida.
+- Nova tentativa após falha.
+
+## 14.5. Integridade
+
+Confirmar que:
+- Os registros antigos permanecem intactos.
+- Os cálculos existentes continuam funcionando.
+- A sincronização permanece operacional.
+- O backup continua funcional.
+- A autenticação não foi alterada.
+- O sistema não apresenta lançamentos duplicados.
+- Nenhuma operação é efetivada sem aprovação manual.
+
+# PARTE XV — CRITÉRIOS DE ACEITAÇÃO
+
+A implementação somente poderá ser considerada concluída quando:
+
+1. Os cinco formatos estiverem disponíveis.
+2. A identificação bancária estiver funcionando.
+3. A separação CPF/CNPJ estiver funcionando.
+4. PIX e transferências estiverem corretamente classificados.
+5. CDB, CDI e cashback estiverem contemplados.
+6. Aplicações e resgates não gerarem receitas ou despesas indevidas.
+7. As duplicidades forem identificadas.
+8. Os registros não reconhecidos forem apresentados para revisão.
+9. A aprovação manual estiver funcionando.
+10. Os saldos forem conciliados.
+11. A integração com o sistema financeiro existente estiver funcionando.
+12. A interface estiver adaptada para desktop, tablet e smartphone.
+13. A compilação estiver concluída sem erros.
+14. Os testes críticos estiverem aprovados.
+
+# PARTE XVI — EXECUÇÃO E ENTREGA
+
+Não entregar somente um plano de desenvolvimento.
+
+Executar efetivamente a implementação no repositório.
+
+Trabalhar incrementalmente:
+
+ETAPA 1 — Auditoria da arquitetura.
+
+ETAPA 2 — Identificação dos serviços e modelos existentes.
+
+ETAPA 3 — Desenvolvimento dos leitores de arquivos.
+
+ETAPA 4 — Extração e identificação das contas.
+
+ETAPA 5 — Classificação inteligente das movimentações.
+
+ETAPA 6 — Identificação de investimentos, CDB, CDI e cashback.
+
+ETAPA 7 — Detecção de duplicidades e conciliação.
+
+ETAPA 8 — Desenvolvimento da interface de revisão e aprovação.
+
+ETAPA 9 — Integração com os serviços financeiros existentes.
+
+ETAPA 10 — Testes, validação e correções.
+
+Ao concluir, apresentar relatório técnico contendo:
+
+- Diagnóstico inicial do repositório.
+- Arquitetura encontrada.
+- Arquivos criados.
+- Arquivos modificados.
+- Estruturas e serviços reaproveitados.
+- Dependências adicionadas.
+- Funcionalidades implementadas.
+- Testes executados.
+- Resultado da compilação.
+- Evidências de funcionamento.
+- Pendências técnicas.
+
+Não declarar concluído aquilo que não foi efetivamente implementado e testado.
+
+## DIRETRIZ FINAL
+
+O Sávio Finanças deverá permitir que o usuário importe extratos de diferentes bancos, identifique automaticamente contas pessoais e empresariais, reconheça movimentações comuns e financeiras, classifique rendimentos e cashback, identifique investimentos e realize a conciliação bancária.
+
+O sistema deverá funcionar como um assistente de conferência financeira, preservando a autonomia do usuário e exigindo aprovação manual antes de efetivar qualquer lançamento.
+
+**PRINCÍPIO FUNDAMENTAL: AUTOMATIZAR A LEITURA E A IDENTIFICAÇÃO, MAS MANTER O CONTROLE FINANCEIRO NAS MÃOS DO USUÁRIO.**  Componente principal — Importação Bancária
+Arquivo sugerido: src/components/importacao/ImportacaoBancaria.tsx ;
+import React, { useRef, useState } from "react";
+import {
+  Upload,
+  Landmark,
+  ClipboardCheck,
+  History,
+  FileSpreadsheet,
+  FileText,
+  Image,
+  ArrowRight,
+  CheckCircle2,
+  Circle,
+  ShieldCheck,
+  ScanSearch,
+} from "lucide-react";
+
+import "./ImportacaoBancaria.css";
+
+type Etapa =
+  | "arquivo"
+  | "leitura"
+  | "conta"
+  | "classificacao"
+  | "duplicidades"
+  | "conferencia"
+  | "concluido";
+
+type Props = {
+  onFileSelected?: (file: File) => void;
+  onOpenAccounts?: () => void;
+  onOpenReview?: () => void;
+  onOpenHistory?: () => void;
+};
+
+const etapas: { id: Etapa; titulo: string }[] = [
+  { id: "arquivo", titulo: "Arquivo recebido" },
+  { id: "leitura", titulo: "Leitura e extração" },
+  { id: "conta", titulo: "Identificação bancária" },
+  { id: "classificacao", titulo: "Classificação" },
+  { id: "duplicidades", titulo: "Verificação de duplicidades" },
+  { id: "conferencia", titulo: "Conferência e aprovação" },
+  { id: "concluido", titulo: "Registro e conciliação" },
+];
+
+const formatos = [
+  ".ofx",
+  ".csv",
+  ".xlsx",
+  ".xls",
+  ".pdf",
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+];
+
+export default function ImportacaoBancaria({
+  onFileSelected,
+  onOpenAccounts,
+  onOpenReview,
+  onOpenHistory,
+}: Props) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [arquivo, setArquivo] = useState<File | null>(null);
+  const [etapaAtual, setEtapaAtual] = useState<Etapa>("arquivo");
+
+  function selecionarArquivo(file?: File) {
+    if (!file) return;
+
+    const extensao = "." + file.name.split(".").pop()?.toLowerCase();
+
+    if (!formatos.includes(extensao)) {
+      alert("Formato de arquivo não suportado.");
+      return;
+    }
+
+    setArquivo(file);
+    setEtapaAtual("arquivo");
+    onFileSelected?.(file);
+  }
+
+  const cards = [
+    {
+      titulo: "Novo extrato",
+      descricao: "Enviar arquivo bancário",
+      icon: Upload,
+      action: () => inputRef.current?.click(),
+      destaque: true,
+    },
+    {
+      titulo: "Contas identificadas",
+      descricao: "Agências e contas bancárias",
+      icon: Landmark,
+      action: onOpenAccounts,
+    },
+    {
+      titulo: "Conferência",
+      descricao: "Revisar movimentações",
+      icon: ClipboardCheck,
+      action: onOpenReview,
+    },
+    {
+      titulo: "Histórico",
+      descricao: "Importações anteriores",
+      icon: History,
+      action: onOpenHistory,
+    },
+  ];
+
+  return (
+    <main className="ib-container">
+
+      <input
+        ref={inputRef}
+        type="file"
+        hidden
+        accept={formatos.join(",")}
+        onChange={(event) => {
+          selecionarArquivo(event.target.files?.[0]);
+          event.target.value = "";
+        }}
+      />
+
+      <header className="ib-header">
+        <div className="ib-header-icon">
+          <FileSpreadsheet size={25} />
+        </div>
+
+        <div>
+          <h1>Importação bancária</h1>
+          <p>
+            Leitura inteligente de movimentações e
+            conciliação financeira
+          </p>
+        </div>
+      </header>
+
+      <section className="ib-grid">
+
+        {cards.map((card) => {
+          const Icon = card.icon;
+
+          return (
+            <button
+              key={card.titulo}
+              type="button"
+              className={`ib-card ${
+                card.destaque ? "ib-card-primary" : ""
+              }`}
+              onClick={card.action}
+            >
+              <span className="ib-card-icon">
+                <Icon size={23} />
+              </span>
+
+              <span className="ib-card-content">
+                <strong>{card.titulo}</strong>
+                <small>{card.descricao}</small>
+              </span>
+
+              <ArrowRight className="ib-card-arrow" size={18} />
+            </button>
+          );
+        })}
+
+      </section>
+
+      <section className="ib-upload">
+        <div className="ib-section-title">
+          <div>
+            <h2>Importar extrato bancário</h2>
+            <p>Selecione um arquivo para iniciar a análise.</p>
+          </div>
+          <ShieldCheck size={23} />
+        </div>
+
+        <button
+          type="button"
+          className="ib-dropzone"
+          onClick={() => inputRef.current?.click()}
+        >
+          <Upload size={32} />
+
+          <strong>
+            {arquivo
+              ? arquivo.name
+              : "Selecionar arquivo bancário"}
+          </strong>
+
+          <span>
+            OFX, CSV, XLSX, PDF ou imagem
+          </span>
+
+          {arquivo && (
+            <small>
+              {(arquivo.size / 1024).toFixed(1)} KB
+            </small>
+          )}
+        </button>
+
+        <div className="ib-formats">
+          <span><FileSpreadsheet size={15} /> OFX</span>
+          <span><FileSpreadsheet size={15} /> CSV</span>
+          <span><FileSpreadsheet size={15} /> XLSX</span>
+          <span><FileText size={15} /> PDF</span>
+          <span><Image size={15} /> Imagem</span>
+        </div>
+      </section>
+
+      <section className="ib-process">
+        <div className="ib-section-title">
+          <div>
+            <h2>Fluxo de processamento</h2>
+            <p>Acompanhe as etapas da importação.</p>
+          </div>
+          <ScanSearch size={23} />
+        </div>
+
+        <div className="ib-steps">
+          {etapas.map((etapa, index) => {
+            const atual =
+              etapa.id === etapaAtual;
+
+            const concluida =
+              etapas.findIndex(
+                (item) => item.id === etapaAtual
+              ) > index;
+
+            return (
+              <div
+                key={etapa.id}
+                className={`ib-step ${
+                  atual ? "active" : ""
+                } ${concluida ? "completed" : ""}`}
+              >
+                <div className="ib-step-marker">
+                  {concluida ? (
+                    <CheckCircle2 size={19} />
+                  ) : (
+                    <Circle size={19} />
+                  )}
+                </div>
+
+                <div className="ib-step-text">
+                  <strong>
+                    {index + 1}. {etapa.titulo}
+                  </strong>
+                  {atual && (
+                    <small>Etapa atual</small>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <footer className="ib-security">
+        <ShieldCheck size={19} />
+        <p>
+          Todas as movimentações serão submetidas à
+          conferência e aprovação manual antes do registro.
+        </p>
+      </footer>
+
+    </main>
+  );
+}
+  ; 2. Estilização — identidade visual Sávio Finanças ; Arquivo: src/components/importacao/ImportacaoBancaria.css "
+.ib-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  color: #172536;
+  background: #F4F7FB;
+  box-sizing: border-box;
+}
+
+.ib-container * {
+  box-sizing: border-box;
+}
+
+.ib-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.ib-header-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #082B5C;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ib-header h1 {
+  margin: 0;
+  color: #082B5C;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.ib-header p {
+  margin: 5px 0 0;
+  color: #64748B;
+  font-size: 13px;
+}
+
+.ib-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.ib-card {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid #E2E8F0;
+  border-radius: 15px;
+  background: #FFFFFF;
+  color: #082B5C;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+
+.ib-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 18px rgba(8,43,92,.09);
+}
+
+.ib-card-primary {
+  border-color: #082B5C;
+  background: #082B5C;
+  color: #FFFFFF;
+}
+
+.ib-card-icon {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.ib-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+  min-width: 0;
+}
+
+.ib-card-content strong {
+  font-size: 14px;
+}
+
+.ib-card-content small {
+  font-size: 11px;
+  color: #64748B;
+}
+
+.ib-card-primary .ib-card-content small {
+  color: #DCE8F7;
+}
+
+.ib-card-arrow {
+  flex-shrink: 0;
+}
+
+.ib-upload,
+.ib-process {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 17px;
+  padding: 22px;
+  margin-bottom: 18px;
+}
+
+.ib-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+  color: #082B5C;
+}
+
+.ib-section-title h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.ib-section-title p {
+  margin: 5px 0 0;
+  color: #64748B;
+  font-size: 12px;
+}
+
+.ib-dropzone {
+  width: 100%;
+  min-height: 145px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: #F4F7FB;
+  border: 2px dashed #9BAFC8;
+  border-radius: 13px;
+  color: #082B5C;
+  cursor: pointer;
+}
+
+.ib-dropzone:hover {
+  border-color: #00A65A;
+  background: #F0FAF5;
+}
+
+.ib-dropzone strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.ib-dropzone span,
+.ib-dropzone small {
+  color: #64748B;
+  font-size: 12px;
+}
+
+.ib-formats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 14px;
+}
+
+.ib-formats span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #F4F7FB;
+  color: #082B5C;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ib-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ib-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 13px;
+  border: 1px solid #E2E8F0;
+  border-radius: 11px;
+  background: #F8FAFC;
+  min-width: 0;
+}
+
+.ib-step-marker {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+.ib-step-text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.ib-step-text strong {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.ib-step-text small {
+  color: #00A65A;
+  font-size: 10px;
+}
+
+.ib-step.active {
+  border-color: #082B5C;
+  background: #EEF4FC;
+}
+
+.ib-step.active .ib-step-marker,
+.ib-step.completed .ib-step-marker {
+  color: #00A65A;
+}
+
+.ib-security {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px;
+  border-radius: 11px;
+  background: #EAF7EF;
+  color: #176B42;
+}
+
+.ib-security p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .ib-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ib-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .ib-container {
+    padding: 12px;
+  }
+
+  .ib-header {
+    gap: 10px;
+    margin-bottom: 17px;
+  }
+
+  .ib-header-icon {
+    width: 43px;
+    height: 43px;
+  }
+
+  .ib-header h1 {
+    font-size: 19px;
+  }
+
+  .ib-header p {
+    font-size: 11px;
+  }
+
+  .ib-grid {
+    gap: 9px;
+  }
+
+  .ib-card {
+    padding: 12px 10px;
+    gap: 8px;
+    border-radius: 12px;
+  }
+
+  .ib-card-content strong {
+    font-size: 12px;
+  }
+
+  .ib-card-content small {
+    font-size: 10px;
+  }
+
+  .ib-card-arrow {
+    width: 14px;
+  }
+
+  .ib-upload,
+  .ib-process {
+    padding: 14px;
+    border-radius: 13px;
+  }
+
+  .ib-section-title h2 {
+    font-size: 15px;
+  }
+
+  .ib-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .ib-step {
+    padding: 11px;
+  }
+
+  .ib-dropzone {
+    min-height: 125px;
+  }
+}
+
+@media (max-width: 340px) {
+  .ib-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ib-card {
+    min-height: 65px;
+  }
+}
+3. Integração com o menu principal
+No componente de navegação existente, acrescentar uma opção chamada Importação Bancária.
+
+Exemplo de referência:
+
+import { FileSpreadsheet } from "lucide-react";
+
+{
+  label: "Importação bancária",
+  icon: FileSpreadsheet,
+  path: "/importacao-bancaria"
+}
+
+
+
+Criar a rota conforme o roteador já utilizado pelo projeto:
+
+import ImportacaoBancaria from
+  "./components/importacao/ImportacaoBancaria";
+
+// Dentro das rotas existentes:
+<Route
+  path="/importacao-bancaria"
+  element={<ImportacaoBancaria />}
+/>
+
+
+
+Não criar um segundo roteador. Adaptar ao React Router ou mecanismo de navegação já existente.
+4. Contrato de integração com o processamento bancário
+Para que sua IA não implemente apenas a aparência, forneça também esta estrutura de serviços.
+
+Arquivo sugerido: src/services/importacaoBancaria.types.ts
+
+export type TipoArquivo =
+  | "OFX"
+  | "CSV"
+  | "XLSX"
+  | "PDF"
+  | "IMAGE";
+
+export type NaturezaTitular = "CPF" | "CNPJ";
+
+export type TipoMovimentacao =
+  | "RECEITA"
+  | "DESPESA"
+  | "PIX_RECEBIDO"
+  | "PIX_ENVIADO"
+  | "TRANSFERENCIA"
+  | "APLICACAO"
+  | "RESGATE"
+  | "RENDIMENTO"
+  | "CASHBACK"
+  | "ESTORNO"
+  | "TARIFA"
+  | "IMPOSTO"
+  | "NAO_IDENTIFICADO";
+
+export type StatusImportacao =
+  | "PENDENTE"
+  | "PROCESSANDO"
+  | "AGUARDANDO_REVISAO"
+  | "APROVADO"
+  | "CONCLUIDO"
+  | "ERRO";
+
+export interface ContaIdentificada {
+  banco?: string;
+  titular?: string;
+  documento?: string;
+  natureza?: NaturezaTitular;
+  agencia?: string;
+  numeroConta?: string;
+  tipoConta?: string;
+  contaExistenteId?: string;
+  requerConfirmacao: boolean;
+}
+
+export interface MovimentacaoExtraida {
+  id: string;
+  identificadorBancario?: string;
+  data: string;
+  descricaoOriginal: string;
+  valor: number;
+  tipo: TipoMovimentacao;
+  categoriaSugerida?: string;
+  favorecido?: string;
+  duplicidade: boolean;
+  necessitaRevisao: boolean;
+  confianca?: number;
+}
+
+export interface ResultadoLeitura {
+  conta: ContaIdentificada;
+  movimentacoes: MovimentacaoExtraida[];
+  saldoInicial?: number;
+  saldoFinal?: number;
+  erros: string[];
+}
+
+export interface LoteImportacao {
+  id: string;
+  nomeArquivo: string;
+  formato: TipoArquivo;
+  status: StatusImportacao;
+  totalMovimentacoes: number;
+  totalPendentes: number;
+  totalDuplicadas: number;
+  contaId?: string;
+}
+
+
+
+5. Serviços que sua IA deverá conectar
+A estrutura abaixo define as responsabilidades necessárias. Os métodos devem ser implementados utilizando os serviços reais do repositório.
+
+export interface ImportacaoBancariaService {
+  analisarArquivo(
+    arquivo: File
+  ): Promise<ResultadoLeitura>;
+
+  identificarConta(
+    dados: ContaIdentificada
+  ): Promise<ContaIdentificada>;
+
+  classificarMovimentacoes(
+    movimentacoes: MovimentacaoExtraida[]
+  ): Promise<MovimentacaoExtraida[]>;
+
+  verificarDuplicidades(
+    movimentacoes: MovimentacaoExtraida[],
+    contaId: string
+  ): Promise<MovimentacaoExtraida[]>;
+
+  conciliarSaldos(
+    resultado: ResultadoLeitura
+  ): Promise<{
+    saldoCalculado?: number;
+    saldoInformado?: number;
+    divergencia?: number;
+    conciliado: boolean;
+  }>;
+
+  aprovarImportacao(
+    loteId: string,
+    movimentacoesIds: string[]
+  ): Promise<void>;
+}
+
+
+
+Atenção: essa interface é um contrato de desenvolvimento, não uma implementação pronta. Sua IA deverá conectar cada operação aos leitores de arquivo, mecanismos de classificação e serviços financeiros existentes.
+6. Instrução final para sua IA
+Envie este comando depois dos códigos:
+EXECUTAR IMPLEMENTAÇÃO — IMPORTAÇÃO BANCÁRIA SÁVIO FINANÇAS
+Utilize os códigos fornecidos como base para implementar o módulo de Importação Bancária no repositório existente.
+
+ORDEM DE EXECUÇÃO:
+1. Inspecionar o repositório e confirmar a arquitetura React/TypeScript.
+2. Verificar se Tailwind CSS e lucide-react já estão instalados.
+3. Criar os componentes e estilos, adaptando os caminhos reais.
+4. Integrar o módulo ao menu e ao roteador existentes.
+5. Implementar seleção de arquivos e validação dos formatos OFX, CSV, XLSX, PDF e imagens.
+6. Implementar efetivamente os serviços de leitura e extração.
+7. Integrar identificação de contas CPF/CNPJ.
+8. Implementar classificação de PIX, receitas, despesas, transferências, CDB, CDI, aplicações, resgates e cashback.
+9. Implementar detecção de duplicidades.
+10. Criar telas funcionais de conferência e histórico.
+11. Integrar a aprovação manual aos serviços financeiros existentes.
+12. Implementar conciliação de saldos.
+13. Testar responsividade em smartphones de 320, 340, 360, 390 e 430 px, tablets e desktops.
+IMPORTANTE:
+
+O código visual fornecido é uma base inicial. Não considerar o módulo concluído apenas porque a tela está renderizando.
+
+Os quatro cartões devem executar ações reais:
+- Novo extrato: abrir seletor de arquivos.
+- Contas identificadas: abrir cadastro e consulta de contas.
+- Conferência: abrir a revisão dos registros pendentes.
+- Histórico: consultar importações anteriores.
+As sete etapas do processamento devem refletir o estado real do processamento, não apenas uma sequência visual estática.
+
+Não utilizar dados financeiros fictícios.
+
+Não criar serviços paralelos de contas e movimentações.
+
+Não modificar cálculos financeiros, Firebase, Dexie, IndexedDB, autenticação, sincronização ou backup.
+
+Preservar integralmente os registros existentes.
+
+ENTREGA:
+
+Executar as alterações diretamente no repositório, testar a compilação e apresentar todos os arquivos criados e modificados, dependências utilizadas, testes executados e funcionalidades efetivamente concluídas.
+
+Não substituir funcionalidades existentes por demonstrações ou telas estáticas.
+
+
+
+
+
+7. O que você terá depois da implementação
+Módulo final esperado
+Importação de extratos
+
+Implementar
+
+
+Identificação CPF/CNPJ e contas
+
+
+Leitura e classificação inteligente
+
+
+Prevenção de duplicidades
+
+
+Conferência e aprovação manual
+
+
+Histórico e conciliação

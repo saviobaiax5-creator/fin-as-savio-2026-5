@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { APP_CATEGORIES, OPERATION_TYPES } from '../types.ts';
 
-export const MAX_BASE64_LENGTH = 14_000_000; // ~10 MB binary limit
+export const MAX_BASE64_LENGTH = 21_500_000; // ~15 MB binary limit after base64 expansion
 
 export function sanitizeTextInput(raw: string, maxLen = 1500): string {
   return raw
@@ -94,7 +94,7 @@ export const ExtractedDocItemSchema = z.object({
 });
 
 export const ExtractedDocBatchSchema = z.object({
-  transactions: z.array(ExtractedDocItemSchema).min(1),
+  transactions: z.array(ExtractedDocItemSchema).default([]),
 });
 
 export const ParseBoletoRequestSchema = z
@@ -140,9 +140,19 @@ export function isOriginAllowedForAi(params: {
   try {
     const parsedOrigin = new URL(candidate);
     const originHost = parsedOrigin.host.toLowerCase();
-    const expectedHosts = [host, forwardedHost]
+    const appUrlHost = (() => {
+      try {
+        return process.env.APP_URL ? new URL(process.env.APP_URL).host.toLowerCase() : '';
+      } catch {
+        return '';
+      }
+    })();
+
+    const expectedHosts = [host, forwardedHost, appUrlHost]
       .filter(Boolean)
-      .map((h) => String(h).split(',')[0].trim().toLowerCase());
+      .flatMap((h) => String(h).split(','))
+      .map((h) => h.trim().toLowerCase())
+      .filter(Boolean);
 
     if (expectedHosts.includes(originHost)) return true;
     if (!isProd && (originHost.startsWith('localhost:') || originHost.startsWith('127.0.0.1:'))) {

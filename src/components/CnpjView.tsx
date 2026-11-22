@@ -10,7 +10,7 @@ import {
 } from '../utils/financeCalculations';
 import { useIsDesktop } from '../hooks/useMediaQuery';
 import { VirtualCardList, computeWindowedRange } from './VirtualList';
-import { Plus, Pencil, Trash2, Search, RotateCcw, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Search, RotateCcw, X, Eye } from 'lucide-react';
 
 interface CnpjViewProps {
   transactions: Transaction[];
@@ -22,6 +22,7 @@ interface CnpjViewProps {
   onEditTransaction: (tx: Transaction) => void;
   onDeleteTransaction: (id: string) => void;
   onRestoreTransaction?: (id: string) => void;
+  onTraceTransaction?: (tx: Transaction) => void;
   onNavigate: (tab: string) => void;
 }
 
@@ -35,6 +36,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
   onEditTransaction,
   onDeleteTransaction,
   onRestoreTransaction,
+  onTraceTransaction,
   onNavigate,
 }) => {
   const isDesktop = useIsDesktop();
@@ -407,6 +409,17 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                       )}
                     </div>
                     <div className="flex items-center gap-1">
+                      {onTraceTransaction && (t.origin === 'IMPORT' || t.origin === 'OPEN_FINANCE' || Boolean(t.idempotencyKey || t.externalId)) && (
+                        <button
+                          type="button"
+                          onClick={() => onTraceTransaction(t)}
+                          className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#00A65A] dark:text-slate-400 dark:hover:text-[#00A65A] cursor-pointer"
+                          aria-label={`Rastrear movimentação ${t.description}`}
+                          title="Rastrear movimentação"
+                        >
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => onEditTransaction(t)}
@@ -534,6 +547,17 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                         </td>
                         <td className="py-3.5 px-6 text-center">
                           <div className="inline-flex items-center gap-1">
+                            {onTraceTransaction && (t.origin === 'IMPORT' || t.origin === 'OPEN_FINANCE' || Boolean(t.idempotencyKey || t.externalId)) && (
+                              <button
+                                type="button"
+                                onClick={() => onTraceTransaction(t)}
+                                className="p-2 text-slate-400 hover:text-[#00A65A] hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-lg cursor-pointer"
+                                aria-label={`Rastrear movimentação ${t.description}`}
+                                title="Rastrear movimentação"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                            )}
                             <button
                               type="button"
                               onClick={() => onEditTransaction(t)}

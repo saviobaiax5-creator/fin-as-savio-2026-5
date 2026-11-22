@@ -23,6 +23,11 @@ export const STORAGE_KEYS = {
   preResetSnapshot: 'finance_ia_pre_reset_snapshot',
   recoveryIndex: 'finance_ia_recovery_backups',
   notificationSettings: 'finance_ia_notification_settings',
+  extractionBatches: 'finance_ia_extraction_batches',
+  institutions: 'finance_ia_institutions',
+  accountExtensions: 'finance_ia_account_extensions',
+  extractionRules: 'finance_ia_extraction_rules',
+  consolidationPrefs: 'finance_ia_consolidation_prefs',
 } as const;
 
 export interface RecoveryBackup {
@@ -329,6 +334,11 @@ export function clearEntityStoragePreservingBackups(): void {
     STORAGE_KEYS.salaries,
     STORAGE_KEYS.budgets,
     STORAGE_KEYS.categoryRules,
+    STORAGE_KEYS.extractionBatches,
+    STORAGE_KEYS.institutions,
+    STORAGE_KEYS.accountExtensions,
+    STORAGE_KEYS.extractionRules,
+    STORAGE_KEYS.consolidationPrefs,
   ];
   for (const k of entityKeys) {
     storageService.remove(k);

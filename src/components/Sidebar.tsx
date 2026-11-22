@@ -50,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'investments', label: 'Investimentos · CDI', icon: LineChart, section: 'FINANÇAS' },
     { id: 'assets', label: 'Patrimônio e ativos', icon: TrendingUp, section: 'FINANÇAS' },
     { id: 'documents', label: 'Leitor & Scanner IA', icon: FileSearch, section: 'INTELIGÊNCIA' },
-    { id: 'imports', label: 'Extratos & Importação', icon: FolderOpen, section: 'INTELIGÊNCIA' },
+    { id: 'imports', label: 'Extrações Financeiras', icon: FolderOpen, section: 'INTELIGÊNCIA' },
     { id: 'notifications', label: 'Notificações · Banco', icon: BellRing, section: 'INTELIGÊNCIA' },
     { id: 'ai', label: 'IA Financeira', icon: Bot, section: 'INTELIGÊNCIA' },
     { id: 'reports', label: 'Relatórios gerenciais', icon: FileText, section: 'INTELIGÊNCIA' },

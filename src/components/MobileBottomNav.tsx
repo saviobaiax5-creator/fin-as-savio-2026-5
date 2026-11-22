@@ -59,7 +59,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     { id: 'investments', label: 'Investimentos · CDI', icon: TrendingUp },
     { id: 'assets', label: 'Patrimônio', icon: Package },
     { id: 'documents', label: 'Documentos e Scanner', icon: FileText },
-    { id: 'imports', label: 'Extratos e Open Finance', icon: Receipt },
+    { id: 'imports', label: 'Extrações Financeiras', icon: Receipt },
     { id: 'notifications', label: 'Notificações · Banco', icon: BellRing },
     { id: 'ai', label: 'Inteligência Artificial', icon: Brain },
     { id: 'reports', label: 'Relatórios', icon: ChartNoAxesCombined },

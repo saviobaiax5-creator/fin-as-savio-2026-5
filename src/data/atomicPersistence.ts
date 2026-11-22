@@ -2,6 +2,7 @@ import { db } from '../services/indexedDb';
 import { STORAGE_KEYS, readRawKeySafe, saveJsonSafe } from '../services/storage';
 import type {
   Account,
+  Asset,
   AuditLogEntry,
   Boleto,
   CreditCard,
@@ -18,6 +19,7 @@ export interface AtomicMutationBatch {
   creditCards?: CreditCard[];
   debts?: Debt[];
   accounts?: Account[];
+  assets?: Asset[];
   salaryData?: SalaryDataset;
   auditLogs?: AuditLogEntry[];
   reversals?: TransactionReversalRecord[];
@@ -66,6 +68,11 @@ export async function commitAtomicMutationBatch(
       const res = saveJsonSafe(STORAGE_KEYS.accounts, batch.accounts);
       if (!res.ok) throw new Error(res.error || 'Falha ao salvar contas.');
     }
+    if (batch.assets) {
+      captureKey(STORAGE_KEYS.assets);
+      const res = saveJsonSafe(STORAGE_KEYS.assets, batch.assets);
+      if (!res.ok) throw new Error(res.error || 'Falha ao salvar ativos.');
+    }
     if (batch.salaryData) {
       captureKey(STORAGE_KEYS.salaries);
       const res = saveSalaryDatasetSafely(batch.salaryData);
@@ -111,6 +118,7 @@ export async function commitAtomicMutationBatch(
         database.creditCards,
         database.debts,
         database.accounts,
+        database.assets,
         database.auditLogs,
         database.reversals,
       ];
@@ -134,6 +142,10 @@ export async function commitAtomicMutationBatch(
         if (batch.accounts) {
           await database.accounts.clear();
           if (batch.accounts.length > 0) await database.accounts.bulkPut(batch.accounts);
+        }
+        if (batch.assets) {
+          await database.assets.clear();
+          if (batch.assets.length > 0) await database.assets.bulkPut(batch.assets);
         }
         if (batch.auditLogs) {
           await database.auditLogs.clear();

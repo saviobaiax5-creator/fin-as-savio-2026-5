@@ -282,12 +282,23 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
           }),
         });
 
-        const data = await res.json();
+        const rawText = await res.text();
+        let data: { error?: string; transactions?: ExtractedDocumentTransaction[] } = {};
+        if (rawText.trim()) {
+          try {
+            data = JSON.parse(rawText);
+          } catch {
+            data = {};
+          }
+        }
         if (!res.ok) {
-          setErrorMsg(
-            data.error ||
-              'Não foi possível extrair os dados com IA. Você pode visualizar o documento no leitor ou cadastrar manualmente.'
-          );
+          const fallbackMsg =
+            res.status === 413
+              ? 'O documento excedeu o limite de tamanho aceito pelo servidor OCR (máximo 15 MB).'
+              : res.status === 504 || res.status === 502
+                ? 'O serviço de análise demorou além do esperado para responder. Tente novamente com um arquivo menor ou cadastre manualmente.'
+                : 'Não foi possível extrair os dados com IA. Você pode visualizar o documento no leitor ou cadastrar manualmente.';
+          setErrorMsg(data.error || fallbackMsg);
         } else if (Array.isArray(data.transactions) && data.transactions.length > 0) {
           extractedList = data.transactions;
           setDrafts(buildDraftsFromExtracted(data.transactions));
@@ -295,7 +306,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
           setErrorMsg('Nenhum lançamento financeiro foi identificado neste documento.');
         }
       } catch {
-        setErrorMsg('Erro de comunicação com o servidor de análise documental.');
+        setErrorMsg('Sem conexão com o serviço de análise documental no momento. Você pode visualizar o documento no leitor ou cadastrar manualmente.');
       }
     }
 
