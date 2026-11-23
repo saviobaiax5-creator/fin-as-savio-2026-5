@@ -10,8 +10,10 @@ import {
   type InstitutionProfile,
 } from '../../types/extractions';
 import { computeFinancialConsolidation, inferAccountCategory } from '../../domain/extractions/consolidationEngine';
-import { fromCents } from '../../domain/money/money';
+import { fromCents, type MoneyCents } from '../../domain/money/money';
 import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { InstitutionCategoryBadge } from './InstitutionCategoryBadge';
 import { Sheet } from '../Sheet';
 import {
@@ -59,6 +61,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
   onUpdatePreferences,
   onNavigateModule,
 }) => {
+  const { hideValues } = usePrivacy();
   const [entityFilter, setEntityFilter] = useState<'ALL' | 'CPF' | 'CNPJ'>('ALL');
   const [periodOverride, setPeriodOverride] = useState(period);
   const [inspectBucket, setInspectBucket] = useState<{
@@ -100,6 +103,12 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
   );
 
   const sym = currencySymbol(preferences.targetCurrency);
+  const fmtAmt = (cents: MoneyCents): string => {
+    if (preferences.targetCurrency === 'BRL') {
+      return formatarValor(fromCents(cents), hideValues);
+    }
+    return hideValues ? `${sym}•••••` : `${sym}${formatCurrencyBRL(fromCents(cents))}`;
+  };
   const activeAccounts = useMemo(
     () => accounts.filter((a) => preferences.includeClosedAccounts || !a.archived),
     [accounts, preferences.includeClosedAccounts]
@@ -181,7 +190,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
     {
       title: 'Disponibilidades Financeiras',
       valueCents: summary.disponibilidadesCents,
-      sub: `Bancos físicos ${sym}${formatCurrencyBRL(fromCents(summary.disponibilidadeBancosFisicosCents))} · Digitais ${sym}${formatCurrencyBRL(fromCents(summary.disponibilidadeBancosDigitaisCents))}`,
+      sub: `Bancos físicos ${fmtAmt(summary.disponibilidadeBancosFisicosCents)} · Digitais ${fmtAmt(summary.disponibilidadeBancosDigitaisCents)}`,
       icon: Wallet,
       color: 'text-[#082B5C] dark:text-blue-300',
       bucket: summary.breakdownByBucket.disponibilidades,
@@ -205,7 +214,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
     {
       title: 'Faturas em Aberto + Dívidas',
       valueCents: summary.obrigacoesTotaisCents,
-      sub: `Faturas ${sym}${formatCurrencyBRL(fromCents(summary.faturasAbertasCents))} · Dívidas ${sym}${formatCurrencyBRL(fromCents(summary.dividasCents))} (limites excluídos)`,
+      sub: `Faturas ${fmtAmt(summary.faturasAbertasCents)} · Dívidas ${fmtAmt(summary.dividasCents)} (limites excluídos)`,
       icon: Receipt,
       color: 'text-[#DC3545]',
       bucket: [...summary.breakdownByBucket.faturas, ...summary.breakdownByBucket.dividas],
@@ -511,8 +520,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                 <Icon size={16} className={`${card.color} shrink-0`} />
               </div>
               <div className={`text-xl font-extrabold tabular-nums ${card.color}`}>
-                {sym}
-                {formatCurrencyBRL(fromCents(card.valueCents))}
+                {fmtAmt(card.valueCents)}
               </div>
               <div className="flex items-center justify-between gap-2 pt-1 text-[11px] text-slate-400">
                 <span className="line-clamp-2">{card.sub}</span>
@@ -561,22 +569,19 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                   <div>
                     <span className="block text-[10px] text-slate-400">Disponível</span>
                     <strong className="text-[#082B5C] dark:text-blue-300">
-                      {sym}
-                      {formatCurrencyBRL(fromCents(row.disponibilidadesCents))}
+                      {fmtAmt(row.disponibilidadesCents)}
                     </strong>
                   </div>
                   <div>
                     <span className="block text-[10px] text-slate-400">Investido</span>
                     <strong className="text-[#00A65A]">
-                      {sym}
-                      {formatCurrencyBRL(fromCents(row.investimentosCents))}
+                      {fmtAmt(row.investimentosCents)}
                     </strong>
                   </div>
                   <div>
                     <span className="block text-[10px] text-slate-400">Obrigações</span>
                     <strong className="text-[#DC3545]">
-                      {sym}
-                      {formatCurrencyBRL(fromCents(row.obrigacoesCents))}
+                      {fmtAmt(row.obrigacoesCents)}
                     </strong>
                   </div>
                 </div>
@@ -621,13 +626,12 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                     </div>
                     <div className="text-right shrink-0">
                       <div className="text-xs font-extrabold tabular-nums text-[#082B5C] dark:text-emerald-400">
-                        {sym}
-                        {formatCurrencyBRL(fromCents(item.convertedBrlCents))}
+                        {fmtAmt(item.convertedBrlCents)}
                       </div>
                       {item.currency !== preferences.targetCurrency && (
                         <div className="text-[10px] text-slate-400 tabular-nums">
                           Original: {item.currency}{' '}
-                          {formatCurrencyBRL(fromCents(item.originalAmountCents))}
+                          {hideValues ? '•••••' : formatCurrencyBRL(fromCents(item.originalAmountCents))}
                         </div>
                       )}
                       {item.targetTab && onNavigateModule && (

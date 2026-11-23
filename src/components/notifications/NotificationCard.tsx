@@ -11,8 +11,9 @@ import {
   parseMoneyInput,
   toCents,
 } from '../../domain/money/money';
-import { formatCurrencyBRL } from '../../utils/financeCalculations';
 import { formatDateBR } from '../../utils/dateUtils';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import type {
   BankNotificationViewItem,
   NotificationKind,
@@ -104,6 +105,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
   onConfirm,
   onDiscard,
 }) => {
+  const { hideValues } = usePrivacy();
   const activeAccounts = useMemo(() => accounts.filter((a) => !a.archived), [accounts]);
   const { payload } = item;
 
@@ -274,7 +276,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
                   : 'text-[#082B5C] dark:text-white'
               }`}
             >
-              R$ {formatCurrencyBRL(fromCents(payload.amountCents))}
+              {formatarValor(fromCents(payload.amountCents), hideValues)}
             </div>
           ) : (
             <div className="text-xs font-semibold text-amber-700 dark:text-amber-400">

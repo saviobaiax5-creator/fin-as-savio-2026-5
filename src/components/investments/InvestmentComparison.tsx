@@ -11,9 +11,10 @@ import {
 } from '../../services/investmentCalculator';
 import {
   PRODUCT_TYPE_LABELS,
-  formatBRL,
   formatPercentBR,
 } from '../../utils/investmentFormatters';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import GraficoComparativo, { ChartPoint } from './GraficoComparativo';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
@@ -70,6 +71,7 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
   onRefresh,
   theme,
 }) => {
+  const { hideValues } = usePrivacy();
   const safeInitial = Number.isFinite(initialAmount) && initialAmount >= 0 ? initialAmount : 0;
   const safeContrib =
     Number.isFinite(monthlyContribution) && monthlyContribution >= 0 ? monthlyContribution : 0;
@@ -282,7 +284,7 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
-              Faixas comparativas no período (capital único de {formatBRL(safeInitial)})
+              Faixas comparativas no período (capital único de {formatarValor(safeInitial, hideValues)})
             </h3>
             <span className="text-xs text-slate-400 tabular-nums">{rates.length} dias úteis BCB</span>
           </div>
@@ -332,14 +334,15 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
                   <tr key={row.label} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
                     <td className="py-3.5 px-5 font-bold text-[#082B5C] dark:text-white">{row.label}</td>
                     <td className="py-3.5 px-5 text-right font-bold text-slate-800 dark:text-slate-100">
-                      {formatBRL(row.val)}
+                      {formatarValor(row.val, hideValues)}
                     </td>
                     <td className="py-3.5 px-5 text-right font-semibold text-emerald-700 dark:text-emerald-400">
-                      +{formatBRL(row.profit)}
+                      {hideValues ? formatarValor(row.profit, true) : `+${formatarValor(row.profit, false)}`}
                     </td>
                     <td className="py-3.5 px-5 text-right font-bold text-blue-700 dark:text-blue-400">
-                      {row.diff >= 0 ? '+' : ''}
-                      {formatBRL(row.diff)}
+                      {hideValues
+                        ? formatarValor(row.diff, true)
+                        : `${row.diff >= 0 ? '+' : ''}${formatarValor(row.diff, false)}`}
                     </td>
                   </tr>
                 ))}

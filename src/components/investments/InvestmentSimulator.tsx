@@ -6,9 +6,10 @@ import {
 import { simulateProjectedInvestment } from '../../services/investmentCalculator';
 import {
   PRODUCT_TYPE_LABELS,
-  formatBRL,
   formatPercentBR,
 } from '../../utils/investmentFormatters';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { todayLocal } from '../../utils/dateUtils';
 import GraficoComparativo, { ChartPoint } from './GraficoComparativo';
 import { Save, CheckCircle2, AlertCircle } from 'lucide-react';
@@ -38,6 +39,7 @@ export default function InvestmentSimulator({
   onSaveSimulation,
   theme,
 }: InvestmentSimulatorProps) {
+  const { hideValues } = usePrivacy();
   const [form, setForm] = useState<SimulatorFormState>({
     name: initialPreset?.name || 'Reserva CDB 115% CDI',
     productType: initialPreset?.productType || 'CDB',
@@ -292,7 +294,7 @@ export default function InvestmentSimulator({
                 <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
                   <span className="text-xs text-slate-500 dark:text-slate-400">Total investido</span>
                   <div className="text-base sm:text-lg font-bold text-[#082B5C] dark:text-white mt-1 tabular-nums">
-                    {formatBRL(simulation.investedValue)}
+                    {formatarValor(simulation.investedValue, hideValues)}
                   </div>
                   <span className="text-[11px] text-slate-400">Sem aportes contados como lucro</span>
                 </div>
@@ -300,20 +302,20 @@ export default function InvestmentSimulator({
                 <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
                   <span className="text-xs text-slate-500 dark:text-slate-400">Saldo bruto estimado</span>
                   <div className="text-base sm:text-lg font-bold text-blue-700 dark:text-blue-400 mt-1 tabular-nums">
-                    {formatBRL(simulation.grossValue)}
+                    {formatarValor(simulation.grossValue, hideValues)}
                   </div>
                   <span className="text-[11px] text-slate-400 tabular-nums">
-                    Rendimento: +{formatBRL(simulation.grossProfit)}
+                    Rendimento: {hideValues ? formatarValor(simulation.grossProfit, true) : `+${formatarValor(simulation.grossProfit, false)}`}
                   </span>
                 </div>
 
                 <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 col-span-2 sm:col-span-1">
                   <span className="text-xs text-slate-500 dark:text-slate-400">Saldo líquido estimado</span>
                   <div className="text-base sm:text-lg font-extrabold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
-                    {formatBRL(simulation.netValue)}
+                    {formatarValor(simulation.netValue, hideValues)}
                   </div>
                   <span className="text-[11px] text-amber-700 dark:text-amber-400 tabular-nums">
-                    Impostos: -{formatBRL(simulation.tax.totalTax)}
+                    Impostos: {hideValues ? formatarValor(simulation.tax.totalTax, true) : `-${formatarValor(simulation.tax.totalTax, false)}`}
                   </span>
                 </div>
               </div>

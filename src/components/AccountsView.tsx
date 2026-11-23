@@ -19,6 +19,8 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { Sheet } from './Sheet';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface AccountsViewProps {
   accounts: Account[];
@@ -47,6 +49,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
   onInspectAccount,
   onExecuteTransfer,
 }) => {
+  const { hideValues } = usePrivacy();
   const isDesktop = useIsDesktop();
   const [modalOpen, setModalOpen] = useState(false);
   const [institutionName, setInstitutionName] = useState('');
@@ -187,11 +190,11 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
           ) : (
             <>
               <div className="text-2xl sm:text-3xl font-extrabold text-[#082B5C] dark:text-white mt-1">
-                R$ {formatCurrencyBRL(totalBalance)}
+                {formatarValor(totalBalance, hideValues)}
               </div>
               {Math.abs(totalProjectedBalance - totalBalance) >= 0.01 && (
                 <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold mt-1">
-                  Saldo projetado (com pendentes/planejados): R$ {formatCurrencyBRL(totalProjectedBalance)}
+                  Saldo projetado (com pendentes/planejados): {formatarValor(totalProjectedBalance, hideValues)}
                 </p>
               )}
             </>
@@ -262,12 +265,12 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                     </div>
                     <div className="text-right">
                       <div className="text-base font-extrabold text-[#082B5C] dark:text-emerald-400">
-                        R$ {formatCurrencyBRL(acc.balance)}
+                        {formatarValor(acc.balance, hideValues)}
                       </div>
                       {typeof acc.projectedBalance === 'number' &&
                         Math.abs(acc.projectedBalance - acc.balance) >= 0.01 && (
                           <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-300">
-                            Proj.: R$ {formatCurrencyBRL(acc.projectedBalance)}
+                            Proj.: {formatarValor(acc.projectedBalance, hideValues)}
                           </div>
                         )}
                     </div>
@@ -399,14 +402,14 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                       </span>
                     </td>
                     <td className="py-4 px-6 text-right text-slate-500 dark:text-slate-400">
-                      R$ {formatCurrencyBRL(acc.openingBalance)}
+                      {formatarValor(acc.openingBalance, hideValues)}
                     </td>
                     <td className="py-4 px-6 text-right font-extrabold text-[#082B5C] dark:text-emerald-400">
-                      <div>R$ {formatCurrencyBRL(acc.balance)}</div>
+                      <div>{formatarValor(acc.balance, hideValues)}</div>
                       {typeof acc.projectedBalance === 'number' &&
                         Math.abs(acc.projectedBalance - acc.balance) >= 0.01 && (
                           <small className="block font-semibold text-amber-700 dark:text-amber-300">
-                            Proj.: R$ {formatCurrencyBRL(acc.projectedBalance)}
+                            Proj.: {formatarValor(acc.projectedBalance, hideValues)}
                           </small>
                         )}
                     </td>
@@ -633,7 +636,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
             >
               {activeAccounts.map((acc) => (
                 <option key={acc.id} value={acc.id}>
-                  {acc.institutionName} · {acc.accountName} ({acc.entityId}) — R$ {formatCurrencyBRL(acc.balance)}
+                  {acc.institutionName} · {acc.accountName} ({acc.entityId}) — {formatarValor(acc.balance, hideValues)}
                 </option>
               ))}
             </select>
@@ -650,7 +653,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
             >
               {activeAccounts.map((acc) => (
                 <option key={acc.id} value={acc.id}>
-                  {acc.institutionName} · {acc.accountName} ({acc.entityId}) — R$ {formatCurrencyBRL(acc.balance)}
+                  {acc.institutionName} · {acc.accountName} ({acc.entityId}) — {formatarValor(acc.balance, hideValues)}
                 </option>
               ))}
             </select>

@@ -11,10 +11,11 @@ import {
 } from 'recharts';
 import { InvestmentSimulation } from '../../types/investment';
 import {
-  formatBRL,
   formatPercentBR,
   formatIsoDateTimePtBr,
 } from '../../utils/investmentFormatters';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { Sheet } from '../Sheet';
 import { Copy, Pencil, Trash2, ArrowUpRight, Layers } from 'lucide-react';
 
@@ -35,6 +36,7 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
   onLoadSimulation,
   theme,
 }) => {
+  const { hideValues } = usePrivacy();
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [renamingSim, setRenamingSim] = useState<InvestmentSimulation | null>(null);
   const [renameInput, setRenameInput] = useState('');
@@ -113,7 +115,7 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                         {sim.productType} · {formatPercentBR(sim.cdiPercentage, 1)} CDI · Inicial{' '}
-                        {formatBRL(sim.initialAmount)} · Aporte {formatBRL(sim.monthlyContribution)}/mês ·{' '}
+                        {formatarValor(sim.initialAmount, hideValues)} · Aporte {formatarValor(sim.monthlyContribution, hideValues)}/mês ·{' '}
                         {sim.days} dias
                       </div>
                       <div className="text-[11px] text-slate-400 mt-0.5">
@@ -125,10 +127,10 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                   <div className="flex flex-wrap items-center justify-between md:justify-end gap-4">
                     <div className="text-left md:text-right tabular-nums">
                       <div className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400">
-                        Líquido: {formatBRL(sim.netValue)}
+                        Líquido: {formatarValor(sim.netValue, hideValues)}
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400">
-                        Bruto: {formatBRL(sim.grossValue)} · IR/IOF: {formatBRL(sim.estimatedTax)}
+                        Bruto: {formatarValor(sim.grossValue, hideValues)} · IR/IOF: {formatarValor(sim.estimatedTax, hideValues)}
                       </div>
                     </div>
 
@@ -198,7 +200,11 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                 <YAxis
                   width={84}
                   tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 11 }}
-                  tickFormatter={(v: number) => `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`}
+                  tickFormatter={(v: number) =>
+                    hideValues
+                      ? 'R$ •••'
+                      : `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`
+                  }
                 />
                 <Tooltip
                   contentStyle={{
@@ -208,7 +214,10 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                     color: isDark ? '#f8fafc' : '#172536',
                     fontSize: '12px',
                   }}
-                  formatter={(v: unknown, name: unknown) => [formatBRL(Number(v) || 0), String(name || '')]}
+                  formatter={(v: unknown, name: unknown) => [
+                    formatarValor(Number(v) || 0, hideValues),
+                    String(name || ''),
+                  ]}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px' }} />
                 <Bar dataKey="invested" name="Total investido" stackId="a" fill="#082B5C" />

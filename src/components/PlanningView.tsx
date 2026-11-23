@@ -24,6 +24,8 @@ import {
   Target,
   Trash2,
 } from 'lucide-react';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface PlanningViewProps {
   transactions: Transaction[];
@@ -58,6 +60,7 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
   scope,
   period,
 }) => {
+  const { hideValues } = usePrivacy();
   const [includeProjected, setIncludeProjected] = useState(false);
   const [budgetCategory, setBudgetCategory] = useState<string>('Alimentação');
   const [budgetScope, setBudgetScope] = useState<EntityScope>(scope);
@@ -149,7 +152,7 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
             Base de receita ({period === 'ALL' ? 'Todo período' : period}, escopo {scope}):{' '}
             <strong className="text-emerald-700 dark:text-emerald-400">
-              R$ {formatCurrencyBRL(budget503020.baseIncome)}
+              {formatarValor(budget503020.baseIncome, hideValues)}
             </strong>
           </p>
         </div>
@@ -190,11 +193,11 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
             <Target className="w-5 h-5 text-blue-600" />
           </div>
           <div className="text-2xl font-extrabold text-[#082B5C] dark:text-white">
-            R$ {formatCurrencyBRL(budget503020.needsTarget)}
+            {formatarValor(budget503020.needsTarget, hideValues)}
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400">
             {includeProjected ? 'Projetado' : 'Realizado'}:{' '}
-            <strong>R$ {formatCurrencyBRL(budget503020.needsSpent)}</strong> (
+            <strong>{formatarValor(budget503020.needsSpent, hideValues)}</strong> (
             {pct(budget503020.needsSpent, budget503020.needsTarget)}%)
           </div>
           <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -216,11 +219,11 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
             <Target className="w-5 h-5 text-amber-600" />
           </div>
           <div className="text-2xl font-extrabold text-[#082B5C] dark:text-white">
-            R$ {formatCurrencyBRL(budget503020.wantsTarget)}
+            {formatarValor(budget503020.wantsTarget, hideValues)}
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400">
             {includeProjected ? 'Projetado' : 'Realizado'}:{' '}
-            <strong>R$ {formatCurrencyBRL(budget503020.wantsSpent)}</strong> (
+            <strong>{formatarValor(budget503020.wantsSpent, hideValues)}</strong> (
             {pct(budget503020.wantsSpent, budget503020.wantsTarget)}%)
           </div>
           <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -242,11 +245,11 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
             <Target className="w-5 h-5 text-emerald-600" />
           </div>
           <div className="text-2xl font-extrabold text-[#082B5C] dark:text-white">
-            R$ {formatCurrencyBRL(budget503020.savingsTarget)}
+            {formatarValor(budget503020.savingsTarget, hideValues)}
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400">
             Preservado no período:{' '}
-            <strong>R$ {formatCurrencyBRL(budget503020.actualSavings)}</strong> (
+            <strong>{formatarValor(budget503020.actualSavings, hideValues)}</strong> (
             {pct(budget503020.actualSavings, budget503020.savingsTarget)}%)
           </div>
           <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -410,16 +413,16 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
 
                     <div className="flex justify-between text-xs text-slate-600 dark:text-slate-300">
                       <span>
-                        Gasto: <strong>R$ {formatCurrencyBRL(fromCents(spentCents))}</strong>
+                        Gasto: <strong>{formatarValor(fromCents(spentCents), hideValues)}</strong>
                         {!includeProjected && projectedExtraCents > 0 && (
                           <span className="text-slate-400">
                             {' '}
-                            (+ R$ {formatCurrencyBRL(fromCents(projectedExtraCents))} prev.)
+                            (+ {formatarValor(fromCents(projectedExtraCents), hideValues)} prev.)
                           </span>
                         )}
                       </span>
                       <span>
-                        Teto: <strong>R$ {formatCurrencyBRL(budget.limitAmount)}</strong>
+                        Teto: <strong>{formatarValor(budget.limitAmount, hideValues)}</strong>
                       </span>
                     </div>
 
@@ -433,11 +436,11 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
                     <div className="text-[11px] font-semibold">
                       {remainingCents >= 0 ? (
                         <span className="text-emerald-700 dark:text-emerald-400">
-                          Margem restante: R$ {formatCurrencyBRL(fromCents(remainingCents))}
+                          Margem restante: {formatarValor(fromCents(remainingCents), hideValues)}
                         </span>
                       ) : (
                         <span className="text-red-700 dark:text-red-400">
-                          Ultrapassado em R$ {formatCurrencyBRL(Math.abs(fromCents(remainingCents)))}
+                          Ultrapassado em {formatarValor(Math.abs(fromCents(remainingCents)), hideValues)}
                         </span>
                       )}
                     </div>
@@ -463,7 +466,7 @@ export const PlanningView: React.FC<PlanningViewProps> = ({
                     }}
                     className="px-3 min-h-8 rounded-lg border border-slate-200 dark:border-slate-700 text-xs text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                   >
-                    + {cat.category} (R$ {formatCurrencyBRL(fromCents(includeProjected ? cat.totalCents : cat.confirmedCents))})
+                    + {cat.category} ({formatarValor(fromCents(includeProjected ? cat.totalCents : cat.confirmedCents), hideValues)})
                   </button>
                 ))}
               </div>

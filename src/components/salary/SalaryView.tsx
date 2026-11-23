@@ -23,7 +23,8 @@ import {
   getSourceAnnualTotal,
   normalizeSourceNameKey,
 } from '../../utils/salaryCalculations';
-import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { todayLocal } from '../../utils/dateUtils';
 import { sanitizeCellForSheet } from '../../utils/sheetGuard';
 import { generateEntityId } from '../../domain/common/id';
@@ -80,6 +81,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
   onLinkSalaryToTransaction,
   onNotifyUndo,
 }) => {
+  const { hideValues } = usePrivacy();
   const now = new Date();
   const currentYearDefault = now.getFullYear();
   const currentMonthDefault = now.getMonth() + 1;
@@ -758,7 +760,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                         </div>
                       </div>
                       <span className="text-xs font-extrabold text-[#082B5C] dark:text-white tabular-nums shrink-0">
-                        R$ {formatCurrencyBRL(yearTotal)}
+                        {formatarValor(yearTotal, hideValues)}
                       </span>
                     </div>
 
@@ -961,7 +963,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                       </div>
                       <div className="text-right tabular-nums">
                         <div className="font-bold text-[#082B5C] dark:text-white">
-                          R$ {formatCurrencyBRL(adj.previousAmount)} → R$ {formatCurrencyBRL(adj.newAmount)}
+                          {formatarValor(adj.previousAmount, hideValues)} → {formatarValor(adj.newAmount, hideValues)}
                         </div>
                         <div className="text-emerald-700 dark:text-emerald-400 font-semibold">
                           {adj.percentage !== null
@@ -1033,7 +1035,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                         </div>
                       </div>
                       <div className="text-sm font-extrabold text-blue-700 dark:text-blue-400 tabular-nums">
-                        R$ {formatCurrencyBRL(rec.amount ?? 0)}
+                        {formatarValor(rec.amount ?? 0, hideValues)}
                       </div>
                     </div>
                   );
@@ -1072,11 +1074,11 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 tabular-nums">
                 <span className="text-slate-500">Total anual {yearlyComparison.yearA}:</span>
-                <strong>R$ {formatCurrencyBRL(yearlyComparison.totalYearA)}</strong>
+                <strong>{formatarValor(yearlyComparison.totalYearA, hideValues)}</strong>
               </div>
               <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 tabular-nums">
                 <span className="text-slate-500">Total anual {yearlyComparison.yearB}:</span>
-                <strong>R$ {formatCurrencyBRL(yearlyComparison.totalYearB)}</strong>
+                <strong>{formatarValor(yearlyComparison.totalYearB, hideValues)}</strong>
               </div>
               <div className="flex justify-between py-1 tabular-nums">
                 <span className="text-slate-500">Crescimento (mesmos meses em comum):</span>
@@ -1099,7 +1101,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                 >
                   <span className="text-slate-500">Ano {yr}:</span>
                   <strong>
-                    R$ {formatCurrencyBRL(getAnnualTotal(dataset.records, yr, dataset.sources))}
+                    {formatarValor(getAnnualTotal(dataset.records, yr, dataset.sources), hideValues)}
                   </strong>
                 </div>
               ))}

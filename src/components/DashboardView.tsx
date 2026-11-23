@@ -26,6 +26,9 @@ import {
 } from 'lucide-react';
 
 import type { SyncStatus } from '../services/cloudSyncService';
+import { FinancialCalendarWidget } from './FinancialCalendarWidget';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface DashboardViewProps {
   transactions: Transaction[];
@@ -39,6 +42,7 @@ interface DashboardViewProps {
   onNavigate: (tab: string, filter?: LedgerDrilldownFilter) => void;
   onOpenNew: () => void;
   onEditTransaction?: (tx: Transaction) => void;
+  onScopeChange?: (scope: EntityScope) => void;
 }
 
 const MONTH_NAMES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -55,7 +59,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigate,
   onOpenNew,
   onEditTransaction,
+  onScopeChange,
 }) => {
+  const { hideValues } = usePrivacy();
+
   const scopedAccounts = useMemo(() => {
     return accounts.filter((a) => (scope === 'CONSOLIDATED' ? true : a.entityId === scope));
   }, [accounts, scope]);
@@ -271,20 +278,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             ) : (
               <>
                 <div className="text-3xl sm:text-4xl font-extrabold text-white mt-1.5 tracking-tight">
-                  R$ {formatCurrencyBRL(totalBalance)}
+                  {formatarValor(totalBalance, hideValues)}
                 </div>
                 <p className="text-xs text-slate-300 mt-1">
                   Saldo realizado (inicial + confirmados em {scopedAccounts.length} conta
                   {scopedAccounts.length !== 1 ? 's' : ''}).
                   {Math.abs(projectedBalance - totalBalance) >= 0.01 && (
                     <span className="ml-1.5 text-amber-300 font-semibold">
-                      · Projetado: R$ {formatCurrencyBRL(projectedBalance)}
+                      · Projetado: {formatarValor(projectedBalance, hideValues)}
                     </span>
                   )}
                 </p>
                 {(Math.abs(pendingNet) >= 0.01 || Math.abs(plannedNet) >= 0.01) && (
                   <p className="text-[11px] text-slate-300/90 mt-0.5">
-                    Pendentes no período: R$ {formatCurrencyBRL(pendingNet)} · Planejados: R$ {formatCurrencyBRL(plannedNet)}
+                    Pendentes no período: {formatarValor(pendingNet, hideValues)} · Planejados: {formatarValor(plannedNet, hideValues)}
                   </p>
                 )}
               </>
@@ -367,7 +374,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <div className="text-[11px] text-slate-400">{acc.accountName}</div>
                   </div>
                   <div className="font-extrabold text-emerald-700 dark:text-emerald-400">
-                    R$ {formatCurrencyBRL(acc.balance)}
+                    {formatarValor(acc.balance, hideValues)}
                   </div>
                 </div>
               ))
@@ -375,6 +382,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </details>
       </div>
+
+      {/* 1.8 Tabbed Transactions & Minimizable Calendar Widget */}
+      <FinancialCalendarWidget
+        transactions={transactions}
+        scope={scope}
+        period={period}
+        onEditTransaction={onEditTransaction}
+      />
 
       {/* 2. RECEITAS & DESPESAS SIDE BY SIDE + RESULTADO + A VENCER */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -390,7 +405,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         >
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Receitas</span>
           <div className="text-lg sm:text-2xl font-extrabold text-[#00A65A] dark:text-[#00A65A] my-1.5">
-            R$ {formatCurrencyBRL(totalIncome)}
+            {formatarValor(totalIncome, hideValues)}
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
             <TrendingUp className="w-3.5 h-3.5 text-[#00A65A] shrink-0" />
@@ -410,7 +425,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         >
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Despesas</span>
           <div className="text-lg sm:text-2xl font-extrabold text-[#DC3545] dark:text-[#DC3545] my-1.5">
-            R$ {formatCurrencyBRL(totalExpense)}
+            {formatarValor(totalExpense, hideValues)}
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1">
             <TrendingDown className="w-3.5 h-3.5 text-[#DC3545] shrink-0" />
@@ -429,7 +444,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               netResult >= 0 ? 'text-[#00A65A] dark:text-[#00A65A]' : 'text-[#DC3545] dark:text-[#DC3545]'
             }`}
           >
-            R$ {formatCurrencyBRL(netResult)}
+            {formatarValor(netResult, hideValues)}
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-400">
             {preservationRate}% preservado
@@ -443,7 +458,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         >
           <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">A vencer (Boletos)</span>
           <div className="text-lg sm:text-2xl font-extrabold text-[#F5B719] dark:text-[#F5B719] my-1.5">
-            R$ {formatCurrencyBRL(totalPendingBoletos)}
+            {formatarValor(totalPendingBoletos, hideValues)}
           </div>
           <div className="text-[11px] text-slate-600 dark:text-slate-300 flex items-center gap-1">
             <AlertCircle className="w-3.5 h-3.5 text-[#F5B719] shrink-0" />
@@ -497,7 +512,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             ))}
             {cashFlow30.lowestBalanceCents < 0 && (
               <span className="px-3 py-1 rounded-xl text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-900/60 dark:text-red-200">
-                Caixa projetado negativo (R$ {formatCurrencyBRL(cashFlow30.lowestBalance)}) em{' '}
+                Caixa projetado negativo ({formatarValor(cashFlow30.lowestBalance, hideValues)}) em{' '}
                 {formatDateBR(cashFlow30.lowestBalanceDate)}
               </span>
             )}
@@ -546,7 +561,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                       </span>
                     </div>
                     <div className="text-base font-extrabold text-slate-900 dark:text-white mt-1">
-                      R$ {formatCurrencyBRL(bol.valorOriginal)}
+                      {formatarValor(bol.valorOriginal, hideValues)}
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-2 pt-1">
@@ -640,8 +655,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         : 'text-red-700 dark:text-red-400'
                     }`}
                   >
-                    {t.direction === 'INCOME' ? '+ ' : '− '}
-                    R$ {formatCurrencyBRL(fromCents(getTransactionAmountCents(t)))}
+                    {hideValues
+                      ? formatarValor(fromCents(getTransactionAmountCents(t)), true)
+                      : `${t.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(fromCents(getTransactionAmountCents(t)), false)}`}
                   </div>
                 </button>
               ))}
@@ -722,8 +738,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                             : 'text-red-700 dark:text-red-400'
                         }`}
                       >
-                        {t.direction === 'INCOME' ? '+ ' : '− '}
-                        R$ {formatCurrencyBRL(fromCents(getTransactionAmountCents(t)))}
+                        {hideValues
+                          ? formatarValor(fromCents(getTransactionAmountCents(t)), true)
+                          : `${t.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(fromCents(getTransactionAmountCents(t)), false)}`}
                       </td>
                     </tr>
                   ))}
@@ -760,12 +777,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <div
                       style={{ height: `${m.incPct}%` }}
                       className="w-4 sm:w-6 bg-[#00A65A] rounded-t-sm transition-all"
-                      title={`Receitas: R$ ${formatCurrencyBRL(m.income)}`}
+                      title={`Receitas: ${formatarValor(m.income, hideValues)}`}
                     />
                     <div
                       style={{ height: `${m.expPct}%` }}
                       className="w-4 sm:w-6 bg-[#DC3545] rounded-t-sm transition-all"
-                      title={`Despesas: R$ ${formatCurrencyBRL(m.expense)}`}
+                      title={`Despesas: ${formatarValor(m.expense, hideValues)}`}
                     />
                   </div>
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">{m.label}</span>
@@ -801,7 +818,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <div className="flex justify-between text-xs font-semibold mb-1 gap-2">
                       <span className="text-slate-600 dark:text-slate-300 truncate">{item.category}</span>
                       <span className="text-[#082B5C] dark:text-white shrink-0">
-                        {item.percent}% (R$ {formatCurrencyBRL(item.amount)})
+                        {item.percent}% ({formatarValor(item.amount, hideValues)})
                       </span>
                     </div>
                     <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -841,7 +858,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     {c.cardName} (dia {c.dueDay})
                   </span>
                   <span className="font-bold text-red-700 dark:text-red-400 shrink-0">
-                    R$ {formatCurrencyBRL(c.currentInvoiceAmount)}
+                    {formatarValor(c.currentInvoiceAmount, hideValues)}
                   </span>
                 </div>
               ))

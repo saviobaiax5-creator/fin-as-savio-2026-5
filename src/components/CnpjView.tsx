@@ -11,6 +11,8 @@ import {
 import { useIsDesktop } from '../hooks/useMediaQuery';
 import { VirtualCardList, computeWindowedRange } from './VirtualList';
 import { Plus, Pencil, Trash2, Search, RotateCcw, X, Eye } from 'lucide-react';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface CnpjViewProps {
   transactions: Transaction[];
@@ -39,6 +41,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
   onTraceTransaction,
   onNavigate,
 }) => {
+  const { hideValues } = usePrivacy();
   const isDesktop = useIsDesktop();
   const [search, setSearch] = useState('');
   const deferredSearch = useDeferredValue(search);
@@ -191,7 +194,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl">
           <span className="text-xs text-slate-500 dark:text-slate-400">Receita Confirmada CNPJ</span>
           <div className="text-lg sm:text-2xl font-bold text-emerald-700 dark:text-emerald-400 mt-1.5">
-            R$ {formatCurrencyBRL(totalCnpjIncome)}
+            {formatarValor(totalCnpjIncome, hideValues)}
           </div>
           <small className="text-[11px] text-slate-400 mt-1 block">Faturamento realizado</small>
         </div>
@@ -199,7 +202,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl">
           <span className="text-xs text-slate-500 dark:text-slate-400">Despesas Confirmadas PJ</span>
           <div className="text-lg sm:text-2xl font-bold text-red-700 dark:text-red-400 mt-1.5">
-            R$ {formatCurrencyBRL(totalCnpjExpense)}
+            {formatarValor(totalCnpjExpense, hideValues)}
           </div>
           <small className="text-[11px] text-slate-400 mt-1 block">Custos e insumos pagos</small>
         </div>
@@ -207,11 +210,11 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl">
           <span className="text-xs text-slate-500 dark:text-slate-400">Resultado operacional</span>
           <div className="text-lg sm:text-2xl font-bold text-[#082B5C] dark:text-white mt-1.5">
-            R$ {formatCurrencyBRL(operationalResult)}
+            {formatarValor(operationalResult, hideValues)}
           </div>
           <small className="text-[11px] text-slate-400 mt-1 block">
             {Math.abs(pendingCnpjNet) >= 0.01
-              ? `Previsto adicional: R$ ${formatCurrencyBRL(pendingCnpjNet)}`
+              ? `Previsto adicional: ${formatarValor(pendingCnpjNet, hideValues)}`
               : 'Receitas menos despesas'}
           </small>
         </div>
@@ -223,7 +226,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
         >
           <span className="text-xs text-slate-500 dark:text-slate-400">Obrigações / Boletos PJ</span>
           <div className="text-lg sm:text-2xl font-bold text-amber-700 dark:text-amber-400 mt-1.5">
-            R$ {formatCurrencyBRL(totalPendingCnpjBoletos)}
+            {formatarValor(totalPendingCnpjBoletos, hideValues)}
           </div>
           <small className="text-[11px] text-amber-800 dark:text-amber-300 mt-1 block">
             {pendingCnpjBoletos.length} pendente{pendingCnpjBoletos.length !== 1 ? 's' : ''}
@@ -255,7 +258,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                     </small>
                   </div>
                   <span className="font-bold text-emerald-700 dark:text-emerald-400 shrink-0">
-                    R$ {formatCurrencyBRL(fromCents(getTransactionAmountCents(r)))}
+                    {formatarValor(fromCents(getTransactionAmountCents(r)), hideValues)}
                   </span>
                 </li>
               ))}
@@ -287,7 +290,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                     </small>
                   </div>
                   <span className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 rounded-md font-bold shrink-0">
-                    R$ {formatCurrencyBRL(b.valorOriginal)}
+                    {formatarValor(b.valorOriginal, hideValues)}
                   </span>
                 </li>
               ))}
@@ -387,8 +390,9 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
-                      {t.direction === 'INCOME' ? '+ ' : '− '}
-                      R$ {formatCurrencyBRL(displayAmount)}
+                      {hideValues
+                        ? formatarValor(displayAmount, true)
+                        : `${t.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(displayAmount, false)}`}
                     </div>
                   </div>
                   <div className="flex items-center justify-between gap-2">
@@ -542,8 +546,9 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                               : 'text-red-700 dark:text-red-400'
                           }`}
                         >
-                          {t.direction === 'INCOME' ? '+ ' : '− '}
-                          R$ {formatCurrencyBRL(displayAmount)}
+                          {hideValues
+                            ? formatarValor(displayAmount, true)
+                            : `${t.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(displayAmount, false)}`}
                         </td>
                         <td className="py-3.5 px-6 text-center">
                           <div className="inline-flex items-center gap-1">

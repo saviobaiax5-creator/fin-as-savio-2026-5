@@ -17,6 +17,8 @@ import {
   isRecordPaid,
 } from '../../utils/salaryCalculations';
 import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarNumeroBRL, formatarValor } from '../../utils/formatters';
 import { todayLocal } from '../../utils/dateUtils';
 import { Sheet } from '../Sheet';
 import {
@@ -72,6 +74,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
   onOpenImport,
   onOpenNewSource,
 }) => {
+  const { hideValues } = usePrivacy();
   const [filterCategory, setFilterCategory] = useState<string>('ALL');
   const [showArchived, setShowArchived] = useState(false);
 
@@ -386,7 +389,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                               {hasAmount ? (
                                 <>
                                   <span className="font-semibold tabular-nums whitespace-nowrap">
-                                    {formatCurrencyBRL(rec.amount ?? 0)}
+                                    {formatarNumeroBRL(rec.amount ?? 0, hideValues)}
                                   </span>
                                   <span className="text-[10px] opacity-80 flex items-center gap-1 whitespace-nowrap">
                                     {rec.linkedTransactionId && <Link2 size={9} className="text-emerald-600" />}
@@ -404,7 +407,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                       })}
 
                       <td className="py-2.5 px-4 text-right font-extrabold text-[#082B5C] dark:text-white bg-slate-50/70 dark:bg-slate-800/50 border-l border-slate-100 dark:border-slate-800 tabular-nums whitespace-nowrap">
-                        R$ {formatCurrencyBRL(rowTotal)}
+                        {formatarValor(rowTotal, hideValues)}
                       </td>
                     </tr>
                   );
@@ -424,18 +427,18 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                         key={`total-${mLabel}`}
                         className="py-3 px-2.5 text-right tabular-nums whitespace-nowrap"
                       >
-                        {mTotal > 0 ? formatCurrencyBRL(mTotal) : '—'}
+                        {mTotal > 0 ? formatarNumeroBRL(mTotal, hideValues) : '—'}
                       </td>
                     );
                   })}
                   <td className="py-3 px-4 text-right text-emerald-700 dark:text-emerald-400 border-l border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
-                    R${' '}
-                    {formatCurrencyBRL(
+                    {formatarValor(
                       MONTHS_PT_SHORT.reduce(
                         (sum, _l, idx) =>
                           sum + getMonthlyTotal(records, selectedYear, idx + 1, sources),
                         0
-                      )
+                      ),
+                      hideValues
                     )}
                   </td>
                 </tr>
@@ -467,7 +470,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                 <div>
                   <h4 className="font-bold text-sm text-[#082B5C] dark:text-white">{source.name}</h4>
                   <p className="text-xs text-slate-400">
-                    {SALARY_CATEGORY_LABELS[source.category]} · Anual: R$ {formatCurrencyBRL(annual)}
+                    {SALARY_CATEGORY_LABELS[source.category]} · Anual: {formatarValor(annual, hideValues)}
                   </p>
                 </div>
                 <button
@@ -484,7 +487,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                   {rec ? SALARY_STATUS_LABELS[rec.status] : 'Sem pagamento informado'}
                 </span>
                 <span className="text-base font-extrabold text-[#082B5C] dark:text-white tabular-nums">
-                  {rec && rec.amount !== null ? `R$ ${formatCurrencyBRL(rec.amount)}` : '—'}
+                  {rec && rec.amount !== null ? formatarValor(rec.amount, hideValues) : '—'}
                 </span>
               </div>
             </div>
@@ -709,7 +712,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
             <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs space-y-1">
               <div className="text-slate-500">Valor a lançar como receita confirmada</div>
               <div className="text-lg font-extrabold text-emerald-700 dark:text-emerald-400 tabular-nums">
-                R$ {formatCurrencyBRL(linkingRecord.amount ?? 0)}
+                {formatarValor(linkingRecord.amount ?? 0, hideValues)}
               </div>
             </div>
 

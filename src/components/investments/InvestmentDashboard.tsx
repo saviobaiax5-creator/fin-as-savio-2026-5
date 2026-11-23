@@ -20,10 +20,11 @@ import {
 } from '../../services/investmentStorage';
 import {
   PRODUCT_TYPE_LABELS,
-  formatBRL,
   formatIsoDateTimePtBr,
   formatPercentBR,
 } from '../../utils/investmentFormatters';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { todayLocal } from '../../utils/dateUtils';
 import { generateEntityId } from '../../domain/common/id';
 import { InvestmentSummary } from './InvestmentSummary';
@@ -77,6 +78,7 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
   theme,
   onNotifyUndo,
 }) => {
+  const { hideValues } = usePrivacy();
   const [subTab, setSubTab] = useState<InvestmentSubTab>('overview');
   const [periodFilter, setPeriodFilter] = useState<InvestmentFilterPeriod>('12m');
   const [customStartIso, setCustomStartIso] = useState(() => {
@@ -445,10 +447,10 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
                 Retorno Líquido Estimado no Período
               </span>
               <div className="text-2xl font-extrabold text-blue-700 dark:text-blue-400 mt-1 tabular-nums">
-                {formatBRL(activeSummary.netProfit)}
+                {formatarValor(activeSummary.netProfit, hideValues)}
               </div>
               <p className="text-xs text-slate-400 mt-1 tabular-nums">
-                Sobre {formatBRL(activeSummary.investedValue)} aplicados
+                Sobre {formatarValor(activeSummary.investedValue, hideValues)} aplicados
               </p>
             </div>
           </div>

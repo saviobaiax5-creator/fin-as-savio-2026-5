@@ -238,9 +238,22 @@ async function startServer() {
       const parts: Array<{ inlineData?: { mimeType: string; data: string }; text?: string }> = [];
 
       if (fileData) {
+        let finalMime = fileData.mimeType;
+        const lowName = (fileName || '').toLowerCase();
+        if (lowName.endsWith('.pdf') || finalMime.includes('pdf')) {
+          finalMime = 'application/pdf';
+        } else if (lowName.endsWith('.png')) {
+          finalMime = 'image/png';
+        } else if (lowName.endsWith('.webp')) {
+          finalMime = 'image/webp';
+        } else if (lowName.endsWith('.jpg') || lowName.endsWith('.jpeg')) {
+          finalMime = 'image/jpeg';
+        } else if (finalMime === 'application/octet-stream' || !finalMime) {
+          finalMime = 'application/pdf';
+        }
         parts.push({
           inlineData: {
-            mimeType: fileData.mimeType,
+            mimeType: finalMime,
             data: fileData.base64,
           },
         });

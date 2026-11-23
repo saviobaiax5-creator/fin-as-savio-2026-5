@@ -6,6 +6,8 @@ import { useIsDesktop } from '../hooks/useMediaQuery';
 import { MoneyInputField } from './MoneyInputField';
 import { Plus, ShieldAlert, Trash2, AlertCircle, CheckCircle2, Banknote } from 'lucide-react';
 import { Sheet } from './Sheet';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface DebtsViewProps {
   debts: Debt[];
@@ -22,6 +24,7 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
   onAmortizeDebt,
   onDeleteDebt,
 }) => {
+  const { hideValues } = usePrivacy();
   const isDesktop = useIsDesktop();
   const [modalOpen, setModalOpen] = useState(false);
   const [amortizeTarget, setAmortizeTarget] = useState<Debt | null>(null);
@@ -135,7 +138,7 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
         <div>
           <span className="text-xs font-semibold text-slate-400">Saldo Devedor Total</span>
           <div className="text-2xl sm:text-3xl font-extrabold text-red-700 dark:text-red-400 mt-1">
-            R$ {formatCurrencyBRL(totalDebt)}
+            {formatarValor(totalDebt, hideValues)}
           </div>
         </div>
         <div className="p-3 bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 rounded-2xl">
@@ -165,13 +168,13 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
                     <div className="text-xs text-slate-500 dark:text-slate-400">{d.description}</div>
                   </div>
                   <div className="text-sm font-extrabold text-red-700 dark:text-red-400">
-                    R$ {formatCurrencyBRL(d.outstandingAmount)}
+                    {formatarValor(d.outstandingAmount, hideValues)}
                   </div>
                 </div>
                 <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                   <span>
                     Parcela:{' '}
-                    {d.installmentAmount ? `R$ ${formatCurrencyBRL(d.installmentAmount)}` : '—'} · Dia{' '}
+                    {d.installmentAmount ? formatarValor(d.installmentAmount, hideValues) : '—'} · Dia{' '}
                     {d.dueDay}
                   </span>
                   <div className="flex items-center gap-1">
@@ -224,13 +227,13 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
                       </span>
                     </td>
                     <td className="py-4 px-6 text-right font-medium text-slate-600 dark:text-slate-300">
-                      R$ {formatCurrencyBRL(d.originalAmount)}
+                      {formatarValor(d.originalAmount, hideValues)}
                     </td>
                     <td className="py-4 px-6 text-right font-extrabold text-red-700 dark:text-red-400">
-                      R$ {formatCurrencyBRL(d.outstandingAmount)}
+                      {formatarValor(d.outstandingAmount, hideValues)}
                     </td>
                     <td className="py-4 px-6 text-right font-bold text-slate-800 dark:text-slate-200">
-                      {d.installmentAmount ? `R$ ${formatCurrencyBRL(d.installmentAmount)}` : '—'}
+                      {d.installmentAmount ? formatarValor(d.installmentAmount, hideValues) : '—'}
                     </td>
                     <td className="py-4 px-6 text-center text-slate-600 dark:text-slate-300 font-medium">
                       Dia {d.dueDay}
@@ -404,7 +407,7 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
               <div>
                 Saldo devedor atual:{' '}
                 <strong className="text-red-700 dark:text-red-400">
-                  R$ {formatCurrencyBRL(amortizeTarget.outstandingAmount)}
+                  {formatarValor(amortizeTarget.outstandingAmount, hideValues)}
                 </strong>
               </div>
             </div>

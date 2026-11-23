@@ -5,10 +5,9 @@ import { parseSignedMoneyInput, toCents, fromCents } from '../domain/money/money
 import { generateEntityId } from '../domain/common/id';
 import { categorizeTransactionDescription } from '../domain/transactions/CategorizationService';
 import { findMatchingScheduledTransaction } from '../domain/transactions/ImportReconciliationService';
-import {
-  checkDuplicateTransaction,
-  formatCurrencyBRL,
-} from '../utils/financeCalculations';
+import { checkDuplicateTransaction } from '../utils/financeCalculations';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 import { formatDateBR, todayLocal } from '../utils/dateUtils';
 import { Upload, CheckCircle2, AlertCircle, Lock, Sparkles, Tag, Trash2, Link2 } from 'lucide-react';
 
@@ -119,6 +118,7 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
   onDeleteCategoryRule,
   onImportTransactions,
 }) => {
+  const { hideValues } = usePrivacy();
   const activeAccounts = accounts.filter((a) => !a.archived);
   const [fileName, setFileName] = useState('');
   const [targetAccountId, setTargetAccountId] = useState(activeAccounts[0]?.id || accounts[0]?.id || '');
@@ -418,8 +418,9 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
-                      {row.direction === 'INCOME' ? '+ ' : '− '}
-                      R$ {formatCurrencyBRL(row.amount)}
+                      {hideValues
+                        ? formatarValor(row.amount, true)
+                        : `${row.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(row.amount, false)}`}
                     </span>
                   </div>
                 </div>

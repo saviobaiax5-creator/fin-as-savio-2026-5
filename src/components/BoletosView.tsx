@@ -8,6 +8,8 @@ import { generateEntityId } from '../domain/common/id';
 import { todayLocal } from '../utils/dateUtils';
 import { Sheet } from './Sheet';
 import { Check, AlertCircle, Sparkles, Search, Plus, Trash2 } from 'lucide-react';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface BoletosViewProps {
   boletos: Boleto[];
@@ -24,6 +26,7 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
   onPayBoleto,
   onDeleteBoleto,
 }) => {
+  const { hideValues } = usePrivacy();
   const [entryMode, setEntryMode] = useState<'barcode' | 'manual'>('barcode');
   const [linhaInput, setLinhaInput] = useState('');
   const [beneficiarioInput, setBeneficiarioInput] = useState('');
@@ -304,11 +307,11 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
                   </div>
                   <div className="text-right shrink-0">
                     <div className="text-sm font-extrabold text-slate-900 dark:text-white">
-                      R$ {formatCurrencyBRL(b.status === 'PAID' && typeof b.paidAmount === 'number' ? b.paidAmount : b.valorOriginal)}
+                      {formatarValor(b.status === 'PAID' && typeof b.paidAmount === 'number' ? b.paidAmount : b.valorOriginal, hideValues)}
                     </div>
                     {b.status === 'PAID' && typeof b.paidAmount === 'number' && Math.abs(b.paidAmount - b.valorOriginal) > 0.009 && (
                       <div className="text-[10px] text-slate-400">
-                        Orig.: R$ {formatCurrencyBRL(b.valorOriginal)}
+                        Orig.: {formatarValor(b.valorOriginal, hideValues)}
                       </div>
                     )}
                   </div>
@@ -396,11 +399,11 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
                     </td>
                     <td className="py-4 px-6 text-right font-extrabold text-slate-900 dark:text-white">
                       <div>
-                        R$ {formatCurrencyBRL(b.status === 'PAID' && typeof b.paidAmount === 'number' ? b.paidAmount : b.valorOriginal)}
+                        {formatarValor(b.status === 'PAID' && typeof b.paidAmount === 'number' ? b.paidAmount : b.valorOriginal, hideValues)}
                       </div>
                       {b.status === 'PAID' && typeof b.paidAmount === 'number' && Math.abs(b.paidAmount - b.valorOriginal) > 0.009 && (
                         <small className="font-normal text-slate-400">
-                          Original: R$ {formatCurrencyBRL(b.valorOriginal)}
+                          Original: {formatarValor(b.valorOriginal, hideValues)}
                         </small>
                       )}
                     </td>
@@ -690,7 +693,7 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
             <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs space-y-1">
               <div className="font-bold text-slate-900 dark:text-white">{payingBoleto.beneficiario}</div>
               <div className="text-slate-500 dark:text-slate-400">
-                Valor original: <strong className="text-slate-800 dark:text-slate-200">R$ {formatCurrencyBRL(payingBoleto.valorOriginal)}</strong>
+                Valor original: <strong className="text-slate-800 dark:text-slate-200">{formatarValor(payingBoleto.valorOriginal, hideValues)}</strong>
               </div>
               <div className="text-slate-500 dark:text-slate-400">
                 Vencimento: {payingBoleto.vencimento.split('-').reverse().join('/')}

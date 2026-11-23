@@ -16,6 +16,8 @@ import {
 import { formatDateBR } from '../utils/dateUtils';
 import { sanitizeCellForSheet } from '../utils/sheetGuard';
 import { Printer, Download, CalendarRange, AlertTriangle } from 'lucide-react';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface ReportsViewProps {
   transactions: Transaction[];
@@ -38,6 +40,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
   period,
   onNavigate,
 }) => {
+  const { hideValues } = usePrivacy();
   const [horizonDays, setHorizonDays] = useState<CashFlowHorizonDays>(30);
 
   const cashFlowProjection = useMemo(
@@ -199,17 +202,17 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
               summary.net >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'
             }`}
           >
-            R$ {formatCurrencyBRL(summary.net)}
+            {formatarValor(summary.net, hideValues)}
           </div>
           <small className="text-[11px] text-slate-400 mt-1 block">
-            Rec: R$ {formatCurrencyBRL(summary.income)} · Desp: R$ {formatCurrencyBRL(summary.expense)}
+            Rec: {formatarValor(summary.income, hideValues)} · Desp: {formatarValor(summary.expense, hideValues)}
           </small>
         </div>
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
           <span className="text-xs text-slate-400 font-semibold">Saldo em Contas</span>
           <div className="text-lg sm:text-xl font-extrabold text-[#082B5C] dark:text-white mt-1">
-            R$ {formatCurrencyBRL(summary.accountsBalance)}
+            {formatarValor(summary.accountsBalance, hideValues)}
           </div>
           <small className="text-[11px] text-slate-400 mt-1 block">Liquidez imediata</small>
         </div>
@@ -217,7 +220,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
           <span className="text-xs text-slate-400 font-semibold">Patrimônio Líquido Estimado</span>
           <div className="text-lg sm:text-xl font-extrabold text-blue-700 dark:text-blue-400 mt-1">
-            R$ {formatCurrencyBRL(summary.netWorth)}
+            {formatarValor(summary.netWorth, hideValues)}
           </div>
           <small className="text-[11px] text-slate-400 mt-1 block">Contas + Ativos − Dívidas</small>
         </div>
@@ -225,7 +228,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
           <span className="text-xs text-slate-400 font-semibold">Boletos Pendentes</span>
           <div className="text-lg sm:text-xl font-extrabold text-amber-700 dark:text-amber-400 mt-1">
-            R$ {formatCurrencyBRL(summary.pendingBoletos)}
+            {formatarValor(summary.pendingBoletos, hideValues)}
           </div>
           <small className="text-[11px] text-slate-400 mt-1 block">Obrigações em aberto</small>
         </div>
@@ -253,12 +256,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                 <div className="text-right">
                   {item.income > 0 && (
                     <div className="font-bold text-emerald-700 dark:text-emerald-400">
-                      + R$ {formatCurrencyBRL(item.income)}
+                      {hideValues ? formatarValor(item.income, true) : `+ ${formatarValor(item.income, false)}`}
                     </div>
                   )}
                   {item.expense > 0 && (
                     <div className="font-bold text-red-700 dark:text-red-400">
-                      − R$ {formatCurrencyBRL(item.expense)}
+                      {hideValues ? formatarValor(item.expense, true) : `− ${formatarValor(item.expense, false)}`}
                     </div>
                   )}
                 </div>
@@ -279,19 +282,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Receitas:</span>
               <strong className="text-emerald-700 dark:text-emerald-400">
-                R$ {formatCurrencyBRL(entityComparison.cpf.inc)}
+                {formatarValor(entityComparison.cpf.inc, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Despesas:</span>
               <strong className="text-red-700 dark:text-red-400">
-                R$ {formatCurrencyBRL(entityComparison.cpf.exp)}
+                {formatarValor(entityComparison.cpf.exp, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between pt-1 border-t border-emerald-200/70 dark:border-emerald-800">
               <span className="font-bold text-slate-700 dark:text-slate-200">Resultado:</span>
               <strong className="text-[#082B5C] dark:text-white">
-                R$ {formatCurrencyBRL(entityComparison.cpf.net)}
+                {formatarValor(entityComparison.cpf.net, hideValues)}
               </strong>
             </div>
           </div>
@@ -301,19 +304,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Faturamento:</span>
               <strong className="text-emerald-700 dark:text-emerald-400">
-                R$ {formatCurrencyBRL(entityComparison.cnpj.inc)}
+                {formatarValor(entityComparison.cnpj.inc, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Custos / Despesas:</span>
               <strong className="text-red-700 dark:text-red-400">
-                R$ {formatCurrencyBRL(entityComparison.cnpj.exp)}
+                {formatarValor(entityComparison.cnpj.exp, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between pt-1 border-t border-blue-200/70 dark:border-blue-800">
               <span className="font-bold text-slate-700 dark:text-slate-200">Resultado Operacional:</span>
               <strong className="text-[#082B5C] dark:text-white">
-                R$ {formatCurrencyBRL(entityComparison.cnpj.net)}
+                {formatarValor(entityComparison.cnpj.net, hideValues)}
               </strong>
             </div>
           </div>
@@ -355,19 +358,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
             <span className="text-slate-500 dark:text-slate-400 block">Saldo Inicial Real</span>
             <strong className="text-base font-extrabold text-[#082B5C] dark:text-white">
-              R$ {formatCurrencyBRL(cashFlowProjection.startingBalance)}
+              {formatarValor(cashFlowProjection.startingBalance, hideValues)}
             </strong>
           </div>
           <div className="p-3.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
             <span className="text-emerald-700 dark:text-emerald-300 block">Entradas Previstas</span>
             <strong className="text-base font-extrabold text-emerald-700 dark:text-emerald-400">
-              + R$ {formatCurrencyBRL(cashFlowProjection.totalInflows)}
+              {hideValues ? formatarValor(cashFlowProjection.totalInflows, true) : `+ ${formatarValor(cashFlowProjection.totalInflows, false)}`}
             </strong>
           </div>
           <div className="p-3.5 rounded-xl bg-red-50/60 dark:bg-red-950/30 border border-red-200 dark:border-red-800">
             <span className="text-red-700 dark:text-red-300 block">Saídas + Boletos</span>
             <strong className="text-base font-extrabold text-red-700 dark:text-red-400">
-              − R$ {formatCurrencyBRL(cashFlowProjection.totalOutflows)}
+              {hideValues ? formatarValor(cashFlowProjection.totalOutflows, true) : `− ${formatarValor(cashFlowProjection.totalOutflows, false)}`}
             </strong>
           </div>
           <div
@@ -385,7 +388,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                   : 'text-[#082B5C] dark:text-emerald-400'
               }`}
             >
-              R$ {formatCurrencyBRL(cashFlowProjection.projectedEndBalance)}
+              {formatarValor(cashFlowProjection.projectedEndBalance, hideValues)}
             </strong>
           </div>
         </div>
@@ -395,7 +398,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <AlertTriangle className="w-4 h-4 shrink-0" />
             <span>
               Atenção: o saldo projetado atinge o menor ponto de{' '}
-              <strong>R$ {formatCurrencyBRL(cashFlowProjection.lowestBalance)}</strong> em{' '}
+              <strong>{formatarValor(cashFlowProjection.lowestBalance, hideValues)}</strong> em{' '}
               <strong>{formatDateBR(cashFlowProjection.lowestBalanceDate)}</strong>.
             </span>
           </div>
@@ -436,8 +439,9 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
-                      {ev.direction === 'INCOME' ? '+ ' : '− '}
-                      R$ {formatCurrencyBRL(fromCents(ev.amountCents))}
+                      {hideValues
+                        ? formatarValor(fromCents(ev.amountCents), true)
+                        : `${ev.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(fromCents(ev.amountCents), false)}`}
                     </td>
                     <td
                       className={`py-2.5 px-3 text-right font-extrabold whitespace-nowrap ${
@@ -446,7 +450,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                           : 'text-[#082B5C] dark:text-white'
                       }`}
                     >
-                      R$ {formatCurrencyBRL(fromCents(ev.runningBalanceCents))}
+                      {formatarValor(fromCents(ev.runningBalanceCents), hideValues)}
                     </td>
                   </tr>
                 ))}

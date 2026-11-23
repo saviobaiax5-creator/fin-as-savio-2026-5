@@ -7,6 +7,8 @@ import { MoneyInputField } from './MoneyInputField';
 import { todayLocal } from '../utils/dateLocal';
 import { TrendingUp, Plus, Trash2, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { Sheet } from './Sheet';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface AssetsViewProps {
   assets: Asset[];
@@ -15,6 +17,7 @@ interface AssetsViewProps {
 }
 
 export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDeleteAsset }) => {
+  const { hideValues } = usePrivacy();
   const isDesktop = useIsDesktop();
   const [modalOpen, setModalOpen] = useState(false);
   const [description, setDescription] = useState('');
@@ -89,7 +92,7 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
         <div>
           <span className="text-xs font-semibold text-slate-400">Patrimônio Bruto Consolidado</span>
           <div className="text-2xl sm:text-3xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1">
-            R$ {formatCurrencyBRL(totalAssets)}
+            {formatarValor(totalAssets, hideValues)}
           </div>
         </div>
         <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 rounded-2xl">
@@ -115,7 +118,7 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
                     </div>
                   </div>
                   <div className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400">
-                    R$ {formatCurrencyBRL(a.currentValue)}
+                    {formatarValor(a.currentValue, hideValues)}
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
@@ -175,7 +178,7 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
                       </span>
                     </td>
                     <td className="py-4 px-6 text-right font-extrabold text-emerald-700 dark:text-emerald-400">
-                      R$ {formatCurrencyBRL(a.currentValue)}
+                      {formatarValor(a.currentValue, hideValues)}
                     </td>
                     <td className="py-4 px-6 text-center">
                       <button

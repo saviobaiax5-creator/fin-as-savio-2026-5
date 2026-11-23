@@ -12,12 +12,13 @@ import {
 } from '../types';
 import {
   parseCurrencyInput,
-  formatCurrencyBRL,
   checkDuplicateTransaction,
   detectInternalTransfer,
   toCents,
   fromCents,
 } from '../utils/financeCalculations';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 import { generateEntityId } from '../domain/common/id';
 import { todayLocal, todayDisplayPtBr } from '../utils/dateUtils';
 import { fileStorageService } from '../services/fileStorage';
@@ -77,6 +78,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
   onDeleteDocument,
   onAddTransactions,
 }) => {
+  const { hideValues } = usePrivacy();
   const [activeTab, setActiveTab] = useState<'upload' | 'camera' | 'reader'>('upload');
   const [analyzing, setAnalyzing] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
@@ -506,8 +508,9 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
     const totalSavedCents = toCreate.reduce((sum, item) => sum + (item.amountCents ?? toCents(item.amount)), 0);
     setDrafts([]);
     setSuccessMsg(
-      `${toCreate.length} lançamento(s) salvo(s) após conferência (total movimentado: R$ ${formatCurrencyBRL(
-        fromCents(totalSavedCents)
+      `${toCreate.length} lançamento(s) salvo(s) após conferência (total movimentado: ${formatarValor(
+        fromCents(totalSavedCents),
+        hideValues
       )}).`
     );
   };

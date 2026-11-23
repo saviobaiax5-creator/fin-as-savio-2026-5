@@ -8,8 +8,9 @@ import {
   Legend,
 } from 'recharts';
 import { MonthlySimulationSummary } from '../../types/investment';
-import { formatBRL, formatPercentBR } from '../../utils/investmentFormatters';
-import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { formatPercentBR } from '../../utils/investmentFormatters';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { Asset } from '../../types';
 
 interface InvestmentSummaryProps {
@@ -33,6 +34,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
   onGoToSimulator,
   onGoToComparator,
 }) => {
+  const { hideValues } = usePrivacy();
   const realAssetsTotal = assets.reduce((acc, a) => acc + (a.currentValue || 0), 0);
 
   const compositionData = [
@@ -52,7 +54,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
       <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/70 px-4 py-3 text-xs text-slate-600 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <span>
           <strong>Separação patrimonial:</strong> Simulações e projeções não alteram seu patrimônio cadastrado (
-          <span className="font-semibold tabular-nums">R$ {formatCurrencyBRL(realAssetsTotal)}</span> em Ativos reais).
+          <span className="font-semibold tabular-nums">{formatarValor(realAssetsTotal, hideValues)}</span> em Ativos reais).
         </span>
         <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 shrink-0">
           {isProjection ? 'Projeção estimada' : 'Base histórica real BCB'} · {productLabel} ({formatPercentBR(cdiPercentage, 1)} CDI)
@@ -64,27 +66,27 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
           <span className="text-xs text-slate-500 dark:text-slate-400">Capital inicial</span>
           <div className="text-lg sm:text-xl font-bold text-[#082B5C] dark:text-white mt-1 tabular-nums">
-            {formatBRL(summary.initialAmount)}
+            {formatarValor(summary.initialAmount, hideValues)}
           </div>
           <span className="text-[11px] text-slate-400 mt-1 block tabular-nums">
-            Aportes: {formatBRL(summary.totalContributions)}
+            Aportes: {formatarValor(summary.totalContributions, hideValues)}
           </span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
           <span className="text-xs text-slate-500 dark:text-slate-400">Saldo bruto</span>
           <div className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mt-1 tabular-nums">
-            {formatBRL(summary.grossValue)}
+            {formatarValor(summary.grossValue, hideValues)}
           </div>
           <span className="text-[11px] text-slate-400 mt-1 block tabular-nums">
-            Rendimento bruto: +{formatBRL(summary.grossProfit)}
+            Rendimento bruto: {hideValues ? formatarValor(summary.grossProfit, true) : `+${formatarValor(summary.grossProfit, false)}`}
           </span>
         </div>
 
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
           <span className="text-xs text-slate-500 dark:text-slate-400">Imposto estimado</span>
           <div className="text-lg sm:text-xl font-bold text-amber-700 dark:text-amber-400 mt-1 tabular-nums">
-            {formatBRL(summary.tax.totalTax)}
+            {formatarValor(summary.tax.totalTax, hideValues)}
           </div>
           <span className="text-[11px] text-slate-400 mt-1 block">
             {summary.tax.taxExempt
@@ -98,10 +100,10 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
         <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
           <span className="text-xs text-slate-500 dark:text-slate-400">Saldo líquido</span>
           <div className="text-lg sm:text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
-            {formatBRL(summary.netValue)}
+            {formatarValor(summary.netValue, hideValues)}
           </div>
           <span className="text-[11px] text-emerald-700/80 dark:text-emerald-300/80 mt-1 block tabular-nums">
-            Líquido: +{formatBRL(summary.netProfit)} · {formatPercentBR(summary.cumulativeYieldPct)}
+            Líquido: {hideValues ? formatarValor(summary.netProfit, true) : `+${formatarValor(summary.netProfit, false)}`} · {formatPercentBR(summary.cumulativeYieldPct)}
           </span>
         </div>
       </div>
@@ -114,7 +116,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
               Composição do Capital Acumulado
             </h3>
             <span className="text-xs text-slate-400 tabular-nums">
-              Total investido: {formatBRL(summary.investedValue)}
+              Total investido: {formatarValor(summary.investedValue, hideValues)}
             </span>
           </div>
 
@@ -148,7 +150,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
                       color: isDark ? '#f8fafc' : '#172536',
                       fontSize: '12px',
                     }}
-                    formatter={(val: unknown) => formatBRL(Number(val) || 0)}
+                    formatter={(val: unknown) => formatarValor(Number(val) || 0, hideValues)}
                   />
                   <Legend wrapperStyle={{ fontSize: '12px' }} />
                 </PieChart>
@@ -167,7 +169,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
               <div className="py-2.5 flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Saldo bruto CDI 100%</span>
                 <span className="font-bold text-slate-800 dark:text-slate-100 tabular-nums">
-                  {formatBRL(summary.cdi100GrossValue)}
+                  {formatarValor(summary.cdi100GrossValue, hideValues)}
                 </span>
               </div>
               <div className="py-2.5 flex items-center justify-between">
@@ -175,7 +177,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
                   Saldo bruto {formatPercentBR(cdiPercentage, 1)} CDI
                 </span>
                 <span className="font-bold text-emerald-700 dark:text-emerald-400 tabular-nums">
-                  {formatBRL(summary.grossValue)}
+                  {formatarValor(summary.grossValue, hideValues)}
                 </span>
               </div>
               <div className="py-2.5 flex items-center justify-between">
@@ -187,14 +189,17 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
                       : 'text-red-700 dark:text-red-400'
                   }`}
                 >
-                  {summary.differenceVsCdiGross >= 0 ? '+' : ''}
-                  {formatBRL(summary.differenceVsCdiGross)}
+                  {hideValues
+                    ? formatarValor(summary.differenceVsCdiGross, true)
+                    : `${summary.differenceVsCdiGross >= 0 ? '+' : ''}${formatarValor(summary.differenceVsCdiGross, false)}`}
                 </span>
               </div>
               <div className="py-2.5 flex items-center justify-between">
                 <span className="text-slate-500 dark:text-slate-400">Rendimento líquido estimado</span>
                 <span className="font-bold text-[#082B5C] dark:text-white tabular-nums">
-                  +{formatBRL(summary.netProfit)}
+                  {hideValues
+                    ? formatarValor(summary.netProfit, true)
+                    : `+${formatarValor(summary.netProfit, false)}`}
                 </span>
               </div>
             </div>

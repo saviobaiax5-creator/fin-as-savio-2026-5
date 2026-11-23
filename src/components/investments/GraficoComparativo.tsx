@@ -9,7 +9,8 @@ import {
   Tooltip,
   Legend,
 } from 'recharts';
-import { formatBRL } from '../../utils/investmentFormatters';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 
 export interface ChartPoint {
   date: string;
@@ -67,6 +68,7 @@ export default function GraficoComparativo({
   theme = 'light',
   defaultMode = 'currency',
 }: GraficoComparativoProps) {
+  const { hideValues } = usePrivacy();
   const [mode, setMode] = useState<ChartDisplayMode>(defaultMode);
 
   const isDark = theme === 'dark';
@@ -145,7 +147,9 @@ export default function GraficoComparativo({
                 tickFormatter={(value: number) =>
                   isPercentMode
                     ? `${Number(value).toFixed(2).replace('.', ',')}%`
-                    : `R$ ${Number(value).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`
+                    : hideValues
+                      ? 'R$ •••'
+                      : `R$ ${Number(value).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`
                 }
               />
               <Tooltip
@@ -159,7 +163,7 @@ export default function GraficoComparativo({
                 formatter={(value: unknown, name: unknown) => [
                   isPercentMode
                     ? `${(Number(value) || 0).toFixed(2).replace('.', ',')}%`
-                    : formatBRL(Number(value) || 0),
+                    : formatarValor(Number(value) || 0, hideValues),
                   String(name || ''),
                 ]}
               />

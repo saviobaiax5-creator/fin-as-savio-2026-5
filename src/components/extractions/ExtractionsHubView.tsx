@@ -42,6 +42,8 @@ import { fileStorageService } from '../../services/fileStorage';
 import { fromCents, toCents } from '../../domain/money/money';
 import type { MoneyCents } from '../../domain/money/money';
 import { formatCurrencyBRL, normalizeDescription, parseCurrencyInput } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { formatDateBR } from '../../utils/dateUtils';
 import { todayLocal } from '../../utils/dateLocal';
 import { generateEntityId } from '../../domain/common/id';
@@ -169,6 +171,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
   onUpdateConsolidationPrefs,
   onNavigateModule,
 }) => {
+  const { hideValues } = usePrivacy();
   const inputRef = useRef<HTMLInputElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -1823,8 +1826,10 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
 
                         <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
                           <span className="text-sm font-extrabold tabular-nums text-[#082B5C] dark:text-white">
-                            {m.direction === 'INCOME' ? '+ ' : '− '}
-                            {m.currency} {formatCurrencyBRL(m.amount)}
+                            {hideValues ? '' : m.direction === 'INCOME' ? '+ ' : '− '}
+                            {m.currency === 'BRL'
+                              ? formatarValor(m.amount, hideValues)
+                              : `${m.currency} ${hideValues ? '•••••' : formatCurrencyBRL(m.amount)}`}
                           </span>
                           <button
                             type="button"
@@ -2076,8 +2081,10 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                                 : 'text-[#DC3545]'
                             }`}
                           >
-                            {m.direction === 'INCOME' ? '+ ' : '− '}
-                            {m.currency} {formatCurrencyBRL(m.amount)}
+                            {hideValues ? '' : m.direction === 'INCOME' ? '+ ' : '− '}
+                            {m.currency === 'BRL'
+                              ? formatarValor(m.amount, hideValues)
+                              : `${m.currency} ${hideValues ? '•••••' : formatCurrencyBRL(m.amount)}`}
                           </span>
 
                           <div className="flex items-center gap-1">
@@ -2205,49 +2212,51 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                       label: 'Saldo Inicial',
                       val:
                         activeBatch.balanceSummary.openingBalanceCents !== undefined
-                          ? `R$ ${formatCurrencyBRL(fromCents(activeBatch.balanceSummary.openingBalanceCents))}`
+                          ? formatarValor(fromCents(activeBatch.balanceSummary.openingBalanceCents), hideValues)
                           : 'Não informado',
                     },
                     {
                       label: 'Total de Entradas',
-                      val: `R$ ${formatCurrencyBRL(fromCents(activeBatch.balanceSummary.creditsCents))}`,
+                      val: formatarValor(fromCents(activeBatch.balanceSummary.creditsCents), hideValues),
                     },
                     {
                       label: 'Total de Saídas',
-                      val: `R$ ${formatCurrencyBRL(fromCents(activeBatch.balanceSummary.debitsCents))}`,
+                      val: formatarValor(fromCents(activeBatch.balanceSummary.debitsCents), hideValues),
                     },
                     {
                       label: 'Aplicações (Patrimonial)',
-                      val: `R$ ${formatCurrencyBRL(fromCents(activeBatch.balanceSummary.applicationsCents))}`,
+                      val: formatarValor(fromCents(activeBatch.balanceSummary.applicationsCents), hideValues),
                     },
                     {
                       label: 'Resgates (Patrimonial)',
-                      val: `R$ ${formatCurrencyBRL(fromCents(activeBatch.balanceSummary.redemptionsCents))}`,
+                      val: formatarValor(fromCents(activeBatch.balanceSummary.redemptionsCents), hideValues),
                     },
                     {
                       label: 'Saldo Final Calculado',
                       val:
                         activeBatch.balanceSummary.calculatedEndingBalanceCents !== undefined
-                          ? `R$ ${formatCurrencyBRL(
-                              fromCents(activeBatch.balanceSummary.calculatedEndingBalanceCents)
-                            )}`
+                          ? formatarValor(
+                              fromCents(activeBatch.balanceSummary.calculatedEndingBalanceCents),
+                              hideValues
+                            )
                           : 'Aguard. saldo inicial',
                     },
                     {
                       label: 'Saldo Informado Banco',
                       val:
                         activeBatch.balanceSummary.reportedEndingBalanceCents !== undefined
-                          ? `R$ ${formatCurrencyBRL(
-                              fromCents(activeBatch.balanceSummary.reportedEndingBalanceCents)
-                            )}`
+                          ? formatarValor(
+                              fromCents(activeBatch.balanceSummary.reportedEndingBalanceCents),
+                              hideValues
+                            )
                           : 'Não informado',
                     },
                     {
                       label: 'Diferença Encontrada',
                       val:
                         activeBatch.balanceSummary.divergenceCents !== undefined
-                          ? `R$ ${formatCurrencyBRL(fromCents(activeBatch.balanceSummary.divergenceCents))}`
-                          : 'R$ 0,00',
+                          ? formatarValor(fromCents(activeBatch.balanceSummary.divergenceCents), hideValues)
+                          : formatarValor(0, hideValues),
                     },
                   ].map((item) => (
                     <div
@@ -2313,7 +2322,11 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                               {m.originalDescription}
                             </div>
                             <div className="text-[11px] text-slate-500">
-                              {formatDateBR(m.date)} · R$ {formatCurrencyBRL(m.amount)} ·{' '}
+                              {formatDateBR(m.date)} ·{' '}
+                              {m.currency === 'BRL'
+                                ? formatarValor(m.amount, hideValues)
+                                : `${m.currency} ${hideValues ? '•••••' : formatCurrencyBRL(m.amount)}`}{' '}
+                              ·{' '}
                               {m.duplicateMatchReason || 'Aguardando vínculo com conta contraparte'}
                             </div>
                           </div>

@@ -18,6 +18,8 @@ import {
 } from 'lucide-react';
 import { formatDateBR } from '../../utils/dateUtils';
 import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 
 interface TraceabilitySheetProps {
   open: boolean;
@@ -30,6 +32,7 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
   onClose,
   traceability,
 }) => {
+  const { hideValues } = usePrivacy();
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [fileMime, setFileMime] = useState<string>('');
   const [fileLoading, setFileLoading] = useState(false);
@@ -129,7 +132,9 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
           <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1">
             <span className="text-[11px] font-semibold text-slate-400">Valor & Integração</span>
             <div className="text-lg font-extrabold tabular-nums text-[#082B5C] dark:text-emerald-400">
-              {movement.currency} {formatCurrencyBRL(movement.amount)}
+              {movement.currency === 'BRL'
+                ? formatarValor(movement.amount, hideValues)
+                : `${movement.currency} ${hideValues ? '•••••' : formatCurrencyBRL(movement.amount)}`}
             </div>
             <div className="text-[11px] text-slate-500 dark:text-slate-400">
               Categoria: <strong>{movement.suggestedCategory}</strong> · Titular:{' '}

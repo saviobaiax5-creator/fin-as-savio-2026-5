@@ -5,6 +5,8 @@ import { addMoney, fromCents, parseMoneyInput, subtractMoney, toCents } from '..
 import { CreditCard, Plus, AlertCircle, CheckCircle2, Trash2, ReceiptText } from 'lucide-react';
 import { Sheet } from './Sheet';
 import { MoneyInputField } from './MoneyInputField';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface CardsViewProps {
   cards: CreditCardType[];
@@ -23,6 +25,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
   onUpdateCardInvoice,
   onDeleteCard,
 }) => {
+  const { hideValues } = usePrivacy();
   const [modalOpen, setModalOpen] = useState(false);
   const [payModalCard, setPayModalCard] = useState<CreditCardType | null>(null);
   const [paymentAccountId, setPaymentAccountId] = useState('');
@@ -230,13 +233,13 @@ export const CardsView: React.FC<CardsViewProps> = ({
                   <div className="flex justify-between">
                     <span className="text-slate-500 dark:text-slate-400">Limite total:</span>
                     <span className="font-bold text-slate-800 dark:text-slate-200">
-                      R$ {formatCurrencyBRL(card.limit)}
+                      {formatarValor(card.limit, hideValues)}
                     </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-500 dark:text-slate-400">Disponível:</span>
                     <span className="font-bold text-emerald-700 dark:text-emerald-400">
-                      R$ {formatCurrencyBRL(available)}
+                      {formatarValor(available, hideValues)}
                     </span>
                   </div>
                   <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -267,7 +270,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                           : 'text-emerald-700 dark:text-emerald-400'
                       }`}
                     >
-                      R$ {formatCurrencyBRL(card.currentInvoiceAmount)}
+                      {formatarValor(card.currentInvoiceAmount, hideValues)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -435,7 +438,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
             <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm">
               Valor da fatura:{' '}
               <strong className="text-red-700 dark:text-red-400">
-                R$ {formatCurrencyBRL(payModalCard.currentInvoiceAmount)}
+                {formatarValor(payModalCard.currentInvoiceAmount, hideValues)}
               </strong>
             </div>
 
@@ -508,7 +511,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
             <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm flex justify-between items-center">
               <span className="text-slate-600 dark:text-slate-300">Fatura atual:</span>
               <strong className="text-[#082B5C] dark:text-white">
-                R$ {formatCurrencyBRL(chargeModalCard.currentInvoiceAmount)}
+                {formatarValor(chargeModalCard.currentInvoiceAmount, hideValues)}
               </strong>
             </div>
 

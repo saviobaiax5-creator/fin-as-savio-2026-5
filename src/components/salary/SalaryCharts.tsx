@@ -21,7 +21,8 @@ import {
   getAnnualTotal,
   getSourceAnnualTotal,
 } from '../../utils/salaryCalculations';
-import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 
 interface SalaryChartsProps {
   sources: SalarySource[];
@@ -49,6 +50,7 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
   availableYears,
   theme = 'light',
 }) => {
+  const { hideValues } = usePrivacy();
   const [compareYearA, setCompareYearA] = useState<number>(() =>
     availableYears.length >= 2 ? availableYears[availableYears.length - 2] : selectedYear
   );
@@ -134,12 +136,16 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                   tick={{ fill: tickColor, fontSize: 11 }}
                   tickLine={false}
                   width={82}
-                  tickFormatter={(v: number) => `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`}
+                  tickFormatter={(v: number) =>
+                    hideValues
+                      ? 'R$ •••'
+                      : `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`
+                  }
                 />
                 <Tooltip
                   contentStyle={tooltipStyle}
                   formatter={(value: unknown, name: unknown) => [
-                    `R$ ${formatCurrencyBRL(Number(value) || 0)}`,
+                    formatarValor(Number(value) || 0, hideValues),
                     String(name || ''),
                   ]}
                 />
@@ -172,11 +178,18 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                   tick={{ fill: tickColor, fontSize: 11 }}
                   tickLine={false}
                   width={82}
-                  tickFormatter={(v: number) => `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`}
+                  tickFormatter={(v: number) =>
+                    hideValues
+                      ? 'R$ •••'
+                      : `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`
+                  }
                 />
                 <Tooltip
                   contentStyle={tooltipStyle}
-                  formatter={(value: unknown) => [`R$ ${formatCurrencyBRL(Number(value) || 0)}`, 'Total recebido']}
+                  formatter={(value: unknown) => [
+                    formatarValor(Number(value) || 0, hideValues),
+                    'Total recebido',
+                  ]}
                 />
                 <Bar dataKey="total" name="Total anual recebido" fill="#082B5C" radius={[6, 6, 0, 0]} />
               </BarChart>
@@ -217,7 +230,10 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                     </Pie>
                     <Tooltip
                       contentStyle={tooltipStyle}
-                      formatter={(value: unknown) => [`R$ ${formatCurrencyBRL(Number(value) || 0)}`, 'Recebido']}
+                      formatter={(value: unknown) => [
+                        formatarValor(Number(value) || 0, hideValues),
+                        'Recebido',
+                      ]}
                     />
                   </PieChart>
                 </ResponsiveContainer>
@@ -329,7 +345,7 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
 
           {yearComparison.isIncompleteComparison && (
             <div className="p-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-[11px] tabular-nums">
-              Comparação parcial: {compareYearA} possui {yearComparison.monthsWithDataA} mês(es) recebido(s) e {compareYearB} possui {yearComparison.monthsWithDataB}. Base equivalente ({yearComparison.commonMonths.length} mês(es) em comum): R$ {formatCurrencyBRL(yearComparison.sameMonthsTotalA)} × R$ {formatCurrencyBRL(yearComparison.sameMonthsTotalB)}.
+              Comparação parcial: {compareYearA} possui {yearComparison.monthsWithDataA} mês(es) recebido(s) e {compareYearB} possui {yearComparison.monthsWithDataB}. Base equivalente ({yearComparison.commonMonths.length} mês(es) em comum): {formatarValor(yearComparison.sameMonthsTotalA, hideValues)} × {formatarValor(yearComparison.sameMonthsTotalB, hideValues)}.
             </div>
           )}
 
@@ -345,12 +361,16 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                   tick={{ fill: tickColor, fontSize: 11 }}
                   tickLine={false}
                   width={78}
-                  tickFormatter={(v: number) => `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`}
+                  tickFormatter={(v: number) =>
+                    hideValues
+                      ? 'R$ •••'
+                      : `R$ ${Number(v).toLocaleString('pt-BR', { maximumFractionDigits: 0 })}`
+                  }
                 />
                 <Tooltip
                   contentStyle={tooltipStyle}
                   formatter={(value: unknown, name: unknown) => [
-                    `R$ ${formatCurrencyBRL(Number(value) || 0)}`,
+                    formatarValor(Number(value) || 0, hideValues),
                     String(name || ''),
                   ]}
                 />

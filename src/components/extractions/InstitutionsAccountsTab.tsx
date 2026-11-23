@@ -10,6 +10,8 @@ import { InstitutionCategoryBadge } from './InstitutionCategoryBadge';
 import { inferAccountCategory } from '../../domain/extractions/consolidationEngine';
 import { maskAccountNumber, maskTaxDocument } from '../../domain/extractions/fileSecurity';
 import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { toCents } from '../../domain/money/money';
 import { generateEntityId } from '../../domain/common/id';
 import { Sheet } from '../Sheet';
@@ -57,6 +59,7 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
   onCreateBankAccount,
   onFilterExtractionsByAccount,
 }) => {
+  const { hideValues } = usePrivacy();
   const [catFilter, setCatFilter] = useState<'ALL' | InstitutionCategory>('ALL');
   const [instModalOpen, setInstModalOpen] = useState(false);
   const [accModalOpen, setAccModalOpen] = useState(false);
@@ -299,7 +302,9 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
                   <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
                     <div className="text-right">
                       <div className="text-sm font-extrabold tabular-nums text-[#082B5C] dark:text-emerald-400">
-                        {currency} {formatCurrencyBRL(acc.balance)}
+                        {currency === 'BRL'
+                          ? formatarValor(acc.balance, hideValues)
+                          : `${currency} ${hideValues ? '•••••' : formatCurrencyBRL(acc.balance)}`}
                       </div>
                       <div className="text-[10px] text-slate-400">
                         {ext?.balanceStatus === 'OUTDATED'
@@ -379,15 +384,15 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
                       </span>
                     </div>
                     <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Emissor: {card.institutionName} · Vencimento dia {card.dueDay} · Limite R${' '}
-                      {formatCurrencyBRL(card.limit)} (limite não é contado como saldo ou dívida)
+                      Emissor: {card.institutionName} · Vencimento dia {card.dueDay} · Limite{' '}
+                      {formatarValor(card.limit, hideValues)} (limite não é contado como saldo ou dívida)
                       {ext?.cardNetwork ? ` · Bandeira: ${ext.cardNetwork}` : ''}
                     </div>
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] text-slate-400 block">Fatura atual</span>
                     <span className="text-sm font-extrabold tabular-nums text-[#DC3545]">
-                      R$ {formatCurrencyBRL(card.currentInvoiceAmount)}
+                      {formatarValor(card.currentInvoiceAmount, hideValues)}
                     </span>
                   </div>
                 </div>

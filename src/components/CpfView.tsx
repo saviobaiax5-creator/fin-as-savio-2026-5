@@ -10,6 +10,8 @@ import {
 import { useIsDesktop } from '../hooks/useMediaQuery';
 import { VirtualCardList, computeWindowedRange } from './VirtualList';
 import { Search, Plus, Trash2, Pencil, RotateCcw, X, Eye } from 'lucide-react';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
 
 interface CpfViewProps {
   transactions: Transaction[];
@@ -34,6 +36,7 @@ export const CpfView: React.FC<CpfViewProps> = ({
   onRestoreTransaction,
   onTraceTransaction,
 }) => {
+  const { hideValues } = usePrivacy();
   const isDesktop = useIsDesktop();
   const [search, setSearch] = useState('');
   const deferredSearch = useDeferredValue(search);
@@ -178,23 +181,23 @@ export const CpfView: React.FC<CpfViewProps> = ({
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
           <span className="text-xs text-slate-500 dark:text-slate-400">Entradas Realizadas CPF</span>
           <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400 mt-1">
-            R$ {formatCurrencyBRL(totalCpfIncome)}
+            {formatarValor(totalCpfIncome, hideValues)}
           </div>
         </div>
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
           <span className="text-xs text-slate-500 dark:text-slate-400">Saídas Realizadas CPF</span>
           <div className="text-xl font-bold text-red-700 dark:text-red-400 mt-1">
-            R$ {formatCurrencyBRL(totalCpfExpense)}
+            {formatarValor(totalCpfExpense, hideValues)}
           </div>
         </div>
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
           <span className="text-xs text-slate-500 dark:text-slate-400">Resultado Realizado CPF</span>
           <div className="text-xl font-bold text-[#082B5C] dark:text-white mt-1">
-            R$ {formatCurrencyBRL(netCpf)}
+            {formatarValor(netCpf, hideValues)}
           </div>
           {(Math.abs(pendingCpfNet) >= 0.01 || Math.abs(plannedCpfNet) >= 0.01) && (
             <div className="text-[11px] text-amber-700 dark:text-amber-300 mt-1">
-              Previsto adicional: R$ {formatCurrencyBRL(pendingCpfNet + plannedCpfNet)}
+              Previsto adicional: {formatarValor(pendingCpfNet + plannedCpfNet, hideValues)}
             </div>
           )}
         </div>
@@ -314,8 +317,9 @@ export const CpfView: React.FC<CpfViewProps> = ({
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
-                      {t.direction === 'INCOME' ? '+ ' : '− '}
-                      R$ {formatCurrencyBRL(displayAmount)}
+                      {hideValues
+                        ? formatarValor(displayAmount, true)
+                        : `${t.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(displayAmount, false)}`}
                     </div>
                   </div>
 
@@ -479,8 +483,9 @@ export const CpfView: React.FC<CpfViewProps> = ({
                               : 'text-red-700 dark:text-red-400'
                           }`}
                         >
-                          {t.direction === 'INCOME' ? '+ ' : '− '}
-                          R$ {formatCurrencyBRL(displayAmount)}
+                          {hideValues
+                            ? formatarValor(displayAmount, true)
+                            : `${t.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(displayAmount, false)}`}
                         </td>
                         <td className="py-3.5 px-6 text-center">
                           <div className="inline-flex items-center gap-1">

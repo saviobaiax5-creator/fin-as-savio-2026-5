@@ -11,7 +11,8 @@ import {
   getMonthlyTotal,
   summarizeAnnualIncome,
 } from '../../utils/salaryCalculations';
-import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import {
   ArrowDownRight,
   ArrowUpRight,
@@ -42,6 +43,8 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
   onOpenNewRecord,
   onGoToArea,
 }) => {
+  const { hideValues } = usePrivacy();
+
   const summary = useMemo(
     () => summarizeAnnualIncome(records, sources, selectedYear),
     [records, sources, selectedYear]
@@ -124,7 +127,7 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
             <CalendarCheck className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-extrabold text-[#082B5C] dark:text-white tabular-nums">
-            R$ {formatCurrencyBRL(currentMonthReceived)}
+            {formatarValor(currentMonthReceived, hideValues)}
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5 tabular-nums">
             {prevMonthInfo.pct === null ? (
@@ -153,10 +156,10 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
             <Banknote className="w-4 h-4 text-blue-600" />
           </div>
           <div className="text-2xl font-extrabold text-[#082B5C] dark:text-white tabular-nums">
-            R$ {formatCurrencyBRL(summary.receivedNetTotal)}
+            {formatarValor(summary.receivedNetTotal, hideValues)}
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400 tabular-nums">
-            Bruto est.: R$ {formatCurrencyBRL(summary.receivedGrossTotal)} · Desc.: R$ {formatCurrencyBRL(summary.receivedDeductionsTotal)}
+            Bruto est.: {formatarValor(summary.receivedGrossTotal, hideValues)} · Desc.: {formatarValor(summary.receivedDeductionsTotal, hideValues)}
           </div>
         </div>
 
@@ -166,7 +169,7 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
             <TrendingUp className="w-4 h-4 text-emerald-600" />
           </div>
           <div className="text-2xl font-extrabold text-[#082B5C] dark:text-white tabular-nums">
-            R$ {formatCurrencyBRL(summary.monthlyAverage)}
+            {formatarValor(summary.monthlyAverage, hideValues)}
           </div>
           <div className="text-xs text-slate-500 dark:text-slate-400 tabular-nums">
             {summary.receivedMonthsCount} {summary.receivedMonthsCount === 1 ? 'mês com recebimento' : 'meses com recebimento'}
@@ -196,7 +199,7 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
           <div className="text-xs text-slate-500 dark:text-slate-400">Última renda mensal realizada</div>
           <div className="text-lg font-bold text-[#082B5C] dark:text-white mt-1 tabular-nums">
             {latestReceivedMonth
-              ? `R$ ${formatCurrencyBRL(latestReceivedMonth.received)}`
+              ? formatarValor(latestReceivedMonth.received, hideValues)
               : '—'}
           </div>
           <div className="text-xs text-slate-400 mt-0.5">
@@ -208,7 +211,7 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
           <div className="text-xs text-slate-500 dark:text-slate-400">Maior renda mensal ({selectedYear})</div>
           <div className="text-lg font-bold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
             {summary.highestMonth
-              ? `R$ ${formatCurrencyBRL(summary.highestMonth.total)}`
+              ? formatarValor(summary.highestMonth.total, hideValues)
               : '—'}
           </div>
           <div className="text-xs text-slate-400 mt-0.5">
@@ -220,7 +223,7 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
           <div className="text-xs text-slate-500 dark:text-slate-400">Menor renda mensal ({selectedYear})</div>
           <div className="text-lg font-bold text-[#082B5C] dark:text-white mt-1 tabular-nums">
             {summary.lowestMonth
-              ? `R$ ${formatCurrencyBRL(summary.lowestMonth.total)}`
+              ? formatarValor(summary.lowestMonth.total, hideValues)
               : '—'}
           </div>
           <div className="text-xs text-slate-400 mt-0.5">
@@ -278,7 +281,7 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70">
             <div className="text-xs text-slate-500 dark:text-slate-400">Renda recorrente recebida</div>
             <div className="text-lg font-extrabold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
-              R$ {formatCurrencyBRL(summary.recurringTotal)}
+              {formatarValor(summary.recurringTotal, hideValues)}
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
               Salário fixo, docência e benefícios
@@ -288,7 +291,7 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70">
             <div className="text-xs text-slate-500 dark:text-slate-400">Renda extraordinária recebida</div>
             <div className="text-lg font-extrabold text-blue-700 dark:text-blue-400 mt-1 tabular-nums">
-              R$ {formatCurrencyBRL(summary.extraordinaryTotal)}
+              {formatarValor(summary.extraordinaryTotal, hideValues)}
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
               13º salário, férias, bônus e extras
@@ -298,17 +301,17 @@ export const SalaryDashboard: React.FC<SalaryDashboardProps> = ({
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70">
             <div className="text-xs text-slate-500 dark:text-slate-400">Previsto e a confirmar</div>
             <div className="text-lg font-extrabold text-amber-700 dark:text-amber-400 mt-1 tabular-nums">
-              R$ {formatCurrencyBRL(summary.expectedTotal + summary.unknownTotal)}
+              {formatarValor(summary.expectedTotal + summary.unknownTotal, hideValues)}
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5 tabular-nums">
-              Previsto: R$ {formatCurrencyBRL(summary.expectedTotal)} · A confirmar: R$ {formatCurrencyBRL(summary.unknownTotal)}
+              Previsto: {formatarValor(summary.expectedTotal, hideValues)} · A confirmar: {formatarValor(summary.unknownTotal, hideValues)}
             </div>
           </div>
 
           <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/70">
             <div className="text-xs text-slate-500 dark:text-slate-400">Empréstimos (isolados da renda)</div>
             <div className="text-lg font-extrabold text-slate-700 dark:text-slate-200 mt-1 tabular-nums">
-              R$ {formatCurrencyBRL(summary.loanTotal)}
+              {formatarValor(summary.loanTotal, hideValues)}
             </div>
             <div className="text-[11px] text-slate-400 mt-0.5">
               {Object.values(SALARY_CATEGORY_GROUPS).filter((g: SalaryIncomeGroup) => g === 'loan').length > 0

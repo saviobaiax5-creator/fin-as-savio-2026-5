@@ -54,6 +54,10 @@ import type { AuthUserSummary } from '../services/authService';
 import type { CloudBackupSnapshotMeta } from '../services/cloudBackupService';
 import type { SyncStatus } from '../services/cloudSyncService';
 import { validateBackupWithDryRun } from '../services/dataProtectionService';
+import { usePrivacy } from '../contexts/PrivacyContext';
+import { formatarValor } from '../utils/formatters';
+import { fromCents } from '../domain/money/money';
+import { Eye, EyeOff, Layers, PanelLeftClose } from 'lucide-react';
 
 interface SettingsViewProps {
   dataset: AppDataset;
@@ -137,6 +141,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   onClearLocalWorkspace,
   onDeleteAccount,
 }) => {
+  const {
+    hideValues,
+    toggleHideValues,
+    showScopeBar,
+    toggleScopeBar,
+    sidebarOpen,
+    toggleSidebar,
+  } = usePrivacy();
   const [importPreview, setImportPreview] = useState<ParsedBackupPreview | null>(null);
   const [importFileName, setImportFileName] = useState('');
   const [importMode, setImportMode] = useState<'merge' | 'replace'>('merge');
@@ -583,6 +595,81 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             </select>
           </div>
         </div>
+
+        {/* Privacidade & Abas (Mobile e PC) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <button
+            type="button"
+            onClick={toggleHideValues}
+            aria-pressed={hideValues}
+            className={`p-3.5 rounded-xl border text-left flex items-center justify-between gap-3 transition-all cursor-pointer ${
+              hideValues
+                ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700'
+                : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+            }`}
+          >
+            <div className="min-w-0">
+              <div className="text-xs font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
+                {hideValues ? <EyeOff size={15} className="text-amber-600" /> : <Eye size={15} className="text-emerald-600" />}
+                <span>Ocultar valores (Privacidade)</span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                {hideValues ? 'Ativo — exibe R$ ••••• em todo o app' : 'Desativado — valores visíveis'}
+              </p>
+            </div>
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0 ${hideValues ? 'bg-amber-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}`}>
+              {hideValues ? 'OCULTO' : 'VISÍVEL'}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleScopeBar}
+            aria-pressed={!showScopeBar}
+            className={`p-3.5 rounded-xl border text-left flex items-center justify-between gap-3 transition-all cursor-pointer ${
+              !showScopeBar
+                ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-700'
+                : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+            }`}
+          >
+            <div className="min-w-0">
+              <div className="text-xs font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
+                <Layers size={15} className="text-blue-600" />
+                <span>Barra de abas (Consolidado/CPF/CNPJ)</span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                {showScopeBar ? 'Visível no topo (Celular e PC)' : 'Escondida para ganhar espaço na tela'}
+              </p>
+            </div>
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0 ${showScopeBar ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}`}>
+              {showScopeBar ? 'VISÍVEL' : 'ESCONDIDA'}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-pressed={!sidebarOpen}
+            className={`hidden md:flex p-3.5 rounded-xl border text-left items-center justify-between gap-3 transition-all cursor-pointer ${
+              !sidebarOpen
+                ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-700'
+                : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+            }`}
+          >
+            <div className="min-w-0">
+              <div className="text-xs font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
+                <PanelLeftClose size={15} className="text-slate-600 dark:text-slate-300" />
+                <span>Menu lateral no PC</span>
+              </div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                {sidebarOpen ? 'Expandido na lateral esquerda' : 'Minimizado para ampliar área útil'}
+              </p>
+            </div>
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0 ${sidebarOpen ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}`}>
+              {sidebarOpen ? 'ABERTO' : 'OCULTO'}
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* Full Backup Export / Import with Preview & Snapshot */}
@@ -873,7 +960,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     </div>
                   </div>
                   <div className="font-extrabold text-[#082B5C] dark:text-white shrink-0">
-                    {formatMoneyBRL(entry.amountCents)}
+                    {hideValues ? formatarValor(fromCents(entry.amountCents), true) : formatMoneyBRL(entry.amountCents)}
                   </div>
                 </div>
               );

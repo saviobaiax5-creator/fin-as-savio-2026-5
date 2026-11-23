@@ -160,6 +160,8 @@ import { RotateCcw, X } from 'lucide-react';
 import { AuthScreen } from './components/auth/AuthScreen';
 import { SyncConflictSheet } from './components/SyncConflictSheet';
 import { MobileShareSheet } from './components/MobileSharePanel';
+import { PrivacyProvider } from './contexts/PrivacyContext';
+import { formatarValor } from './utils/formatters';
 import {
   deleteCurrentFirebaseUser,
   reloadCurrentAuthUser,
@@ -199,6 +201,49 @@ export default function App() {
   const [drilldownFilter, setDrilldownFilter] = useState<LedgerDrilldownFilter | null>(null);
   const [scope, setScope] = useState<EntityScope>('CONSOLIDATED');
   const [period, setPeriod] = useState(() => currentMonthLocal());
+  const [hideValues, setHideValues] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('savio_financas_hide_values') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [showScopeBar, setShowScopeBar] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('savio_financas_show_scope_bar') !== 'false';
+    } catch {
+      return true;
+    }
+  });
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('savio_financas_sidebar_open') !== 'false';
+    } catch {
+      return true;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('savio_financas_hide_values', String(hideValues));
+    } catch {}
+  }, [hideValues]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('savio_financas_show_scope_bar', String(showScopeBar));
+    } catch {}
+  }, [showScopeBar]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('savio_financas_sidebar_open', String(sidebarOpen));
+    } catch {}
+  }, [sidebarOpen]);
+
+  const toggleHideValues = useCallback(() => setHideValues((v) => !v), []);
+  const toggleScopeBar = useCallback(() => setShowScopeBar((v) => !v), []);
+  const toggleSidebar = useCallback(() => setSidebarOpen((v) => !v), []);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [defaultModalEntity, setDefaultModalEntity] = useState<'CPF' | 'CNPJ'>('CPF');
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
@@ -2426,37 +2471,52 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-dvh bg-[#F4F7FB] dark:bg-[#061B3B] text-[#172536] dark:text-slate-100 font-sans">
-      {/* Sidebar hidden on mobile */}
-      <div className="hidden md:flex">
-        <Sidebar
-          currentTab={currentTab}
-          setCurrentTab={(tab) => handleNavigate(tab)}
-          pendingBankNotificationsCount={pendingBankNotificationsCount}
-          currentUser={currentUser}
-          onSignOut={handleSignOut}
-        />
-      </div>
+    <PrivacyProvider
+      value={{
+        hideValues,
+        toggleHideValues,
+        setHideValues,
+        showScopeBar,
+        toggleScopeBar,
+        setShowScopeBar,
+        sidebarOpen,
+        toggleSidebar,
+        setSidebarOpen,
+      }}
+    >
+      <div className="flex min-h-dvh bg-[#F4F7FB] dark:bg-[#061B3B] text-[#172536] dark:text-slate-100 font-sans">
+        {/* Sidebar hidden on mobile and collapsible on PC */}
+        <div className={sidebarOpen ? 'hidden md:flex' : 'hidden'}>
+          <Sidebar
+            currentTab={currentTab}
+            setCurrentTab={(tab) => handleNavigate(tab)}
+            pendingBankNotificationsCount={pendingBankNotificationsCount}
+            currentUser={currentUser}
+            onSignOut={handleSignOut}
+          />
+        </div>
 
-      <div className="flex-1 flex flex-col min-w-0">
-        <Header
-          currentTab={currentTab}
-          scope={scope}
-          setScope={setScope}
-          period={period}
-          setPeriod={setPeriod}
-          periodOptions={periodOptions}
-          onOpenNewTransaction={() => openNewModalForEntity(scope === 'CNPJ' ? 'CNPJ' : 'CPF')}
-          theme={theme}
-          onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
-          boletos={boletos}
-          onNavigate={handleNavigate}
-          syncStatus={syncStatus}
-          pendingSyncCount={pendingSyncCount}
-          onOpenShare={() => setShareSheetOpen(true)}
-        />
+        <div className="flex-1 flex flex-col min-w-0">
+          <Header
+            currentTab={currentTab}
+            scope={scope}
+            setScope={setScope}
+            period={period}
+            setPeriod={setPeriod}
+            periodOptions={periodOptions}
+            onOpenNewTransaction={() => openNewModalForEntity(scope === 'CNPJ' ? 'CNPJ' : 'CPF')}
+            theme={theme}
+            onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+            boletos={boletos}
+            onNavigate={handleNavigate}
+            syncStatus={syncStatus}
+            pendingSyncCount={pendingSyncCount}
+            onOpenShare={() => setShareSheetOpen(true)}
+            hideValues={hideValues}
+            onToggleHideValues={toggleHideValues}
+          />
 
-        <main className="p-4 sm:p-8 max-w-[1600px] w-full mx-auto flex-1">
+          <main className="p-4 pb-24 sm:p-8 sm:pb-24 md:pb-8 max-w-[1600px] w-full mx-auto flex-1">
           {storageWarning && (
             <div className="mb-4 p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 text-amber-900 dark:text-amber-200 text-xs sm:text-sm font-semibold flex items-center justify-between gap-3">
               <span>{storageWarning}</span>
@@ -2489,6 +2549,7 @@ export default function App() {
               onNavigate={handleNavigate}
               onOpenNew={() => openNewModalForEntity(scope === 'CNPJ' ? 'CNPJ' : 'CPF')}
               onEditTransaction={openEditModal}
+              onScopeChange={setScope}
             />
           )}
 
@@ -2841,10 +2902,7 @@ export default function App() {
               </div>
               <div className="font-extrabold text-[#082B5C] dark:text-emerald-400">
                 {reversalTarget.direction === 'INCOME' ? 'Entrada original: ' : 'Saída original: '}
-                R$ {fromCents(getTransactionAmountCents(reversalTarget)).toLocaleString('pt-BR', {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
+                {formatarValor(fromCents(getTransactionAmountCents(reversalTarget)), hideValues)}
               </div>
             </div>
 
@@ -2911,6 +2969,7 @@ export default function App() {
           fn?.();
         }}
       />
-    </div>
+      </div>
+    </PrivacyProvider>
   );
 }
