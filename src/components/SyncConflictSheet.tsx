@@ -56,11 +56,11 @@ export const SyncConflictSheet: React.FC<SyncConflictSheetProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1.5">
-              <div className="font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
-                <HardDrive size={14} className="text-emerald-600" /> Este dispositivo (Local)
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 space-y-1.5">
+              <div className="font-display font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
+                <HardDrive size={14} className="text-[#059669]" /> Este dispositivo (Local)
               </div>
-              <div className="text-slate-600 dark:text-slate-300 space-y-0.5">
+              <div className="font-money text-[#64748B] dark:text-slate-300 space-y-0.5">
                 <div>Contas: {conflict.localCounts.accounts}</div>
                 <div>Lançamentos: {conflict.localCounts.transactions}</div>
                 <div>Boletos: {conflict.localCounts.boletos} · Cartões: {conflict.localCounts.creditCards}</div>
@@ -68,11 +68,11 @@ export const SyncConflictSheet: React.FC<SyncConflictSheetProps> = ({
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-1.5">
-              <div className="font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 space-y-1.5">
+              <div className="font-display font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
                 <Cloud size={14} className="text-blue-600" /> Nuvem (Conta atual)
               </div>
-              <div className="text-slate-600 dark:text-slate-300 space-y-0.5">
+              <div className="font-money text-[#64748B] dark:text-slate-300 space-y-0.5">
                 <div>Contas: {conflict.cloudCounts.accounts}</div>
                 <div>Lançamentos: {conflict.cloudCounts.transactions}</div>
                 <div>Boletos: {conflict.cloudCounts.boletos} · Cartões: {conflict.cloudCounts.creditCards}</div>
@@ -88,7 +88,7 @@ export const SyncConflictSheet: React.FC<SyncConflictSheetProps> = ({
                   type="button"
                   disabled={busy}
                   onClick={() => onResolve('USE_CLOUD')}
-                  className="w-full min-h-12 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full min-h-12 px-4 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 transition-colors"
                 >
                   <Cloud size={16} /> Começar esta conta do zero (salva backup antes)
                 </button>
@@ -97,7 +97,7 @@ export const SyncConflictSheet: React.FC<SyncConflictSheetProps> = ({
                   type="button"
                   disabled={busy}
                   onClick={() => onResolve('KEEP_LOCAL')}
-                  className="w-full min-h-11 px-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full min-h-11 px-4 rounded-xl bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-100 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 transition-colors"
                 >
                   <HardDrive size={15} /> Importar dados locais para esta nova conta
                 </button>
@@ -108,7 +108,7 @@ export const SyncConflictSheet: React.FC<SyncConflictSheetProps> = ({
                   type="button"
                   disabled={busy}
                   onClick={() => onResolve('MERGE_BOTH')}
-                  className="w-full min-h-12 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full min-h-12 px-4 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 transition-colors"
                 >
                   <GitMerge size={16} /> Mesclar os dois conjuntos (preserva todos os IDs)
                 </button>
@@ -117,7 +117,7 @@ export const SyncConflictSheet: React.FC<SyncConflictSheetProps> = ({
                   type="button"
                   disabled={busy}
                   onClick={() => onResolve('KEEP_LOCAL')}
-                  className="w-full min-h-11 px-4 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full min-h-11 px-4 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] text-white text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 transition-colors"
                 >
                   <HardDrive size={15} /> Manter dados deste dispositivo e enviar à nuvem
                 </button>
@@ -126,7 +126,7 @@ export const SyncConflictSheet: React.FC<SyncConflictSheetProps> = ({
                   type="button"
                   disabled={busy}
                   onClick={() => onResolve('USE_CLOUD')}
-                  className="w-full min-h-11 px-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="w-full min-h-11 px-4 rounded-xl bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-100 text-xs font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 transition-colors"
                 >
                   <Cloud size={15} /> Usar dados da nuvem neste dispositivo
                 </button>

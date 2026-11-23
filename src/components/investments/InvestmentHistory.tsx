@@ -67,13 +67,13 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
               Histórico de Simulações Salvas ({simulations.length})
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#64748B] dark:text-slate-400">
               Cenários salvos no dispositivo para comparação. Nunca são duplicados no patrimônio real.
             </p>
           </div>
@@ -110,26 +110,26 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                       className="mt-1 accent-emerald-600 cursor-pointer shrink-0"
                     />
                     <div className="min-w-0">
-                      <div className="font-bold text-sm text-[#082B5C] dark:text-white truncate">
+                      <div className="font-display font-bold text-sm text-[#0F172A] dark:text-white truncate">
                         {sim.name}
                       </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      <div className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
                         {sim.productType} · {formatPercentBR(sim.cdiPercentage, 1)} CDI · Inicial{' '}
                         {formatarValor(sim.initialAmount, hideValues)} · Aporte {formatarValor(sim.monthlyContribution, hideValues)}/mês ·{' '}
                         {sim.days} dias
                       </div>
-                      <div className="text-[11px] text-slate-400 mt-0.5">
+                      <div className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                         Atualizado em {formatIsoDateTimePtBr(sim.updatedAt)}
                       </div>
                     </div>
                   </div>
 
                   <div className="flex flex-wrap items-center justify-between md:justify-end gap-4">
-                    <div className="text-left md:text-right tabular-nums">
-                      <div className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400">
+                    <div className="text-left md:text-right font-money">
+                      <div className="text-sm font-extrabold text-[#059669] dark:text-[#10B981]">
                         Líquido: {formatarValor(sim.netValue, hideValues)}
                       </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">
+                      <div className="text-xs text-[#64748B] dark:text-slate-400">
                         Bruto: {formatarValor(sim.grossValue, hideValues)} · IR/IOF: {formatarValor(sim.estimatedTax, hideValues)}
                       </div>
                     </div>
@@ -138,7 +138,7 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                       <button
                         type="button"
                         onClick={() => onLoadSimulation(sim)}
-                        className="px-3 min-h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                        className="px-3 min-h-9 rounded-lg bg-[#ECFDF5] dark:bg-emerald-950/60 text-[#059669] dark:text-[#10B981] text-xs font-bold flex items-center gap-1 cursor-pointer"
                         title="Carregar no simulador"
                       >
                         <ArrowUpRight size={14} /> Abrir
@@ -149,7 +149,7 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                           setRenamingSim(sim);
                           setRenameInput(sim.name);
                         }}
-                        className="min-w-9 min-h-9 grid place-items-center text-slate-400 hover:text-[#082B5C] dark:hover:text-white rounded-lg cursor-pointer"
+                        className="min-w-9 min-h-9 grid place-items-center text-slate-400 hover:text-[#0F172A] dark:hover:text-white rounded-lg cursor-pointer"
                         aria-label={`Renomear ${sim.name}`}
                         title="Renomear cenário"
                       >
@@ -184,10 +184,12 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
 
       {/* Multi-scenario comparison chart */}
       {comparedSimulations.length >= 2 && (
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4">
-          <div className="flex items-center gap-2">
-            <Layers size={16} className="text-emerald-600" />
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+        <div className="sf-card p-5 space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="sf-icon-badge shrink-0">
+              <Layers size={18} />
+            </span>
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
               Comparação Visual entre Cenários ({comparedSimulations.length})
             </h3>
           </div>
@@ -208,8 +210,8 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: isDark ? '#061B3B' : '#ffffff',
-                    borderColor: isDark ? '#334155' : '#cbd5e1',
+                    backgroundColor: isDark ? '#11185A' : '#ffffff',
+                    borderColor: isDark ? 'rgba(255,255,255,0.16)' : '#cbd5e1',
                     borderRadius: '0.75rem',
                     color: isDark ? '#f8fafc' : '#172536',
                     fontSize: '12px',
@@ -220,8 +222,8 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
                   ]}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px' }} />
-                <Bar dataKey="invested" name="Total investido" stackId="a" fill="#082B5C" />
-                <Bar dataKey="netProfit" name="Rendimento líquido" stackId="a" fill="#00A65A" />
+                <Bar dataKey="invested" name="Total investido" stackId="a" fill={isDark ? '#38bdf8' : '#061E3E'} />
+                <Bar dataKey="netProfit" name="Rendimento líquido" stackId="a" fill="#059669" />
                 <Bar dataKey="tax" name="Imposto estimado" stackId="a" fill="#F5B719" />
               </BarChart>
             </ResponsiveContainer>
@@ -263,7 +265,7 @@ export const InvestmentHistory: React.FC<InvestmentHistoryProps> = ({
             </button>
             <button
               type="submit"
-              className="flex-[1.5] min-h-11 rounded-xl bg-[#082B5C] dark:bg-emerald-600 text-white text-sm font-bold cursor-pointer"
+              className="flex-[1.5] min-h-11 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-sm font-bold cursor-pointer transition-colors"
             >
               Salvar nome
             </button>

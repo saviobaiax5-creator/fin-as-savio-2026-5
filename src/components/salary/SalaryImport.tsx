@@ -14,6 +14,8 @@ import {
   normalizeSourceNameKey,
 } from '../../utils/salaryCalculations';
 import { formatCurrencyBRL } from '../../utils/financeCalculations';
+import { usePrivacy } from '../../contexts/PrivacyContext';
+import { formatarValor } from '../../utils/formatters';
 import { AlertTriangle, CheckCircle2, FileSpreadsheet, Upload } from 'lucide-react';
 
 interface SalaryImportProps {
@@ -32,6 +34,7 @@ export default function SalaryImport({
   onImport,
   onCancel,
 }: SalaryImportProps) {
+  const { hideValues } = usePrivacy();
   const [preview, setPreview] = useState<SalaryImportResult | null>(null);
   const [excludedSourceIds, setExcludedSourceIds] = useState<Set<string>>(new Set());
   const [skipDuplicates, setSkipDuplicates] = useState(true);
@@ -148,34 +151,38 @@ export default function SalaryImport({
   }
 
   return (
-    <section className="space-y-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 sm:p-6">
+    <section className="space-y-5 sf-card p-5 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h2 className="text-lg font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-            <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
-            Importar salários do Excel (Planilha1 · A1:N24)
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Lê exclusivamente o bloco salarial (A:N), ignora totais da coluna O, preserva células vazias como ausentes e apresenta prévia editável antes de salvar.
-          </p>
+        <div className="flex items-start gap-3">
+          <span className="sf-icon-badge shrink-0">
+            <FileSpreadsheet className="w-5 h-5" />
+          </span>
+          <div>
+            <h2 className="font-display text-lg font-bold text-[#0F172A] dark:text-white">
+              Importar salários do Excel (Planilha1 · A1:N24)
+            </h2>
+            <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+              Lê exclusivamente o bloco salarial (A:N), ignora totais da coluna O, preserva células vazias como ausentes e apresenta prévia editável antes de salvar.
+            </p>
+          </div>
         </div>
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="min-h-9 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-semibold cursor-pointer"
+            className="min-h-9 px-3 py-1.5 rounded-lg border border-[#E2E8F0] dark:border-slate-700 text-xs font-semibold cursor-pointer"
           >
             Fechar
           </button>
         )}
       </div>
 
-      <label className="flex flex-col items-center justify-center gap-2 p-6 rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-emerald-500 transition-colors cursor-pointer bg-slate-50/70 dark:bg-slate-800/40">
-        <Upload className="w-6 h-6 text-emerald-600" />
-        <span className="text-sm font-semibold text-[#082B5C] dark:text-white">
+      <label className="flex flex-col items-center justify-center gap-2 p-6 rounded-xl border-2 border-dashed border-[#CBD5E1] dark:border-slate-700 hover:border-[#059669] transition-colors cursor-pointer bg-[#F8FAFC] dark:bg-slate-800/40">
+        <Upload className="w-6 h-6 text-[#059669]" />
+        <span className="text-sm font-semibold text-[#0F172A] dark:text-white">
           {fileName ? `Arquivo selecionado: ${fileName}` : 'Clique para selecionar arquivo .xlsx ou .xls'}
         </span>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-[#64748B] dark:text-slate-400">
           Os lançamentos entram inicialmente como &ldquo;A confirmar&rdquo; para sua validação.
         </span>
         <input
@@ -202,27 +209,27 @@ export default function SalaryImport({
         <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
           {/* Summary Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
-              <span className="text-slate-400 block">Ano identificado</span>
-              <strong className="text-base text-[#082B5C] dark:text-white tabular-nums">
+            <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700">
+              <span className="text-[#64748B] dark:text-slate-400 block">Ano identificado</span>
+              <strong className="font-money text-base text-[#0F172A] dark:text-white">
                 {preview.year}
               </strong>
             </div>
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
-              <span className="text-slate-400 block">Fontes encontradas</span>
-              <strong className="text-base text-[#082B5C] dark:text-white tabular-nums">
+            <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700">
+              <span className="text-[#64748B] dark:text-slate-400 block">Fontes encontradas</span>
+              <strong className="font-money text-base text-[#0F172A] dark:text-white">
                 {preview.sources.length - excludedSourceIds.size} de {preview.sources.length}
               </strong>
             </div>
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
-              <span className="text-slate-400 block">Lançamentos mensais</span>
-              <strong className="text-base text-[#082B5C] dark:text-white tabular-nums">
+            <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700">
+              <span className="text-[#64748B] dark:text-slate-400 block">Lançamentos mensais</span>
+              <strong className="font-money text-base text-[#0F172A] dark:text-white">
                 {preview.records.length}
               </strong>
             </div>
-            <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800">
-              <span className="text-slate-400 block">Duplicidades detectadas</span>
-              <strong className="text-base text-amber-700 dark:text-amber-400 tabular-nums">
+            <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700">
+              <span className="text-[#64748B] dark:text-slate-400 block">Duplicidades detectadas</span>
+              <strong className="font-money text-base text-amber-700 dark:text-amber-400">
                 {duplicateInfo?.duplicateCount ?? 0}
               </strong>
             </div>
@@ -301,8 +308,8 @@ export default function SalaryImport({
                         />
                       </td>
                       <td className="p-2.5 align-top min-w-[160px]">
-                        <div className="font-bold text-[#082B5C] dark:text-white">{src.name}</div>
-                        <div className="text-[11px] text-slate-400">
+                        <div className="font-bold text-[#0F172A] dark:text-white">{src.name}</div>
+                        <div className="text-[11px] text-[#64748B] dark:text-slate-400">
                           {isExisting ? 'Já existe no cadastro' : 'Nova fonte'} · {srcRecords.length} mês(es)
                         </div>
                       </td>
@@ -362,7 +369,7 @@ export default function SalaryImport({
                                   defaultValue={rec.amount !== null ? String(rec.amount) : ''}
                                   onBlur={(e) => updatePreviewRecordAmount(rec.id, e.target.value)}
                                   className="w-24 px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 font-semibold tabular-nums"
-                                  title={`Original: R$ ${formatCurrencyBRL(rec.amount ?? 0)}`}
+                                  title={`Original: ${formatarValor(rec.amount ?? 0, hideValues)}`}
                                 />
                               </div>
                             );

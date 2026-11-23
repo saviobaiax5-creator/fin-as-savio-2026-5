@@ -44,10 +44,10 @@ export const Sheet: React.FC<SheetProps> = ({
 
   const headerClasses =
     headerVariant === 'navy'
-      ? 'bg-[#082B5C] text-white'
+      ? 'bg-[#061E3E] text-white'
       : headerVariant === 'danger'
       ? 'bg-red-700 text-white'
-      : 'bg-white dark:bg-slate-900 text-[#082B5C] dark:text-white border-b border-slate-100 dark:border-slate-800';
+      : 'bg-white dark:bg-slate-900 text-[#0F172A] dark:text-white border-b border-slate-100 dark:border-slate-800';
 
   const closeBtnClasses =
     headerVariant === 'plain'
@@ -71,7 +71,7 @@ export const Sheet: React.FC<SheetProps> = ({
       >
         <header className={`px-5 py-4 flex items-center justify-between gap-3 shrink-0 ${headerClasses}`}>
           <div className="min-w-0">
-            <h3 className="text-base font-bold truncate">{title}</h3>
+            <h3 className="font-display text-base font-bold truncate">{title}</h3>
             {subtitle && (
               <p className="text-xs opacity-80 truncate mt-0.5">{subtitle}</p>
             )}

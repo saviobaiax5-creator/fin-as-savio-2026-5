@@ -30,8 +30,8 @@ export function SavioFinancasLogo({
       >
         <defs>
           <linearGradient id={bgId} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#082B5C" />
-            <stop offset="100%" stopColor="#061B3B" />
+            <stop offset="0%" stopColor="#061E3E" />
+            <stop offset="100%" stopColor="#0F172A" />
           </linearGradient>
           <linearGradient id={goldId} x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#FFD85A" />
@@ -65,7 +65,7 @@ export function SavioFinancasLogo({
         <path
           d="M17 101 C40 89 61 89 83 98"
           fill="none"
-          stroke="#00A65A"
+          stroke="#059669"
           strokeWidth="7"
           strokeLinecap="round"
         />
@@ -78,7 +78,7 @@ export function SavioFinancasLogo({
           textAnchor="middle"
           fontSize="25"
           fontWeight="bold"
-          fill="#082B5C"
+          fill="#061E3E"
         >
           $
         </text>
@@ -86,7 +86,7 @@ export function SavioFinancasLogo({
 
       {showName && (
         <div className="flex flex-col min-w-0">
-          <strong className="text-lg font-bold tracking-tight text-inherit truncate">
+          <strong className="font-display text-lg font-bold tracking-tight text-inherit truncate">
             Sávio <span className="text-[#F5B719]">Finanças</span>
           </strong>
 

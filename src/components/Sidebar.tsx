@@ -60,20 +60,20 @@ export const Sidebar: React.FC<SidebarProps> = ({
   let lastSection = '';
 
   return (
-    <aside className="w-64 bg-[#061B3B] dark:bg-slate-950 text-white p-5 flex flex-col flex-shrink-0 select-none shadow-xl border-r border-[#082B5C]/50">
+    <aside className="w-64 bg-[#061E3E] dark:bg-[#040836] text-white p-5 flex flex-col flex-shrink-0 select-none border-r border-white/10 font-sans">
       <div className="px-1 py-1 mb-2">
         <SavioFinancasLogo size={40} subtitle />
       </div>
 
-      <div className="my-3 px-3 py-3 bg-[#082B5C] dark:bg-slate-900 rounded-xl flex items-center gap-3 border border-[#0b3877] dark:border-slate-800">
-        <div className="w-9 h-9 rounded-full bg-[#00A65A]/20 text-[#00A65A] grid place-items-center font-bold text-sm shrink-0 border border-[#00A65A]/30">
+      <div className="my-3 px-3 py-3 bg-[#0C2A52] dark:bg-[#11185A] rounded-xl flex items-center gap-3 border border-white/10">
+        <div className="w-9 h-9 rounded-full bg-[#10B981]/20 text-[#10B981] grid place-items-center font-display font-bold text-sm shrink-0 border border-[#10B981]/30">
           {(currentUser?.displayName || 'SF').slice(0, 2).toUpperCase()}
         </div>
         <div className="overflow-hidden flex-1 min-w-0">
-          <p className="text-xs font-bold text-white truncate">
+          <p className="font-display text-xs font-bold text-white truncate">
             {currentUser?.displayName || 'Titular CPF & CNPJ'}
           </p>
-          <small className="block text-[11px] text-[#b0c4de] truncate">
+          <small className="block text-[11px] text-white/75 truncate">
             {currentUser?.email || 'Gestão consolidada'}
           </small>
         </div>
@@ -83,9 +83,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
             onClick={onSignOut}
             title="Sair da conta"
             aria-label="Sair da conta"
-            className="p-1.5 rounded-lg text-[#b0c4de] hover:text-white hover:bg-[#061B3B] cursor-pointer shrink-0"
+            className="p-1.5 rounded-lg text-white/75 hover:text-white hover:bg-[#061E3E] dark:hover:bg-white/10 cursor-pointer shrink-0"
           >
-            <LogOut size={14} />
+            <LogOut size={14} strokeWidth={1.75} />
           </button>
         )}
       </div>
@@ -100,23 +100,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
           return (
             <React.Fragment key={item.id}>
               {showSectionHeader && (
-                <div className="text-[10px] text-[#8fa8c6] tracking-widest px-3 pt-4 pb-1 font-semibold uppercase">
+                <div className="text-[10px] text-white/55 tracking-widest px-3 pt-4 pb-1 font-semibold uppercase">
                   {item.section}
                 </div>
               )}
               <button
                 type="button"
                 onClick={() => setCurrentTab(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-all cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium transition-colors cursor-pointer ${
                   isActive
-                    ? 'bg-[#00A65A] text-white shadow-md shadow-[#00A65A]/30 font-semibold'
-                    : 'text-[#d5e2f0] hover:bg-[#082B5C] dark:hover:bg-slate-900 hover:text-white'
+                    ? 'bg-[#059669] text-white font-semibold'
+                    : 'text-white/80 hover:bg-[#0C2A52] dark:hover:bg-[#11185A] hover:text-white'
                 }`}
               >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#a0b8d4]'}`} />
+                <Icon
+                  strokeWidth={1.75}
+                  className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-white/75'}`}
+                />
                 <span className="truncate flex-1 text-left">{item.label}</span>
                 {item.id === 'notifications' && pendingBankNotificationsCount > 0 && (
-                  <span className="text-[11px] font-bold tabular-nums text-[#F5B719]">
+                  <span className="font-money text-[11px] font-bold text-[#F5B719]">
                     {pendingBankNotificationsCount}
                   </span>
                 )}
@@ -126,9 +129,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         })}
       </nav>
 
-      <div className="mt-4 pt-3 border-t border-[#082B5C] dark:border-slate-800 text-[11px] text-[#8fa8c6] flex items-center justify-between">
+      <div className="mt-4 pt-3 border-t border-white/10 text-[11px] text-white/65 flex items-center justify-between">
         <span className="font-medium">Sávio Finanças Pro</span>
-        <span className="inline-block w-2 h-2 rounded-full bg-[#00A65A] ring-2 ring-[#00A65A]/30" />
+        <span className="inline-block w-2 h-2 rounded-full bg-[#10B981]" />
       </div>
     </aside>
   );

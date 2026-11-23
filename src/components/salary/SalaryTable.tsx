@@ -236,9 +236,9 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
   return (
     <div className="space-y-4">
       {/* Toolbar */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex flex-wrap items-center justify-between gap-3">
+      <div className="sf-card p-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center gap-1 bg-[#F8FAFC] dark:bg-slate-800 p-1 rounded-xl border border-[#E2E8F0] dark:border-slate-700">
             {availableYears.map((yr) => (
               <button
                 key={yr}
@@ -246,8 +246,8 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                 onClick={() => onChangeYear(yr)}
                 className={`min-h-9 px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
                   selectedYear === yr
-                    ? 'bg-white dark:bg-slate-900 text-[#082B5C] dark:text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                    ? 'bg-white dark:bg-slate-900 text-[#0F172A] dark:text-white border border-[#E2E8F0] dark:border-slate-700'
+                    : 'text-[#64748B] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
                 {yr}
@@ -311,25 +311,25 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
       </div>
 
       {/* Desktop Matrix Table (hidden on small mobile) */}
-      <div className="hidden md:block rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
+      <div className="hidden md:block sf-card overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300">
-                <th className="text-left font-bold py-3 px-4 sticky left-0 bg-slate-50 dark:bg-slate-800/95 min-w-[190px] z-10 border-r border-slate-200 dark:border-slate-700">
+              <tr className="bg-[#F8FAFC] dark:bg-slate-800/80 border-b border-[#E2E8F0] dark:border-slate-800 text-[#64748B] dark:text-slate-300">
+                <th className="text-left font-bold py-3 px-4 sticky left-0 bg-[#F8FAFC] dark:bg-slate-800/95 min-w-[190px] z-10 border-r border-[#E2E8F0] dark:border-slate-700">
                   Fonte de renda ({selectedYear})
                 </th>
                 {MONTHS_PT_SHORT.map((mLabel, idx) => (
                   <th
                     key={mLabel}
                     className={`text-right font-bold py-3 px-2.5 min-w-[96px] ${
-                      idx + 1 === selectedMonth ? 'text-emerald-700 dark:text-emerald-400' : ''
+                      idx + 1 === selectedMonth ? 'text-[#059669] dark:text-[#10B981]' : ''
                     }`}
                   >
                     {mLabel}
                   </th>
                 ))}
-                <th className="text-right font-extrabold py-3 px-4 min-w-[116px] bg-slate-100/70 dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700">
+                <th className="text-right font-extrabold py-3 px-4 min-w-[116px] bg-slate-100/70 dark:bg-slate-800 border-l border-[#E2E8F0] dark:border-slate-700">
                   Total recebido
                 </th>
               </tr>
@@ -337,7 +337,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {visibleSources.length === 0 ? (
                 <tr>
-                  <td colSpan={14} className="py-10 text-center text-slate-400">
+                  <td colSpan={14} className="py-10 text-center text-[#64748B]">
                     Nenhuma fonte de renda encontrada para os filtros selecionados.
                   </td>
                 </tr>
@@ -347,13 +347,13 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                   return (
                     <tr
                       key={source.id}
-                      className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
+                      className="hover:bg-[#F8FAFC] dark:hover:bg-slate-800/40 transition-colors"
                     >
                       <td className="py-2.5 px-4 sticky left-0 bg-white dark:bg-slate-900 z-10 border-r border-slate-100 dark:border-slate-800">
-                        <div className="font-bold text-[#082B5C] dark:text-white truncate max-w-[180px]">
+                        <div className="font-bold text-[#0F172A] dark:text-white truncate max-w-[180px]">
                           {source.name}
                         </div>
-                        <div className="text-[11px] text-slate-400">
+                        <div className="text-[11px] text-[#64748B] dark:text-slate-400">
                           {SALARY_CATEGORY_LABELS[source.category]}
                           {!source.active ? ' · Arquivada' : ''}
                         </div>
@@ -373,7 +373,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                                 !hasAmount
                                   ? 'text-slate-300 dark:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
                                   : rec.status === 'received' || rec.status === 'partially_received'
-                                  ? 'text-[#082B5C] dark:text-slate-100 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
+                                  ? 'text-[#0F172A] dark:text-slate-100 hover:bg-[#ECFDF5] dark:hover:bg-emerald-950/40'
                                   : rec.status === 'expected'
                                   ? 'text-blue-700 dark:text-blue-300 bg-blue-50/40 dark:bg-blue-950/20 hover:bg-blue-50'
                                   : rec.status === 'cancelled'
@@ -388,11 +388,11 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                             >
                               {hasAmount ? (
                                 <>
-                                  <span className="font-semibold tabular-nums whitespace-nowrap">
+                                  <span className="font-money font-semibold whitespace-nowrap">
                                     {formatarNumeroBRL(rec.amount ?? 0, hideValues)}
                                   </span>
                                   <span className="text-[10px] opacity-80 flex items-center gap-1 whitespace-nowrap">
-                                    {rec.linkedTransactionId && <Link2 size={9} className="text-emerald-600" />}
+                                    {rec.linkedTransactionId && <Link2 size={9} className="text-[#059669]" />}
                                     {rec.status === 'received'
                                       ? 'Recebido'
                                       : SALARY_STATUS_LABELS[rec.status]}
@@ -406,7 +406,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                         );
                       })}
 
-                      <td className="py-2.5 px-4 text-right font-extrabold text-[#082B5C] dark:text-white bg-slate-50/70 dark:bg-slate-800/50 border-l border-slate-100 dark:border-slate-800 tabular-nums whitespace-nowrap">
+                      <td className="py-2.5 px-4 text-right font-money font-extrabold text-[#0F172A] dark:text-white bg-[#F8FAFC] dark:bg-slate-800/50 border-l border-slate-100 dark:border-slate-800 whitespace-nowrap">
                         {formatarValor(rowTotal, hideValues)}
                       </td>
                     </tr>
@@ -416,8 +416,8 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
             </tbody>
             {visibleSources.length > 0 && (
               <tfoot>
-                <tr className="bg-slate-100/80 dark:bg-slate-800/90 border-t-2 border-slate-200 dark:border-slate-700 font-extrabold text-[#082B5C] dark:text-white">
-                  <td className="py-3 px-4 sticky left-0 bg-slate-100 dark:bg-slate-800 z-10 border-r border-slate-200 dark:border-slate-700">
+                <tr className="bg-[#F8FAFC] dark:bg-slate-800/90 border-t-2 border-[#E2E8F0] dark:border-slate-700 font-extrabold text-[#0F172A] dark:text-white">
+                  <td className="py-3 px-4 sticky left-0 bg-[#F8FAFC] dark:bg-slate-800 z-10 border-r border-[#E2E8F0] dark:border-slate-700">
                     Total recebido líquido (sem empréstimos)
                   </td>
                   {MONTHS_PT_SHORT.map((mLabel, mIdx) => {
@@ -425,13 +425,13 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                     return (
                       <td
                         key={`total-${mLabel}`}
-                        className="py-3 px-2.5 text-right tabular-nums whitespace-nowrap"
+                        className="py-3 px-2.5 text-right font-money whitespace-nowrap"
                       >
                         {mTotal > 0 ? formatarNumeroBRL(mTotal, hideValues) : '—'}
                       </td>
                     );
                   })}
-                  <td className="py-3 px-4 text-right text-emerald-700 dark:text-emerald-400 border-l border-slate-200 dark:border-slate-700 tabular-nums whitespace-nowrap">
+                  <td className="py-3 px-4 text-right font-money text-[#059669] dark:text-[#10B981] border-l border-[#E2E8F0] dark:border-slate-700 whitespace-nowrap">
                     {formatarValor(
                       MONTHS_PT_SHORT.reduce(
                         (sum, _l, idx) =>
@@ -450,9 +450,9 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
 
       {/* Mobile Card List (no horizontal overflow) */}
       <div className="md:hidden space-y-3">
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex items-center justify-between gap-3">
-          <div className="text-xs font-semibold text-slate-500">Mês visualizado:</div>
-          <span className="text-sm font-bold text-[#082B5C] dark:text-white">
+        <div className="sf-card p-4 flex items-center justify-between gap-3">
+          <div className="text-xs font-semibold text-[#64748B]">Mês visualizado:</div>
+          <span className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
             {MONTHS_PT_FULL[selectedMonth - 1]} / {selectedYear}
           </span>
         </div>
@@ -464,29 +464,29 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
           return (
             <div
               key={source.id}
-              className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3"
+              className="sf-card p-4 space-y-3"
             >
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h4 className="font-bold text-sm text-[#082B5C] dark:text-white">{source.name}</h4>
-                  <p className="text-xs text-slate-400">
+                  <h4 className="font-display font-bold text-sm text-[#0F172A] dark:text-white">{source.name}</h4>
+                  <p className="font-money text-xs text-[#64748B] dark:text-slate-400">
                     {SALARY_CATEGORY_LABELS[source.category]} · Anual: {formatarValor(annual, hideValues)}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => openCellEditor(source, selectedMonth)}
-                  className="min-h-10 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1 cursor-pointer shrink-0"
+                  className="min-h-10 px-3 py-1.5 rounded-xl border border-[#E2E8F0] dark:border-slate-700 text-xs font-semibold text-[#0F172A] dark:text-slate-200 flex items-center gap-1 cursor-pointer shrink-0"
                 >
                   <Edit3 size={13} /> {rec ? 'Editar' : 'Registrar'}
                 </button>
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-[#64748B]">
                   {rec ? SALARY_STATUS_LABELS[rec.status] : 'Sem pagamento informado'}
                 </span>
-                <span className="text-base font-extrabold text-[#082B5C] dark:text-white tabular-nums">
+                <span className="font-money text-base font-extrabold text-[#0F172A] dark:text-white">
                   {rec && rec.amount !== null ? formatarValor(rec.amount, hideValues) : '—'}
                 </span>
               </div>
@@ -567,7 +567,7 @@ export const SalaryTable: React.FC<SalaryTableProps> = ({
                   <span className="text-slate-500">Salário líquido calculado:</span>
                   <strong className="text-base text-emerald-700 dark:text-emerald-400 tabular-nums">
                     {previewNet.netAmount !== null
-                      ? `R$ ${formatCurrencyBRL(previewNet.netAmount)}`
+                      ? formatarValor(previewNet.netAmount, hideValues)
                       : 'Informe o bruto acima'}
                   </strong>
                 </div>

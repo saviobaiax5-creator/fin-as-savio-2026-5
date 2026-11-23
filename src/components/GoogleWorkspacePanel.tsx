@@ -116,18 +116,18 @@ export const GoogleWorkspacePanel: React.FC<GoogleWorkspacePanelProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-5">
+    <div className="sf-card p-5 sm:p-6 space-y-5">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 rounded-md text-[10px] font-bold">
               GOOGLE WORKSPACE
             </span>
-            <h3 className="text-base sm:text-lg font-extrabold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-base sm:text-lg font-extrabold text-[#0F172A] dark:text-white">
               Integração Drive, Sheets & Calendar
             </h3>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Exporte planilhas seguras, agende vencimentos de dia inteiro no calendário e salve backups no Drive.
           </p>
         </div>
@@ -137,7 +137,7 @@ export const GoogleWorkspacePanel: React.FC<GoogleWorkspacePanelProps> = ({
             type="button"
             onClick={handleLogin}
             disabled={loading}
-            className="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-xs flex items-center justify-center gap-3 transition-all cursor-pointer"
+            className="bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 hover:border-[#CBD5E1] hover:bg-[#F8FAFC] dark:hover:bg-slate-700 text-[#0F172A] dark:text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-3 transition-all cursor-pointer"
           >
             <span>Conectar com Google Workspace</span>
           </button>
@@ -190,18 +190,18 @@ export const GoogleWorkspacePanel: React.FC<GoogleWorkspacePanelProps> = ({
               type="button"
               onClick={handleExportSheets}
               disabled={loading}
-              className="w-full min-h-11 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer"
+              className="w-full min-h-11 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
             >
               Exportar para Sheets
             </button>
           </div>
 
-          <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl flex flex-col justify-between space-y-3">
+          <div className="bg-[#F8FAFC] dark:bg-slate-800/80 border border-[#E2E8F0] dark:border-slate-700 p-4 rounded-2xl flex flex-col justify-between space-y-3">
             <div>
-              <div className="flex items-center gap-2 font-bold text-slate-800 dark:text-white text-xs mb-1">
+              <div className="flex items-center gap-2 font-bold text-[#0F172A] dark:text-white text-xs mb-1">
                 <HardDrive className="w-4 h-4 text-blue-600" /> Google Drive
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400">
+              <p className="text-[11px] text-[#64748B] dark:text-slate-400">
                 Salvar backup JSON na pasta da sua conta Google Drive.
               </p>
             </div>
@@ -209,7 +209,7 @@ export const GoogleWorkspacePanel: React.FC<GoogleWorkspacePanelProps> = ({
               type="button"
               onClick={handleDriveBackup}
               disabled={loading}
-              className="w-full min-h-11 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-xs font-bold hover:opacity-90 transition-opacity cursor-pointer"
+              className="w-full min-h-11 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
             >
               Fazer Backup no Drive
             </button>
@@ -263,7 +263,7 @@ export const GoogleWorkspacePanel: React.FC<GoogleWorkspacePanelProps> = ({
               <button
                 type="button"
                 onClick={confirmSyncCalendar}
-                className="flex-[1.5] min-h-12 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-sm font-bold cursor-pointer"
+                className="flex-[1.5] min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-sm font-bold cursor-pointer"
               >
                 Confirmar agendamento
               </button>

@@ -114,10 +114,10 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Dívidas e Compromissos Futuros
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="font-sans text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Acompanhamento de financiamentos, empréstimos e parcelamentos de longo prazo.
           </p>
         </div>
@@ -127,33 +127,33 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
             setErrorMsg('');
             setModalOpen(true);
           }}
-          className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Registrar dívida
         </button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs flex items-center justify-between">
+      <div className="sf-card p-5 sm:p-6 flex items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold text-slate-400">Saldo Devedor Total</span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-red-700 dark:text-red-400 mt-1">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Saldo Devedor Total</span>
+          <div className="font-money text-2xl sm:text-3xl font-extrabold text-[#DC3545] dark:text-red-400 mt-1">
             {formatarValor(totalDebt, hideValues)}
           </div>
         </div>
-        <div className="p-3 bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-400 rounded-2xl">
-          <ShieldAlert className="w-8 h-8" />
+        <div className="sf-icon-badge-danger">
+          <ShieldAlert size={20} strokeWidth={2} />
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">Compromissos ativos</h3>
-          <span className="text-xs text-slate-400">{debts.length} registros</span>
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">Compromissos ativos</h3>
+          <span className="text-xs text-[#64748B]">{debts.length} registros</span>
         </div>
 
         {debts.length === 0 ? (
-          <p className="p-8 text-center text-sm text-slate-500 dark:text-slate-400">
+          <p className="p-8 text-center text-sm text-[#64748B] dark:text-slate-400">
             Nenhuma dívida cadastrada.
           </p>
         ) : !isDesktop ? (
@@ -162,17 +162,17 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
               <div key={d.id} className="p-4 space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="font-bold text-sm text-slate-900 dark:text-white">
+                    <div className="font-display font-bold text-sm text-[#0F172A] dark:text-white">
                       {d.creditorName}
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">{d.description}</div>
+                    <div className="text-xs text-[#64748B] dark:text-slate-400">{d.description}</div>
                   </div>
-                  <div className="text-sm font-extrabold text-red-700 dark:text-red-400">
+                  <div className="font-money text-sm font-bold text-[#DC3545] dark:text-red-400">
                     {formatarValor(d.outstandingAmount, hideValues)}
                   </div>
                 </div>
-                <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                  <span>
+                <div className="flex items-center justify-between text-xs text-[#64748B] dark:text-slate-400">
+                  <span className="font-money">
                     Parcela:{' '}
                     {d.installmentAmount ? formatarValor(d.installmentAmount, hideValues) : '—'} · Dia{' '}
                     {d.dueDay}
@@ -182,7 +182,7 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
                       <button
                         type="button"
                         onClick={() => openAmortizeModal(d)}
-                        className="px-2.5 min-h-9 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 min-h-9 rounded-lg bg-[#ECFDF5] dark:bg-emerald-950/60 text-[#059669] dark:text-[#10B981] font-bold text-[11px] flex items-center gap-1 cursor-pointer"
                       >
                         <Banknote size={14} /> Amortizar
                       </button>
@@ -204,7 +204,7 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-400 border-b border-slate-100 dark:border-slate-800">
+                <tr className="bg-[#F8FAFC] dark:bg-slate-800/60 text-[#64748B] border-b border-slate-100 dark:border-slate-800">
                   <th className="py-3 px-6 font-semibold">Credor / Descrição</th>
                   <th className="py-3 px-6 font-semibold">Vínculo</th>
                   <th className="py-3 px-6 font-semibold text-right">Valor Original</th>
@@ -218,21 +218,21 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
                 {debts.map((d) => (
                   <tr key={d.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="py-4 px-6">
-                      <div className="font-bold text-slate-800 dark:text-white">{d.creditorName}</div>
-                      <small className="text-slate-400">{d.description}</small>
+                      <div className="font-semibold text-[#0F172A] dark:text-white">{d.creditorName}</div>
+                      <small className="text-[#64748B]">{d.description}</small>
                     </td>
                     <td className="py-4 px-6">
-                      <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 rounded-full text-[10px] font-bold">
+                      <span className="px-2 py-0.5 bg-[#ECFDF5] dark:bg-emerald-950/60 text-[#059669] dark:text-[#10B981] rounded-full text-[10px] font-bold">
                         {d.entityId}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-right font-medium text-slate-600 dark:text-slate-300">
+                    <td className="font-money py-4 px-6 text-right font-medium text-[#64748B] dark:text-slate-300">
                       {formatarValor(d.originalAmount, hideValues)}
                     </td>
-                    <td className="py-4 px-6 text-right font-extrabold text-red-700 dark:text-red-400">
+                    <td className="font-money py-4 px-6 text-right font-bold text-[#DC3545] dark:text-red-400">
                       {formatarValor(d.outstandingAmount, hideValues)}
                     </td>
-                    <td className="py-4 px-6 text-right font-bold text-slate-800 dark:text-slate-200">
+                    <td className="font-money py-4 px-6 text-right font-bold text-[#0F172A] dark:text-slate-200">
                       {d.installmentAmount ? formatarValor(d.installmentAmount, hideValues) : '—'}
                     </td>
                     <td className="py-4 px-6 text-center text-slate-600 dark:text-slate-300 font-medium">
@@ -359,7 +359,7 @@ export const DebtsView: React.FC<DebtsViewProps> = ({
             </button>
             <button
               type="submit"
-              className="flex-[1.5] min-h-12 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-[1.5] min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               <CheckCircle2 size={16} /> Salvar dívida
             </button>

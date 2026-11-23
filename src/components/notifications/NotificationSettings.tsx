@@ -85,17 +85,17 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({
   return (
     <div className="space-y-6">
       {/* Platform status */}
-      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
+      <section className="sf-card rounded-2xl p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-start gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-[#082B5C] dark:text-emerald-400 grid place-items-center shrink-0">
+            <div className="sf-icon-badge-navy">
               <Smartphone size={20} />
             </div>
             <div>
-              <h3 className="text-sm sm:text-base font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-sm sm:text-base font-bold text-[#0F172A] dark:text-white">
                 Integração com Android (NotificationListenerService)
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
                 {permissionStatus.supported
                   ? permissionStatus.listenerEnabled
                     ? 'Serviço de leitura de notificações habilitado no sistema Android.'
@@ -111,7 +111,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({
             <button
               type="button"
               onClick={() => void onOpenAndroidSettings()}
-              className="min-h-11 px-4 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+              className="min-h-11 px-4 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold flex items-center justify-center gap-2 shrink-0 cursor-pointer transition-colors"
             >
               <ExternalLink size={15} />
               Configurações do Android
@@ -158,14 +158,14 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({
       </section>
 
       {/* Explicit Consent & Security Guarantees */}
-      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
+      <section className="sf-card rounded-2xl p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="text-sm sm:text-base font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-              <ShieldCheck size={18} className="text-emerald-600" />
+            <h3 className="font-display text-sm sm:text-base font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
+              <ShieldCheck size={18} className="text-[#059669] dark:text-[#10B981]" />
               Autorização explícita e privacidade
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#64748B] dark:text-slate-400">
               O Sávio Finanças nunca lê SMS, nunca grava mensagens em logs e não envia notificações brutas para servidores externos por padrão.
             </p>
           </div>
@@ -213,7 +213,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({
                   retentionDays: Number(e.target.value) as 7 | 30 | 60 | 90,
                 })
               }
-              className="border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-semibold min-h-9"
+              className="border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 bg-white dark:bg-[#11185A] text-slate-900 dark:text-white font-semibold min-h-9"
             >
               <option value={7}>7 dias</option>
               <option value={30}>30 dias</option>
@@ -225,12 +225,12 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({
       </section>
 
       {/* Authorized Banking Apps Allowlist */}
-      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
+      <section className="sf-card rounded-2xl p-5 sm:p-6 space-y-4">
         <div>
-          <h3 className="text-sm sm:text-base font-bold text-[#082B5C] dark:text-white">
+          <h3 className="font-display text-sm sm:text-base font-bold text-[#0F172A] dark:text-white">
             Aplicativos bancários autorizados
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
             Apenas notificações emitidas pelos pacotes selecionados abaixo serão enfileiradas para revisão.
           </p>
         </div>
@@ -315,8 +315,8 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({
       </section>
 
       {/* Retention cleanup & full revocation */}
-      <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4">
-        <h3 className="text-sm sm:text-base font-bold text-[#082B5C] dark:text-white">
+      <section className="sf-card rounded-2xl p-5 sm:p-6 space-y-4">
+        <h3 className="font-display text-sm sm:text-base font-bold text-[#0F172A] dark:text-white">
           Manutenção e revogação
         </h3>
 

@@ -34,6 +34,7 @@ import { identifySourceAccount } from './accountIdentifier';
 import { classifyExtractedMovement } from './movementClassifier';
 import { evaluateMovementDuplicates } from './duplicationDetector';
 import { computeStatementBalanceSummary } from './balanceReconciler';
+import { detectBankFromStatementAsync } from './banksRepository';
 
 export interface ProcessExtractionParams {
   file: File;
@@ -354,19 +355,29 @@ export async function processExtractionFile(
   onStageChange?.('leitura');
 
   let parseResult: ParseResultPayload;
+  let headerSample = '';
   if (format === 'OFX') {
-    parseResult = parseOfxStatement(decodeTextBuffer(buffer), file.name);
+    const text = decodeTextBuffer(buffer);
+    headerSample = text.slice(0, 4000);
+    parseResult = parseOfxStatement(text, file.name);
   } else if (format === 'CSV') {
-    parseResult = parseCsvStatement(decodeTextBuffer(buffer), file.name, csvMapping);
+    const text = decodeTextBuffer(buffer);
+    headerSample = text.slice(0, 4000);
+    parseResult = parseCsvStatement(text, file.name, csvMapping);
   } else if (format === 'XLSX' || format === 'XLS') {
     parseResult = parseSpreadsheetStatement(buffer, file.name, xlsxSheetName, csvMapping);
   } else if (format === 'JSON') {
-    parseResult = parseJsonStatement(decodeTextBuffer(buffer), file.name);
+    const text = decodeTextBuffer(buffer);
+    headerSample = text.slice(0, 4000);
+    parseResult = parseJsonStatement(text, file.name);
   } else if (format === 'XML') {
-    parseResult = parseXmlStatement(decodeTextBuffer(buffer), file.name);
+    const text = decodeTextBuffer(buffer);
+    headerSample = text.slice(0, 4000);
+    parseResult = parseXmlStatement(text, file.name);
   } else if (format === 'PDF') {
     const localExtracted = await extractTextFromPdfBufferAsync(buffer);
     checkAbort();
+    headerSample = localExtracted.text.slice(0, 4000);
     const localResult = parseTextualPdfContent(localExtracted.text, file.name);
     if (localResult.rows.length > 0 || !allowRemoteOcr) {
       parseResult = localResult;
@@ -417,6 +428,38 @@ export async function processExtractionFile(
         format: 'IMAGE',
         signal,
       });
+    }
+  }
+
+  checkAbort();
+
+  // Cached BrasilAPI fallback when a COMPE code was found but static bank resolution remained unknown
+  if (
+    parseResult.identifiedAccount.bankCode &&
+    (!parseResult.identifiedAccount.bankType ||
+      parseResult.identifiedAccount.bankType === 'desconhecido')
+  ) {
+    const asyncDetected = await detectBankFromStatementAsync(
+      headerSample || `<BANKID>${parseResult.identifiedAccount.bankCode}</BANKID>`,
+      file.name
+    );
+    if (asyncDetected.type !== 'desconhecido') {
+      parseResult.identifiedAccount = {
+        ...parseResult.identifiedAccount,
+        bankName: asyncDetected.name || parseResult.identifiedAccount.bankName,
+        bankCode: asyncDetected.code || parseResult.identifiedAccount.bankCode,
+        bankIspb: asyncDetected.ispb || parseResult.identifiedAccount.bankIspb,
+        bankType: asyncDetected.type,
+        detectionConfidence: asyncDetected.confidence,
+        institutionId:
+          asyncDetected.institutionId || parseResult.identifiedAccount.institutionId,
+        institutionCategory:
+          asyncDetected.type === 'fisico'
+            ? 'BANCO_FISICO'
+            : asyncDetected.type === 'digital'
+              ? 'BANCO_DIGITAL'
+              : parseResult.identifiedAccount.institutionCategory,
+      };
     }
   }
 

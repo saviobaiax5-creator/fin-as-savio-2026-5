@@ -182,6 +182,114 @@ export const BUILTIN_INSTITUTIONS: InstitutionProfile[] = [
     updatedAt: NOW_ISO,
   },
   {
+    id: 'inst-safra',
+    name: 'Banco Safra S.A.',
+    commercialName: 'Safra',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '422',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-banrisul',
+    name: 'Banco do Estado do Rio Grande do Sul S.A.',
+    commercialName: 'Banrisul',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '041',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-brb',
+    name: 'BRB - Banco de Brasília S.A.',
+    commercialName: 'BRB',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '070',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-bnb',
+    name: 'Banco do Nordeste do Brasil S.A.',
+    commercialName: 'Banco do Nordeste',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '004',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-basa',
+    name: 'Banco da Amazônia S.A.',
+    commercialName: 'Banco da Amazônia',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '003',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-original',
+    name: 'Banco Original S.A.',
+    commercialName: 'Banco Original',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '212',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-cora',
+    name: 'Cora Sociedade de Crédito Direto S.A.',
+    commercialName: 'Cora',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '403',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-stone',
+    name: 'Stone Instituição de Pagamento S.A.',
+    commercialName: 'Stone',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '197',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-willbank',
+    name: 'Will Financeira S.A.',
+    commercialName: 'Will Bank',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '280',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
     id: 'inst-wise',
     name: 'Wise Payments Limited',
     commercialName: 'Wise',
@@ -311,21 +419,222 @@ export const BUILTIN_INSTITUTIONS: InstitutionProfile[] = [
     createdAt: NOW_ISO,
     updatedAt: NOW_ISO,
   },
+  {
+    id: 'inst-99pay',
+    name: '99Pay Instituição de Pagamento S.A.',
+    commercialName: '99Pay',
+    category: 'CARTEIRA_DIGITAL',
+    country: 'Brasil',
+    code: '301',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-iti',
+    name: 'iti Itaú Digital',
+    commercialName: 'iti Itaú',
+    category: 'CARTEIRA_DIGITAL',
+    country: 'Brasil',
+    code: '341',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-next',
+    name: 'Next Banco Digital (Bradesco)',
+    commercialName: 'Next',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '237',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-sofisadireto',
+    name: 'Banco Sofisa S.A. (Sofisa Direto)',
+    commercialName: 'Sofisa Direto',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '637',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-pan',
+    name: 'Banco PAN S.A.',
+    commercialName: 'Banco PAN',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '623',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-bs2',
+    name: 'Banco BS2 S.A.',
+    commercialName: 'Banco BS2',
+    category: 'BANCO_DIGITAL',
+    country: 'Brasil',
+    code: '218',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-recargapay',
+    name: 'RecargaPay Instituição de Pagamento Ltda.',
+    commercialName: 'RecargaPay',
+    category: 'CARTEIRA_DIGITAL',
+    country: 'Brasil',
+    code: '350',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-ame',
+    name: 'Ame Digital Instituição de Pagamento S.A.',
+    commercialName: 'Ame Digital',
+    category: 'CARTEIRA_DIGITAL',
+    country: 'Brasil',
+    code: '364',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-cresol',
+    name: 'Sistema Cresol de Cooperativas de Crédito',
+    commercialName: 'Cresol',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '133',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-unicred',
+    name: 'Sistema Unicred de Cooperativas de Crédito',
+    commercialName: 'Unicred',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '136',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-ailos',
+    name: 'Sistema Ailos / Viacredi',
+    commercialName: 'Ailos / Viacredi',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '085',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-uniprime',
+    name: 'Uniprime Central Nacional',
+    commercialName: 'Uniprime',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '084',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-sisprime',
+    name: 'Sisprime do Brasil Cooperativa de Crédito',
+    commercialName: 'Sisprime',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '084',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-credisis',
+    name: 'CrediSIS Central de Cooperativas de Crédito',
+    commercialName: 'CrediSIS',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '097',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-credicoamo',
+    name: 'Credicoamo Crédito Rural Cooperativa',
+    commercialName: 'Credicoamo',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '098',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
+  {
+    id: 'inst-sulcredi',
+    name: 'Sulcredi Cooperativa de Crédito',
+    commercialName: 'Sulcredi',
+    category: 'BANCO_FISICO',
+    country: 'Brasil',
+    code: '322',
+    status: 'ACTIVE',
+    isBuiltin: true,
+    createdAt: NOW_ISO,
+    updatedAt: NOW_ISO,
+  },
 ];
 
 const KEYWORD_ALIASES: Array<{ keywords: string[]; institutionId: string }> = [
-  { keywords: ['banco do brasil', 'bb s.a', 'bb sa'], institutionId: 'inst-bb' },
+  { keywords: ['banco do brasil', 'bb s.a', 'bb sa', 'ourocard'], institutionId: 'inst-bb' },
   { keywords: ['caixa economica', 'caixa econômica', 'cef'], institutionId: 'inst-cef' },
-  { keywords: ['bradesco'], institutionId: 'inst-bradesco' },
-  { keywords: ['itau', 'itaú', 'unibanco'], institutionId: 'inst-itau' },
+  { keywords: ['bradesco', 'bradescard'], institutionId: 'inst-bradesco' },
+  { keywords: ['itau', 'itaú', 'unibanco', 'itaucard'], institutionId: 'inst-itau' },
   { keywords: ['santander'], institutionId: 'inst-santander' },
-  { keywords: ['sicoob'], institutionId: 'inst-sicoob' },
+  { keywords: ['safra'], institutionId: 'inst-safra' },
+  { keywords: ['banrisul'], institutionId: 'inst-banrisul' },
+  { keywords: ['banco de brasilia', 'banco regional de brasilia', 'brb'], institutionId: 'inst-brb' },
+  { keywords: ['banco do nordeste', 'bnb'], institutionId: 'inst-bnb' },
+  { keywords: ['banco da amazonia', 'banco da amazônia', 'basa'], institutionId: 'inst-basa' },
+  { keywords: ['sicoob', 'bancoob'], institutionId: 'inst-sicoob' },
   { keywords: ['sicredi'], institutionId: 'inst-sicredi' },
   { keywords: ['nubank', 'nu pagamentos', 'nu financeira'], institutionId: 'inst-nubank' },
-  { keywords: ['banco inter', 'inter s.a', 'intermedium'], institutionId: 'inst-inter' },
-  { keywords: ['c6 bank', 'banco c6'], institutionId: 'inst-c6' },
-  { keywords: ['neon'], institutionId: 'inst-neon' },
+  { keywords: ['banco inter', 'inter s.a', 'inter sa', 'intermedium'], institutionId: 'inst-inter' },
+  { keywords: ['c6 bank', 'banco c6', 'c6bank'], institutionId: 'inst-c6' },
+  { keywords: ['neon', 'banco bv', 'banco votorantim'], institutionId: 'inst-neon' },
   { keywords: ['pagbank', 'pagseguro'], institutionId: 'inst-pagbank' },
+  { keywords: ['banco original', 'original s.a'], institutionId: 'inst-original' },
+  { keywords: ['cora scd', 'banco cora', 'cora'], institutionId: 'inst-cora' },
+  { keywords: ['stone pagamentos', 'conta stone', 'stone'], institutionId: 'inst-stone' },
+  { keywords: ['will bank', 'willbank', 'will financeira'], institutionId: 'inst-willbank' },
   { keywords: ['mercado pago', 'mercadopago'], institutionId: 'inst-mercadopago' },
   { keywords: ['picpay'], institutionId: 'inst-picpay' },
   { keywords: ['wise', 'transferwise'], institutionId: 'inst-wise' },
@@ -339,6 +648,22 @@ const KEYWORD_ALIASES: Array<{ keywords: string[]; institutionId: string }> = [
   { keywords: ['binance'], institutionId: 'inst-binance' },
   { keywords: ['mercado bitcoin'], institutionId: 'inst-mercadobitcoin' },
   { keywords: ['coinbase'], institutionId: 'inst-coinbase' },
+  { keywords: ['99pay', '99 pay'], institutionId: 'inst-99pay' },
+  { keywords: ['iti itau', 'conta iti', 'iti pagamentos'], institutionId: 'inst-iti' },
+  { keywords: ['banco next', 'next.me', 'conta next'], institutionId: 'inst-next' },
+  { keywords: ['sofisa direto', 'banco sofisa', 'sofisa'], institutionId: 'inst-sofisadireto' },
+  { keywords: ['banco pan', 'bancopan', 'panamericano'], institutionId: 'inst-pan' },
+  { keywords: ['banco bs2', 'bs2'], institutionId: 'inst-bs2' },
+  { keywords: ['recargapay', 'recarga pay'], institutionId: 'inst-recargapay' },
+  { keywords: ['ame digital', 'conta ame'], institutionId: 'inst-ame' },
+  { keywords: ['cresol'], institutionId: 'inst-cresol' },
+  { keywords: ['unicred'], institutionId: 'inst-unicred' },
+  { keywords: ['ailos', 'viacredi'], institutionId: 'inst-ailos' },
+  { keywords: ['uniprime'], institutionId: 'inst-uniprime' },
+  { keywords: ['sisprime'], institutionId: 'inst-sisprime' },
+  { keywords: ['credisis'], institutionId: 'inst-credisis' },
+  { keywords: ['credicoamo'], institutionId: 'inst-credicoamo' },
+  { keywords: ['sulcredi'], institutionId: 'inst-sulcredi' },
 ];
 
 export function mergeInstitutionsCatalog(userInstitutions: InstitutionProfile[]): InstitutionProfile[] {
@@ -360,6 +685,21 @@ export function resolveInstitutionMatch(params: {
   fileNameHint?: string;
   catalog: InstitutionProfile[];
 }): InstitutionProfile | undefined {
+  const haystack = `${params.bankNameHint || ''} ${params.fileNameHint || ''}`
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
+  // Check explicit sub-brand keyword aliases first when bankNameHint/fileNameHint clearly names a sub-brand
+  if (haystack.trim()) {
+    for (const entry of KEYWORD_ALIASES) {
+      if (entry.keywords.some((kw) => haystack.includes(kw))) {
+        const found = params.catalog.find((i) => i.id === entry.institutionId);
+        if (found) return found;
+      }
+    }
+  }
+
   const normalizedCode = (params.bankCode || '').replace(/\D/g, '').replace(/^0+/, '').padStart(3, '0');
   if (params.bankCode && normalizedCode !== '000') {
     const byCode = params.catalog.find(
@@ -368,19 +708,7 @@ export function resolveInstitutionMatch(params: {
     if (byCode) return byCode;
   }
 
-  const haystack = `${params.bankNameHint || ''} ${params.fileNameHint || ''}`
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-
   if (!haystack.trim()) return undefined;
-
-  for (const entry of KEYWORD_ALIASES) {
-    if (entry.keywords.some((kw) => haystack.includes(kw))) {
-      const found = params.catalog.find((i) => i.id === entry.institutionId);
-      if (found) return found;
-    }
-  }
 
   return params.catalog.find((i) => {
     const comm = i.commercialName
@@ -402,16 +730,16 @@ export function inferCategoryFromText(text: string): InstitutionCategory {
   if (/xp |btg|clear|rico|corretora|nota de corretagem|b3|fii/.test(lower)) {
     return 'CORRETORA_NACIONAL';
   }
-  if (/mercado pago|picpay|wise|paypal|carteira/.test(lower)) {
+  if (/99pay|mercado pago|picpay|wise|paypal|recargapay|ame digital|iti |carteira/.test(lower)) {
     return 'CARTEIRA_DIGITAL';
   }
-  if (/nubank|inter|c6|neon|pagbank/.test(lower)) {
+  if (/nubank|inter|c6|neon|pagbank|original|cora|stone|will bank|willbank|sofisa|banco pan|bs2|next/.test(lower)) {
     return 'BANCO_DIGITAL';
   }
   if (/fatura|cart[aã]o|visa|mastercard|elo|amex/.test(lower)) {
     return 'CARTAO_CREDITO';
   }
-  if (/banco do brasil|caixa|bradesco|ita[uú]|santander|sicoob|sicredi/.test(lower)) {
+  if (/banco do brasil|caixa|bradesco|ita[uú]|santander|sicoob|sicredi|cresol|unicred|ailos|viacredi|uniprime|sisprime|credisis|credicoamo|sulcredi|safra|banrisul|brb|nordeste|amaz[oô]nia/.test(lower)) {
     return 'BANCO_FISICO';
   }
   return 'OUTRA';

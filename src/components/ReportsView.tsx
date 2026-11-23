@@ -167,11 +167,11 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Relatórios Gerenciais
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Consolidado real para a competência <strong>{period === 'ALL' ? 'Todo período' : period}</strong> (escopo {scope}).
+          <p className="font-sans text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
+            Consolidado real para a competência <strong className="font-semibold text-[#0F172A] dark:text-slate-200">{period === 'ALL' ? 'Todo período' : period}</strong> (escopo {scope}).
           </p>
         </div>
 
@@ -179,14 +179,14 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
           <button
             type="button"
             onClick={handleExportCsv}
-            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+            className="bg-[#059669] hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center gap-2 cursor-pointer"
           >
             <Download className="w-4 h-4" /> Exportar CSV Seguro
           </button>
           <button
             type="button"
             onClick={() => window.print()}
-            className="bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+            className="sf-card-interactive px-4 min-h-11 text-xs sm:text-sm font-semibold text-[#0F172A] dark:text-slate-200 flex items-center gap-2 cursor-pointer"
           >
             <Printer className="w-4 h-4" /> Imprimir / Salvar PDF
           </button>
@@ -195,52 +195,52 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
 
       {/* Real KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
-          <span className="text-xs text-slate-400 font-semibold">Resultado do Período</span>
+        <div className="sf-card p-4 sm:p-5">
+          <span className="font-sans text-xs text-[#64748B] font-medium">Resultado do Período</span>
           <div
-            className={`text-lg sm:text-xl font-extrabold mt-1 ${
-              summary.net >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'
+            className={`font-money text-lg sm:text-xl font-extrabold mt-1 ${
+              summary.net >= 0 ? 'text-[#059669] dark:text-[#10B981]' : 'text-[#DC3545] dark:text-red-400'
             }`}
           >
             {formatarValor(summary.net, hideValues)}
           </div>
-          <small className="text-[11px] text-slate-400 mt-1 block">
+          <small className="font-money text-[11px] text-[#64748B] mt-1 block">
             Rec: {formatarValor(summary.income, hideValues)} · Desp: {formatarValor(summary.expense, hideValues)}
           </small>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
-          <span className="text-xs text-slate-400 font-semibold">Saldo em Contas</span>
-          <div className="text-lg sm:text-xl font-extrabold text-[#082B5C] dark:text-white mt-1">
+        <div className="sf-card p-4 sm:p-5">
+          <span className="font-sans text-xs text-[#64748B] font-medium">Saldo em Contas</span>
+          <div className="font-money text-lg sm:text-xl font-extrabold text-[#0F172A] dark:text-white mt-1">
             {formatarValor(summary.accountsBalance, hideValues)}
           </div>
-          <small className="text-[11px] text-slate-400 mt-1 block">Liquidez imediata</small>
+          <small className="text-[11px] text-[#64748B] mt-1 block">Liquidez imediata</small>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
-          <span className="text-xs text-slate-400 font-semibold">Patrimônio Líquido Estimado</span>
-          <div className="text-lg sm:text-xl font-extrabold text-blue-700 dark:text-blue-400 mt-1">
+        <div className="sf-card p-4 sm:p-5">
+          <span className="font-sans text-xs text-[#64748B] font-medium">Patrimônio Líquido Estimado</span>
+          <div className="font-money text-lg sm:text-xl font-extrabold text-blue-700 dark:text-blue-400 mt-1">
             {formatarValor(summary.netWorth, hideValues)}
           </div>
-          <small className="text-[11px] text-slate-400 mt-1 block">Contas + Ativos − Dívidas</small>
+          <small className="text-[11px] text-[#64748B] mt-1 block">Contas + Ativos − Dívidas</small>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl shadow-xs">
-          <span className="text-xs text-slate-400 font-semibold">Boletos Pendentes</span>
-          <div className="text-lg sm:text-xl font-extrabold text-amber-700 dark:text-amber-400 mt-1">
+        <div className="sf-card p-4 sm:p-5">
+          <span className="font-sans text-xs text-[#64748B] font-medium">Boletos Pendentes</span>
+          <div className="font-money text-lg sm:text-xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">
             {formatarValor(summary.pendingBoletos, hideValues)}
           </div>
-          <small className="text-[11px] text-slate-400 mt-1 block">Obrigações em aberto</small>
+          <small className="text-[11px] text-[#64748B] mt-1 block">Obrigações em aberto</small>
         </div>
       </div>
 
       {/* Category Breakdown */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
-        <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+      <div className="sf-card p-5 sm:p-6 space-y-4">
+        <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
           Relatório detalhado por categoria
         </h3>
         {byCategory.length === 0 ? (
-          <p className="text-xs text-slate-400 py-4">Nenhum lançamento encontrado para este período.</p>
+          <p className="text-xs text-[#64748B] py-4">Nenhum lançamento encontrado para este período.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             {byCategory.map((item) => (
@@ -250,12 +250,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                 onClick={() =>
                   onNavigate?.(scope === 'CNPJ' ? 'cnpj' : 'cpf', { category: item.category })
                 }
-                className="text-left p-3.5 bg-slate-50 dark:bg-slate-800/80 hover:bg-slate-100 dark:hover:bg-slate-800 border border-transparent hover:border-emerald-400 rounded-xl flex items-center justify-between gap-3 transition-colors cursor-pointer"
+                className="sf-card-interactive text-left p-3.5 flex items-center justify-between gap-3 cursor-pointer"
               >
-                <span className="font-bold text-slate-800 dark:text-slate-100">{item.category}</span>
-                <div className="text-right">
+                <span className="font-semibold text-[#0F172A] dark:text-slate-100">{item.category}</span>
+                <div className="font-money text-right">
                   {item.income > 0 && (
-                    <div className="font-bold text-emerald-700 dark:text-emerald-400">
+                    <div className="font-bold text-[#059669] dark:text-[#10B981]">
                       {hideValues ? formatarValor(item.income, true) : `+ ${formatarValor(item.income, false)}`}
                     </div>
                   )}
@@ -272,8 +272,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
       </div>
 
       {/* CPF vs CNPJ Comparative */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
-        <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+      <div className="sf-card p-5 sm:p-6 space-y-4">
+        <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
           Comparativo CPF vs CNPJ no período
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
@@ -281,19 +281,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <div className="font-bold text-emerald-900 dark:text-emerald-300">Pessoal · CPF</div>
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Receitas:</span>
-              <strong className="text-emerald-700 dark:text-emerald-400">
+              <strong className="font-money text-[#059669] dark:text-[#10B981]">
                 {formatarValor(entityComparison.cpf.inc, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Despesas:</span>
-              <strong className="text-red-700 dark:text-red-400">
+              <strong className="font-money text-red-700 dark:text-red-400">
                 {formatarValor(entityComparison.cpf.exp, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between pt-1 border-t border-emerald-200/70 dark:border-emerald-800">
               <span className="font-bold text-slate-700 dark:text-slate-200">Resultado:</span>
-              <strong className="text-[#082B5C] dark:text-white">
+              <strong className="font-money text-[#0F172A] dark:text-white">
                 {formatarValor(entityComparison.cpf.net, hideValues)}
               </strong>
             </div>
@@ -303,19 +303,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <div className="font-bold text-blue-900 dark:text-blue-300">Empresa · CNPJ / MEI</div>
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Faturamento:</span>
-              <strong className="text-emerald-700 dark:text-emerald-400">
+              <strong className="font-money text-[#059669] dark:text-[#10B981]">
                 {formatarValor(entityComparison.cnpj.inc, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-600 dark:text-slate-300">Custos / Despesas:</span>
-              <strong className="text-red-700 dark:text-red-400">
+              <strong className="font-money text-red-700 dark:text-red-400">
                 {formatarValor(entityComparison.cnpj.exp, hideValues)}
               </strong>
             </div>
             <div className="flex justify-between pt-1 border-t border-blue-200/70 dark:border-blue-800">
               <span className="font-bold text-slate-700 dark:text-slate-200">Resultado Operacional:</span>
-              <strong className="text-[#082B5C] dark:text-white">
+              <strong className="font-money text-[#0F172A] dark:text-white">
                 {formatarValor(entityComparison.cnpj.net, hideValues)}
               </strong>
             </div>
@@ -324,19 +324,23 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
       </div>
 
       {/* P3 Cash Flow Future Projection (30/60/90 days) */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
+      <div className="sf-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-              <CalendarRange className="w-4 h-4 text-emerald-600" />
-              Projeção de Fluxo de Caixa Futuro ({horizonDays} dias)
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Considera saldo realizado atual, lançamentos Pendentes/Planejados e boletos a vencer até {formatDateBR(cashFlowProjection.endDate)}.
-            </p>
+          <div className="flex items-start gap-3">
+            <span className="sf-icon-badge mt-0.5">
+              <CalendarRange size={18} strokeWidth={2} />
+            </span>
+            <div>
+              <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
+                Projeção de Fluxo de Caixa Futuro ({horizonDays} dias)
+              </h3>
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+                Considera saldo realizado atual, lançamentos Pendentes/Planejados e boletos a vencer até {formatDateBR(cashFlowProjection.endDate)}.
+              </p>
+            </div>
           </div>
 
-          <div className="inline-flex rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 p-1 self-start">
+          <div className="inline-flex rounded-xl border border-[#E2E8F0] dark:border-slate-700 bg-[#F8FAFC] dark:bg-slate-800 p-1 self-start">
             {([30, 60, 90] as const).map((days) => (
               <button
                 key={days}
@@ -344,8 +348,8 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                 onClick={() => setHorizonDays(days)}
                 className={`px-3 min-h-9 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   horizonDays === days
-                    ? 'bg-[#082B5C] text-white dark:bg-[#00A65A]'
-                    : 'text-slate-600 dark:text-slate-300'
+                    ? 'bg-[#061E3E] text-white dark:bg-[#059669]'
+                    : 'text-[#64748B] dark:text-slate-300'
                 }`}
               >
                 {days} dias
@@ -355,21 +359,21 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
-            <span className="text-slate-500 dark:text-slate-400 block">Saldo Inicial Real</span>
-            <strong className="text-base font-extrabold text-[#082B5C] dark:text-white">
+          <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800/70 border border-[#E2E8F0] dark:border-slate-700">
+            <span className="text-[#64748B] dark:text-slate-400 block">Saldo Inicial Real</span>
+            <strong className="font-money text-base font-extrabold text-[#0F172A] dark:text-white">
               {formatarValor(cashFlowProjection.startingBalance, hideValues)}
             </strong>
           </div>
           <div className="p-3.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800">
-            <span className="text-emerald-700 dark:text-emerald-300 block">Entradas Previstas</span>
-            <strong className="text-base font-extrabold text-emerald-700 dark:text-emerald-400">
+            <span className="text-[#059669] dark:text-emerald-300 block">Entradas Previstas</span>
+            <strong className="font-money text-base font-extrabold text-[#059669] dark:text-[#10B981]">
               {hideValues ? formatarValor(cashFlowProjection.totalInflows, true) : `+ ${formatarValor(cashFlowProjection.totalInflows, false)}`}
             </strong>
           </div>
           <div className="p-3.5 rounded-xl bg-red-50/60 dark:bg-red-950/30 border border-red-200 dark:border-red-800">
             <span className="text-red-700 dark:text-red-300 block">Saídas + Boletos</span>
-            <strong className="text-base font-extrabold text-red-700 dark:text-red-400">
+            <strong className="font-money text-base font-extrabold text-red-700 dark:text-red-400">
               {hideValues ? formatarValor(cashFlowProjection.totalOutflows, true) : `− ${formatarValor(cashFlowProjection.totalOutflows, false)}`}
             </strong>
           </div>
@@ -377,15 +381,15 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             className={`p-3.5 rounded-xl border ${
               cashFlowProjection.projectedEndBalanceCents < 0
                 ? 'bg-red-50 dark:bg-red-950/50 border-red-300 dark:border-red-800'
-                : 'bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700'
+                : 'bg-[#F8FAFC] dark:bg-slate-800/70 border-[#E2E8F0] dark:border-slate-700'
             }`}
           >
-            <span className="text-slate-500 dark:text-slate-400 block">Saldo Projetado ({horizonDays}d)</span>
+            <span className="text-[#64748B] dark:text-slate-400 block">Saldo Projetado ({horizonDays}d)</span>
             <strong
-              className={`text-base font-extrabold ${
+              className={`font-money text-base font-extrabold ${
                 cashFlowProjection.projectedEndBalanceCents < 0
                   ? 'text-red-700 dark:text-red-400'
-                  : 'text-[#082B5C] dark:text-emerald-400'
+                  : 'text-[#0F172A] dark:text-[#10B981]'
               }`}
             >
               {formatarValor(cashFlowProjection.projectedEndBalance, hideValues)}
@@ -398,20 +402,20 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
             <AlertTriangle className="w-4 h-4 shrink-0" />
             <span>
               Atenção: o saldo projetado atinge o menor ponto de{' '}
-              <strong>{formatarValor(cashFlowProjection.lowestBalance, hideValues)}</strong> em{' '}
+              <strong className="font-money">{formatarValor(cashFlowProjection.lowestBalance, hideValues)}</strong> em{' '}
               <strong>{formatDateBR(cashFlowProjection.lowestBalanceDate)}</strong>.
             </span>
           </div>
         )}
 
         {cashFlowProjection.events.length === 0 ? (
-          <p className="text-xs text-slate-500 dark:text-slate-400 py-2">
+          <p className="text-xs text-[#64748B] dark:text-slate-400 py-2">
             Nenhum lançamento futuro ou boleto pendente encontrado para os próximos {horizonDays} dias.
           </p>
         ) : (
           <div className="overflow-x-auto max-h-72 overflow-y-auto border border-slate-100 dark:border-slate-800 rounded-xl">
             <table className="w-full text-xs text-left">
-              <thead className="sticky top-0 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-300">
+              <thead className="sticky top-0 bg-[#F8FAFC] dark:bg-slate-800 text-[#64748B] dark:text-slate-300">
                 <tr>
                   <th className="py-2.5 px-3 font-semibold">Data</th>
                   <th className="py-2.5 px-3 font-semibold">Evento previsto</th>
@@ -423,19 +427,19 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {cashFlowProjection.events.map((ev) => (
                   <tr key={ev.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40">
-                    <td className="py-2.5 px-3 text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                    <td className="py-2.5 px-3 text-[#64748B] dark:text-slate-400 whitespace-nowrap">
                       {formatDateBR(ev.date)}
                     </td>
                     <td className="py-2.5 px-3 font-semibold text-slate-800 dark:text-slate-100">
                       {ev.title}
                     </td>
-                    <td className="py-2.5 px-3 text-slate-500 dark:text-slate-400">
+                    <td className="py-2.5 px-3 text-[#64748B] dark:text-slate-400">
                       {ev.statusLabel}
                     </td>
                     <td
-                      className={`py-2.5 px-3 text-right font-bold whitespace-nowrap ${
+                      className={`font-money py-2.5 px-3 text-right font-bold whitespace-nowrap ${
                         ev.direction === 'INCOME'
-                          ? 'text-emerald-700 dark:text-emerald-400'
+                          ? 'text-[#059669] dark:text-[#10B981]'
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
@@ -444,10 +448,10 @@ export const ReportsView: React.FC<ReportsViewProps> = ({
                         : `${ev.direction === 'INCOME' ? '+ ' : '− '}${formatarValor(fromCents(ev.amountCents), false)}`}
                     </td>
                     <td
-                      className={`py-2.5 px-3 text-right font-extrabold whitespace-nowrap ${
+                      className={`font-money py-2.5 px-3 text-right font-extrabold whitespace-nowrap ${
                         ev.runningBalanceCents < 0
                           ? 'text-red-700 dark:text-red-400'
-                          : 'text-[#082B5C] dark:text-white'
+                          : 'text-[#0F172A] dark:text-white'
                       }`}
                     >
                       {formatarValor(fromCents(ev.runningBalanceCents), hideValues)}

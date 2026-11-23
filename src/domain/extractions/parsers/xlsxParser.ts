@@ -12,6 +12,7 @@ import {
   parseFlexibleSignedAmount,
 } from './csvParser';
 import { sanitizeCellForSheet } from '../../../utils/sheetGuard';
+import { detectBankFromStatement } from '../banksRepository';
 
 function excelDateToIso(val: unknown): string | undefined {
   if (typeof val === 'number' && Number.isFinite(val) && val > 25000 && val < 80000) {
@@ -217,11 +218,29 @@ export function parseSpreadsheetStatement(
     );
   }
 
+  const detectedBank = detectBankFromStatement(allTextSample, fileName);
+
   return {
     format,
     parseSource: 'LOCAL',
     identifiedAccount: {
-      bankName: fileName ? fileName.replace(/\.(xlsx|xls)$/i, '') : undefined,
+      bankName:
+        detectedBank.type !== 'desconhecido' && detectedBank.name
+          ? detectedBank.name
+          : fileName
+            ? fileName.replace(/\.(xlsx|xls)$/i, '')
+            : undefined,
+      bankCode: detectedBank.code,
+      bankIspb: detectedBank.ispb,
+      bankType: detectedBank.type,
+      detectionConfidence: detectedBank.confidence,
+      institutionId: detectedBank.institutionId,
+      institutionCategory:
+        detectedBank.type === 'fisico'
+          ? 'BANCO_FISICO'
+          : detectedBank.type === 'digital'
+            ? 'BANCO_DIGITAL'
+            : undefined,
       maskedDocument: docInfo?.masked,
       documentValid: docInfo?.valid,
       holderNature: docInfo?.valid ? docInfo.nature : undefined,

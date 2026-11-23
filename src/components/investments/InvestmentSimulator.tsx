@@ -146,13 +146,13 @@ export default function InvestmentSimulator({
         {/* Form Card */}
         <form
           onSubmit={handleSave}
-          className="lg:col-span-5 space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5"
+          className="lg:col-span-5 space-y-4 sf-card p-5"
         >
           <div>
-            <h2 className="text-lg font-bold text-[#082B5C] dark:text-white">
+            <h2 className="font-display text-lg font-bold text-[#0F172A] dark:text-white">
               Simulador de Rentabilidade
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
               Projeção estimada com capitalização composta diária e tributação regressiva aplicável.
             </p>
           </div>
@@ -279,7 +279,7 @@ export default function InvestmentSimulator({
           <button
             type="submit"
             disabled={!simulation}
-            className="w-full min-h-12 rounded-xl bg-[#082B5C] dark:bg-emerald-600 hover:opacity-95 text-white text-sm font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+            className="w-full min-h-12 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-sm font-bold flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 transition-colors"
           >
             <Save size={16} />
             Salvar simulação no histórico
@@ -291,30 +291,30 @@ export default function InvestmentSimulator({
           {simulation ? (
             <>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Total investido</span>
-                  <div className="text-base sm:text-lg font-bold text-[#082B5C] dark:text-white mt-1 tabular-nums">
+                <div className="sf-card p-4">
+                  <span className="text-xs text-[#64748B] dark:text-slate-400">Total investido</span>
+                  <div className="font-money text-base sm:text-lg font-bold text-[#0F172A] dark:text-white mt-1">
                     {formatarValor(simulation.investedValue, hideValues)}
                   </div>
-                  <span className="text-[11px] text-slate-400">Sem aportes contados como lucro</span>
+                  <span className="text-[11px] text-[#64748B] dark:text-slate-400">Sem aportes contados como lucro</span>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Saldo bruto estimado</span>
-                  <div className="text-base sm:text-lg font-bold text-blue-700 dark:text-blue-400 mt-1 tabular-nums">
+                <div className="sf-card p-4">
+                  <span className="text-xs text-[#64748B] dark:text-slate-400">Saldo bruto estimado</span>
+                  <div className="font-money text-base sm:text-lg font-bold text-blue-700 dark:text-blue-400 mt-1">
                     {formatarValor(simulation.grossValue, hideValues)}
                   </div>
-                  <span className="text-[11px] text-slate-400 tabular-nums">
+                  <span className="font-money text-[11px] text-[#64748B] dark:text-slate-400">
                     Rendimento: {hideValues ? formatarValor(simulation.grossProfit, true) : `+${formatarValor(simulation.grossProfit, false)}`}
                   </span>
                 </div>
 
-                <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 col-span-2 sm:col-span-1">
-                  <span className="text-xs text-slate-500 dark:text-slate-400">Saldo líquido estimado</span>
-                  <div className="text-base sm:text-lg font-extrabold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
+                <div className="sf-card p-4 col-span-2 sm:col-span-1">
+                  <span className="text-xs text-[#64748B] dark:text-slate-400">Saldo líquido estimado</span>
+                  <div className="font-money text-base sm:text-lg font-extrabold text-[#059669] dark:text-[#10B981] mt-1">
                     {formatarValor(simulation.netValue, hideValues)}
                   </div>
-                  <span className="text-[11px] text-amber-700 dark:text-amber-400 tabular-nums">
+                  <span className="font-money text-[11px] text-amber-700 dark:text-amber-400">
                     Impostos: {hideValues ? formatarValor(simulation.tax.totalTax, true) : `-${formatarValor(simulation.tax.totalTax, false)}`}
                   </span>
                 </div>
@@ -337,7 +337,7 @@ export default function InvestmentSimulator({
               />
             </>
           ) : (
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center text-sm text-slate-500">
+            <div className="sf-card p-8 text-center text-sm text-[#64748B]">
               Ajuste os parâmetros numéricos para visualizar os resultados.
             </div>
           )}

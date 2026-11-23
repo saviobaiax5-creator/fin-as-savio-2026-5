@@ -5,6 +5,7 @@ import {
   sanitizeExtractedText,
   sanitizeRawRowSnapshot,
 } from '../fileSecurity';
+import { detectBankFromStatement } from '../banksRepository';
 
 export function splitCsvLine(line: string, delimiter: ';' | ',' | '\t'): string[] {
   const cells: string[] = [];
@@ -293,11 +294,30 @@ export function parseCsvStatement(
     .slice(startRow, startRow + 6)
     .map((l) => splitCsvLine(l, delimiter));
 
+  const headerSample = allLines.slice(0, 15).join('\n');
+  const detectedBank = detectBankFromStatement(headerSample, fileName);
+
   return {
     format: 'CSV',
     parseSource: 'LOCAL',
     identifiedAccount: {
-      bankName: fileName ? fileName.replace(/\.csv$/i, '') : undefined,
+      bankName:
+        detectedBank.type !== 'desconhecido' && detectedBank.name
+          ? detectedBank.name
+          : fileName
+            ? fileName.replace(/\.csv$/i, '')
+            : undefined,
+      bankCode: detectedBank.code,
+      bankIspb: detectedBank.ispb,
+      bankType: detectedBank.type,
+      detectionConfidence: detectedBank.confidence,
+      institutionId: detectedBank.institutionId,
+      institutionCategory:
+        detectedBank.type === 'fisico'
+          ? 'BANCO_FISICO'
+          : detectedBank.type === 'digital'
+            ? 'BANCO_DIGITAL'
+            : undefined,
       maskedDocument: docInfo?.masked,
       documentValid: docInfo?.valid,
       holderNature: docInfo?.valid ? docInfo.nature : undefined,

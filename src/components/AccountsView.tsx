@@ -21,6 +21,8 @@ import {
 import { Sheet } from './Sheet';
 import { usePrivacy } from '../contexts/PrivacyContext';
 import { formatarValor } from '../utils/formatters';
+import { InstitutionAvatar } from './InstitutionAvatar';
+import { InstitutionSelectorDrawer } from './InstitutionSelectorDrawer';
 
 interface AccountsViewProps {
   accounts: Account[];
@@ -135,10 +137,10 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Contas Bancárias
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="font-sans text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Saldo calculado automaticamente pelo saldo inicial somado aos lançamentos vinculados.
           </p>
         </div>
@@ -155,9 +157,9 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                 setTransferDesc('');
                 setTransferModalOpen(true);
               }}
-              className="bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="sf-card-interactive px-4 min-h-11 text-xs sm:text-sm font-semibold text-[#0F172A] dark:text-slate-200 flex items-center justify-center gap-2 cursor-pointer"
             >
-              <ArrowLeftRight className="w-4 h-4 text-emerald-600" />
+              <ArrowLeftRight className="w-4 h-4 text-[#059669]" />
               Transferir entre contas
             </button>
           )}
@@ -167,7 +169,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
               setErrorMsg('');
               setModalOpen(true);
             }}
-            className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Nova conta
@@ -175,59 +177,59 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs flex items-center justify-between">
+      <div className="sf-card p-5 sm:p-6 flex items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold text-slate-400">Saldo Realizado em Contas</span>
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Saldo Realizado em Contas</span>
           {accounts.length === 0 ? (
             <>
-              <div className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white mt-1">
+              <div className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white mt-1">
                 Nenhuma conta cadastrada
               </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
                 Toque em <strong>Nova conta</strong> para registrar seu banco ou carteira.
               </p>
             </>
           ) : (
             <>
-              <div className="text-2xl sm:text-3xl font-extrabold text-[#082B5C] dark:text-white mt-1">
+              <div className="font-money text-2xl sm:text-3xl font-extrabold text-[#0F172A] dark:text-white mt-1">
                 {formatarValor(totalBalance, hideValues)}
               </div>
               {Math.abs(totalProjectedBalance - totalBalance) >= 0.01 && (
-                <p className="text-xs text-amber-700 dark:text-amber-300 font-semibold mt-1">
+                <p className="font-money text-xs text-amber-700 dark:text-amber-300 font-semibold mt-1">
                   Saldo projetado (com pendentes/planejados): {formatarValor(totalProjectedBalance, hideValues)}
                 </p>
               )}
             </>
           )}
         </div>
-        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 rounded-2xl">
-          <Wallet className="w-8 h-8" />
+        <div className="sf-icon-badge">
+          <Wallet size={20} strokeWidth={2} />
         </div>
       </div>
 
       {actionMsg && (
-        <div className="p-4 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 rounded-2xl text-xs sm:text-sm font-semibold flex items-center gap-2">
+        <div className="p-4 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2">
           <AlertCircle size={16} className="shrink-0" />
           <span>{actionMsg}</span>
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
             Instituições cadastradas ({accounts.length})
           </h3>
-          <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md text-[10px] font-bold">
+          <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-[#64748B] dark:text-slate-300 rounded-md text-[10px] font-bold">
             Saldo derivado
           </span>
         </div>
 
         {accounts.length === 0 ? (
           <div className="p-8 text-center space-y-3">
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+            <p className="font-display text-sm font-bold text-[#0F172A] dark:text-slate-200">
               Você ainda não possui contas bancárias cadastradas.
             </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#64748B] dark:text-slate-400">
               Novas instalações iniciam zeradas. Adicione sua primeira conta ou restaure um backup em Configurações.
             </p>
             <button
@@ -236,7 +238,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                 setErrorMsg('');
                 setModalOpen(true);
               }}
-              className="inline-flex items-center gap-2 px-4 min-h-11 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 min-h-11 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer"
             >
               <Plus size={15} /> Cadastrar primeira conta
             </button>
@@ -250,26 +252,29 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
               return (
                 <div key={acc.id} className={`p-4 space-y-2 ${acc.archived ? 'opacity-70 bg-slate-50/60 dark:bg-slate-800/30' : ''}`}>
                   <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <div className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                        <span>{acc.institutionName}</span>
-                        {acc.archived && (
-                          <span className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded text-[10px] font-bold">
-                            Arquivada
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-xs text-slate-500 dark:text-slate-400">
-                        {acc.accountName} · {txCount} lançamento{txCount !== 1 ? 's' : ''}
+                    <div className="flex items-start gap-2.5 min-w-0">
+                      <InstitutionAvatar name={acc.institutionName} size="md" className="mt-0.5" />
+                      <div className="min-w-0">
+                        <div className="font-display font-bold text-sm text-[#0F172A] dark:text-white flex items-center gap-2">
+                          <span className="truncate">{acc.institutionName}</span>
+                          {acc.archived && (
+                            <span className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded text-[10px] font-bold shrink-0">
+                              Arquivada
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-xs text-[#64748B] dark:text-slate-400 truncate">
+                          {acc.accountName} · {txCount} lançamento{txCount !== 1 ? 's' : ''}
+                        </div>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-base font-extrabold text-[#082B5C] dark:text-emerald-400">
+                      <div className="font-money text-base font-bold text-[#0F172A] dark:text-[#10B981]">
                         {formatarValor(acc.balance, hideValues)}
                       </div>
                       {typeof acc.projectedBalance === 'number' &&
                         Math.abs(acc.projectedBalance - acc.balance) >= 0.01 && (
-                          <div className="text-[11px] font-semibold text-amber-700 dark:text-amber-300">
+                          <div className="font-money text-[11px] font-semibold text-amber-700 dark:text-amber-300">
                             Proj.: {formatarValor(acc.projectedBalance, hideValues)}
                           </div>
                         )}
@@ -310,7 +315,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                               : `Conta "${acc.institutionName} · ${acc.accountName}" arquivada (histórico e saldo preservados).`
                           );
                         }}
-                        className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#082B5C] dark:text-slate-400 dark:hover:text-white cursor-pointer"
+                        className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#0F172A] dark:text-slate-400 dark:hover:text-white cursor-pointer"
                         aria-label={acc.archived ? `Reativar ${acc.accountName}` : `Arquivar ${acc.accountName}`}
                         title={acc.archived ? 'Reativar conta' : 'Arquivar conta (oculta em novos lançamentos)'}
                       >
@@ -373,17 +378,22 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                     }`}
                   >
                     <td className="py-4 px-6">
-                      <div className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                        <span>{acc.institutionName}</span>
-                        {acc.archived && (
-                          <span className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded text-[10px] font-bold">
-                            Arquivada
-                          </span>
-                        )}
+                      <div className="flex items-center gap-3">
+                        <InstitutionAvatar name={acc.institutionName} size="sm" />
+                        <div>
+                          <div className="font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                            <span>{acc.institutionName}</span>
+                            {acc.archived && (
+                              <span className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded text-[10px] font-bold">
+                                Arquivada
+                              </span>
+                            )}
+                          </div>
+                          <small className="text-slate-400">
+                            {acc.accountName} · {txCount} lançamento{txCount !== 1 ? 's' : ''}
+                          </small>
+                        </div>
                       </div>
-                      <small className="text-slate-400">
-                        {acc.accountName} · {txCount} lançamento{txCount !== 1 ? 's' : ''}
-                      </small>
                     </td>
                     <td className="py-4 px-6">
                       <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md text-[10px] font-medium">
@@ -401,10 +411,10 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                         {acc.entityId}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-right text-slate-500 dark:text-slate-400">
+                    <td className="font-money py-4 px-6 text-right text-[#64748B] dark:text-slate-400">
                       {formatarValor(acc.openingBalance, hideValues)}
                     </td>
-                    <td className="py-4 px-6 text-right font-extrabold text-[#082B5C] dark:text-emerald-400">
+                    <td className="font-money py-4 px-6 text-right font-extrabold text-[#0F172A] dark:text-[#10B981]">
                       <div>{formatarValor(acc.balance, hideValues)}</div>
                       {typeof acc.projectedBalance === 'number' &&
                         Math.abs(acc.projectedBalance - acc.balance) >= 0.01 && (
@@ -435,7 +445,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
                                 : `Conta "${acc.institutionName} · ${acc.accountName}" arquivada (histórico preservado).`
                             );
                           }}
-                          className="p-2 text-slate-500 hover:text-[#082B5C] dark:text-slate-400 dark:hover:text-white rounded-lg cursor-pointer"
+                          className="p-2 text-slate-500 hover:text-[#0F172A] dark:text-slate-400 dark:hover:text-white rounded-lg cursor-pointer"
                           title={acc.archived ? 'Reativar conta' : 'Arquivar conta'}
                         >
                           {acc.archived ? <ArchiveRestore size={15} /> : <Archive size={15} />}
@@ -488,18 +498,33 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
             </div>
           )}
 
+          <InstitutionSelectorDrawer
+            selectedName={institutionName}
+            onSelect={(inst) => {
+              setInstitutionName(inst.nome);
+              setErrorMsg('');
+            }}
+            defaultOpen
+            title="Selecionar Instituição"
+          />
+
           <div>
             <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
               Instituição / Banco
             </label>
-            <input
-              type="text"
-              required
-              placeholder="Ex.: Banco Inter, Nubank, Caixa"
-              value={institutionName}
-              onChange={(e) => setInstitutionName(e.target.value)}
-              className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-12"
-            />
+            <div className="flex items-center gap-2.5">
+              {institutionName.trim() && (
+                <InstitutionAvatar name={institutionName} size="lg" />
+              )}
+              <input
+                type="text"
+                required
+                placeholder="Ex.: 99Pay, Nubank, Sicredi, Caixa"
+                value={institutionName}
+                onChange={(e) => setInstitutionName(e.target.value)}
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-12"
+              />
+            </div>
           </div>
 
           <div>
@@ -566,7 +591,7 @@ export const AccountsView: React.FC<AccountsViewProps> = ({
             </button>
             <button
               type="submit"
-              className="flex-[1.5] min-h-12 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-[1.5] min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle2 size={16} /> Salvar conta
             </button>

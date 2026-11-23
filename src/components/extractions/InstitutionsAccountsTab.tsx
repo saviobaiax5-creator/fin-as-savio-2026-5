@@ -23,6 +23,8 @@ import {
   Shield,
   Filter,
 } from 'lucide-react';
+import { InstitutionAvatar } from '../InstitutionAvatar';
+import { InstitutionSelectorDrawer } from '../InstitutionSelectorDrawer';
 
 interface InstitutionsAccountsTabProps {
   institutions: InstitutionProfile[];
@@ -189,10 +191,10 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
       {/* Header & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h3 className="text-base sm:text-lg font-extrabold text-[#082B5C] dark:text-white">
+          <h3 className="font-display text-base sm:text-lg font-extrabold text-[#0F172A] dark:text-white">
             Instituições Financeiras, Contas & Produtos
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs text-[#64748B] dark:text-slate-400">
             Separação por natureza da instituição (bancos físicos, digitais, carteiras, corretoras nacionais/internacionais, exchanges e cartões).
           </p>
         </div>
@@ -201,14 +203,14 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
           <button
             type="button"
             onClick={() => setInstModalOpen(true)}
-            className="min-h-11 px-3.5 rounded-xl border border-slate-300 dark:border-slate-700 text-[#082B5C] dark:text-white bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+            className="min-h-11 px-3.5 rounded-xl border border-[#E2E8F0] dark:border-white/15 text-[#0F172A] dark:text-white bg-white dark:bg-[#11185A] hover:bg-slate-50 dark:hover:bg-white/10 text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
           >
             <Building2 size={15} /> Nova instituição
           </button>
           <button
             type="button"
             onClick={() => setAccModalOpen(true)}
-            className="min-h-11 px-4 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+            className="min-h-11 px-4 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap transition-colors"
           >
             <Plus size={15} /> Cadastrar conta / produto
           </button>
@@ -216,8 +218,8 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
       </div>
 
       {/* Category Filter */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 sm:p-4 flex flex-wrap items-center gap-2">
-        <span className="text-xs font-bold text-slate-500 dark:text-slate-400 inline-flex items-center gap-1 mr-1">
+      <div className="sf-card rounded-2xl p-3 sm:p-4 flex flex-wrap items-center gap-2">
+        <span className="text-xs font-bold text-[#64748B] dark:text-slate-400 inline-flex items-center gap-1 mr-1">
           <Filter size={13} /> Categoria:
         </span>
         <button
@@ -225,7 +227,7 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
           onClick={() => setCatFilter('ALL')}
           className={`px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer ${
             catFilter === 'ALL'
-              ? 'bg-[#082B5C] text-white dark:bg-[#00A65A]'
+              ? 'bg-[#061E3E] text-white dark:bg-[#059669]'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
           }`}
         >
@@ -238,7 +240,7 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
             onClick={() => setCatFilter(cat)}
             className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold cursor-pointer ${
               catFilter === cat
-                ? 'bg-[#082B5C] text-white dark:bg-[#00A65A]'
+                ? 'bg-[#061E3E] text-white dark:bg-[#059669]'
                 : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
             }`}
           >
@@ -248,10 +250,10 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
       </div>
 
       {/* Accounts List */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
-        <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <span className="text-xs sm:text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-            <Landmark size={16} className="text-[#00A65A]" />
+      <div className="sf-card rounded-2xl overflow-hidden">
+        <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+          <span className="font-display text-xs sm:text-sm font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
+            <Landmark size={16} className="text-[#059669] dark:text-[#10B981]" />
             Contas, Carteiras, Corretoras & Exchanges ({visibleAccounts.length})
           </span>
         </div>
@@ -272,21 +274,23 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
                   key={acc.id}
                   className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50/70 dark:hover:bg-slate-800/40"
                 >
-                  <div className="min-w-0 space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-bold text-sm text-slate-900 dark:text-white">
-                        {acc.institutionName} · {acc.accountName}
-                      </span>
-                      <InstitutionCategoryBadge category={cat} compact />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">
-                        {acc.entityId}
-                      </span>
-                      {acc.archived && (
-                        <span className="px-1.5 py-0.5 rounded bg-red-50 text-red-700 text-[10px] font-bold">
-                          ENCERRADA / ARQUIVADA
+                  <div className="flex items-start gap-3 min-w-0">
+                    <InstitutionAvatar name={acc.institutionName} size="md" className="mt-0.5" />
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-bold text-sm text-slate-900 dark:text-white">
+                          {acc.institutionName} · {acc.accountName}
                         </span>
-                      )}
-                    </div>
+                        <InstitutionCategoryBadge category={cat} compact />
+                        <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-bold text-slate-700 dark:text-slate-300">
+                          {acc.entityId}
+                        </span>
+                        {acc.archived && (
+                          <span className="px-1.5 py-0.5 rounded bg-red-50 text-red-700 text-[10px] font-bold">
+                            ENCERRADA / ARQUIVADA
+                          </span>
+                        )}
+                      </div>
 
                     <div className="text-[11px] text-slate-500 dark:text-slate-400 flex flex-wrap gap-x-3 gap-y-0.5">
                       {ext?.agency && <span>Agência: {ext.agency}</span>}
@@ -298,10 +302,11 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
                       )}
                     </div>
                   </div>
+                  </div>
 
                   <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
                     <div className="text-right">
-                      <div className="text-sm font-extrabold tabular-nums text-[#082B5C] dark:text-emerald-400">
+                      <div className="font-money text-sm font-extrabold text-[#0F172A] dark:text-white">
                         {currency === 'BRL'
                           ? formatarValor(acc.balance, hideValues)
                           : `${currency} ${hideValues ? '•••••' : formatCurrencyBRL(acc.balance)}`}
@@ -318,7 +323,7 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
                         <button
                           type="button"
                           onClick={() => onFilterExtractionsByAccount(acc.id)}
-                          className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-[#082B5C] dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                          className="px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-[11px] font-bold text-[#0F172A] dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                         >
                           Extrações
                         </button>
@@ -358,9 +363,9 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
 
       {/* Linked Credit Cards */}
       {visibleCards.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
-          <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-            <span className="text-xs sm:text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
+        <div className="sf-card rounded-2xl overflow-hidden">
+          <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-white/10 flex items-center justify-between">
+            <span className="font-display text-xs sm:text-sm font-bold text-[#0F172A] dark:text-white flex items-center gap-2">
               <CreditCardIcon size={16} className="text-purple-600" />
               Cartões de Crédito Vinculados ({visibleCards.length})
             </span>
@@ -373,20 +378,23 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
                   key={card.id}
                   className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2"
                 >
-                  <div className="space-y-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-bold text-sm text-slate-900 dark:text-white">
-                        {card.cardName} · •••• {card.last4}
-                      </span>
-                      <InstitutionCategoryBadge category="CARTAO_CREDITO" compact />
-                      <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-bold">
-                        {card.entityId}
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Emissor: {card.institutionName} · Vencimento dia {card.dueDay} · Limite{' '}
-                      {formatarValor(card.limit, hideValues)} (limite não é contado como saldo ou dívida)
-                      {ext?.cardNetwork ? ` · Bandeira: ${ext.cardNetwork}` : ''}
+                  <div className="flex items-start gap-3">
+                    <InstitutionAvatar name={card.institutionName} size="md" className="mt-0.5" />
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-bold text-sm text-slate-900 dark:text-white">
+                          {card.cardName} · •••• {card.last4}
+                        </span>
+                        <InstitutionCategoryBadge category="CARTAO_CREDITO" compact />
+                        <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-bold">
+                          {card.entityId}
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Emissor: {card.institutionName} · Vencimento dia {card.dueDay} · Limite{' '}
+                        {formatarValor(card.limit, hideValues)} (limite não é contado como saldo ou dívida)
+                        {ext?.cardNetwork ? ` · Bandeira: ${ext.cardNetwork}` : ''}
+                      </div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -417,18 +425,41 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
         subtitle="Classifique pela natureza operacional real da instituição"
       >
         <form onSubmit={handleCreateInstitution} className="space-y-3 text-xs sm:text-sm">
+          <InstitutionSelectorDrawer
+            selectedName={instCommName || instName}
+            defaultOpen={false}
+            title="Preencher pelo catálogo offline"
+            onSelect={(inst) => {
+              setInstName(inst.nome);
+              setInstCommName(inst.nome);
+              setInstCode(inst.codigo === '000' ? '' : inst.codigo);
+              if (inst.grupo === 'Cooperativa' || inst.grupo === 'Fisico') {
+                setInstCat('BANCO_FISICO');
+              } else if (/Carteira|Conta Global/i.test(inst.tipo)) {
+                setInstCat('CARTEIRA_DIGITAL');
+              } else {
+                setInstCat('BANCO_DIGITAL');
+              }
+            }}
+          />
+
           <div>
             <label className="block font-semibold text-slate-600 dark:text-slate-300 mb-1">
               Nome oficial da instituição
             </label>
-            <input
-              type="text"
-              required
-              value={instName}
-              onChange={(e) => setInstName(e.target.value)}
-              placeholder="Ex.: Banco BTG Pactual S.A."
-              className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 bg-white dark:bg-slate-800 min-h-11"
-            />
+            <div className="flex items-center gap-2">
+              {(instCommName || instName).trim() && (
+                <InstitutionAvatar name={instCommName || instName} code={instCode} size="md" />
+              )}
+              <input
+                type="text"
+                required
+                value={instName}
+                onChange={(e) => setInstName(e.target.value)}
+                placeholder="Ex.: Banco BTG Pactual S.A."
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 bg-white dark:bg-slate-800 min-h-11"
+              />
+            </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
@@ -498,7 +529,7 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
           </div>
           <button
             type="submit"
-            className="w-full min-h-11 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] text-white font-bold cursor-pointer"
+            className="w-full min-h-11 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] text-white font-bold cursor-pointer transition-colors"
           >
             Salvar instituição
           </button>
@@ -668,7 +699,7 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
           )}
           <button
             type="submit"
-            className="w-full min-h-11 rounded-xl bg-[#00A65A] hover:bg-[#00A65A]/90 text-white font-bold cursor-pointer"
+            className="w-full min-h-11 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white font-bold cursor-pointer transition-colors"
           >
             Confirmar cadastro da conta
           </button>
@@ -768,7 +799,7 @@ export const InstitutionsAccountsTab: React.FC<InstitutionsAccountsTabProps> = (
             </div>
             <button
               type="submit"
-              className="w-full min-h-11 rounded-xl bg-[#082B5C] dark:bg-[#00A65A] text-white font-bold cursor-pointer"
+              className="w-full min-h-11 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] text-white font-bold cursor-pointer transition-colors"
             >
               Salvar detalhes
             </button>

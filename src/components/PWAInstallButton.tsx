@@ -71,7 +71,7 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
       <button
         type="button"
         onClick={install}
-        className="flex items-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white px-3 min-h-10 text-xs font-bold shadow-xs transition cursor-pointer shrink-0"
+        className="flex items-center gap-1.5 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white px-3 min-h-10 text-xs font-bold transition cursor-pointer shrink-0"
         title="Instalar Sávio Finanças como aplicativo"
       >
         <Download size={15} />
@@ -113,7 +113,7 @@ export const PWAInstallButton: React.FC<{ compact?: boolean }> = ({ compact = fa
           <button
             type="button"
             onClick={() => setShowIOSGuide(false)}
-            className="w-full min-h-11 rounded-xl bg-[#082B5C] dark:bg-[#00A65A] text-white text-sm font-bold cursor-pointer"
+            className="w-full min-h-11 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-sm font-bold cursor-pointer"
           >
             Entendi
           </button>

@@ -1,20 +1,27 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 @layer base {
   :root {
     --density-gap: 1.5rem;
     --density-pad: 1.25rem;
-    --sf-navy: #082B5C;
-    --sf-deep: #061B3B;
-    --sf-green: #00A65A;
+    --sf-navy: #0F172A;
+    --sf-deep: #061E3E;
+    --sf-green: #059669;
+    --sf-emerald: #10B981;
     --sf-gold: #F5B719;
     --sf-white: #FFFFFF;
-    --sf-background: #F4F7FB;
+    --sf-background: #F8FAFC;
     --sf-expense: #DC3545;
-    --sf-text: #172536;
+    --sf-text: #0F172A;
     --sf-muted: #64748B;
     --sf-border: #E2E8F0;
+    --sf-border-hover: #CBD5E1;
     --sf-income: var(--sf-green);
     --sf-primary: var(--sf-navy);
     --sf-primary-dark: var(--sf-deep);
@@ -46,6 +53,7 @@
     scroll-behavior: smooth;
     overflow-x: clip;
     overscroll-behavior-y: contain;
+    font-family: var(--font-sans);
   }
 
   body {
@@ -56,14 +64,21 @@
     overscroll-behavior-y: contain;
     background: var(--sf-background);
     color: var(--sf-text);
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: var(--font-sans);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
   }
 
   html.dark body {
-    background: var(--sf-deep);
-    color: #f1f5f9;
+    background: #050B42;
+    color: #F8FAFC;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
   }
 
   button,
@@ -87,10 +102,192 @@
   }
 }
 
-/* Ergonomic touch targets exclusively for coarse pointers (smartphones / tablets), preserving crisp desktop & checkbox sizes */
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-money {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sf-privacy-blur {
+    filter: blur(6px);
+    user-select: none;
+    pointer-events: none;
+    transition: filter 160ms ease;
+  }
+
+  .sf-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  html.dark .sf-card {
+    background-color: #11185A;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.35);
+  }
+
+  .sf-card-interactive {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background-color 180ms ease;
+  }
+
+  @media (hover: hover) {
+    .sf-card-interactive:hover {
+      border-color: #CBD5E1;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+  }
+
+  html.dark .sf-card-interactive {
+    background-color: #11185A;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.35);
+  }
+
+  @media (hover: hover) {
+    html.dark .sf-card-interactive:hover {
+      border-color: rgba(255, 255, 255, 0.26);
+      box-shadow: 0 8px 22px rgba(2, 6, 23, 0.5);
+    }
+  }
+
+  .sf-grouped-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    overflow: hidden;
+  }
+
+  html.dark .sf-grouped-card {
+    background-color: #11185A;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 14px rgba(2, 6, 23, 0.35);
+  }
+
+  .sf-grouped-divider > * + * {
+    border-top: 1px solid #F1F5F9;
+  }
+
+  html.dark .sf-grouped-divider > * + * {
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .sf-hero-card {
+    background-color: #061E3E;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(6, 30, 62, 0.18);
+  }
+
+  html.dark .sf-hero-card {
+    background: linear-gradient(135deg, #11185A 0%, #0B1252 100%);
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 8px 24px rgba(2, 6, 23, 0.45);
+  }
+
+  .sf-icon-badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #ECFDF5;
+    color: #059669;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: none;
+  }
+
+  .sf-icon-badge svg {
+    filter: none;
+    box-shadow: none;
+  }
+
+  html.dark .sf-icon-badge {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10B981;
+  }
+
+  .sf-icon-badge-danger {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #FEF2F2;
+    color: #DC2626;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: none;
+  }
+
+  html.dark .sf-icon-badge-danger {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #F87171;
+  }
+
+  .sf-icon-badge-amber {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #FFFBEB;
+    color: #D97706;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: none;
+  }
+
+  html.dark .sf-icon-badge-amber {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #FBBF24;
+  }
+
+  .sf-icon-badge-navy {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: #F1F5F9;
+    color: #0F172A;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: none;
+  }
+
+  html.dark .sf-icon-badge-navy {
+    background-color: rgba(148, 163, 184, 0.15);
+    color: #E2E8F0;
+  }
+
+  .sf-muted {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    color: #64748B;
+  }
+
+  html.dark .sf-muted {
+    color: #94A3B8;
+  }
+}
+
+/* Ergonomic touch targets exclusively for coarse pointers (smartphones / tablets), preserving compact header selects */
 @media (pointer: coarse) {
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-  select,
+  select:not(.sf-compact-select),
   textarea {
     min-height: 48px;
     font-size: 16px;

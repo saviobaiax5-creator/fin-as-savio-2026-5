@@ -238,12 +238,12 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
   });
 
   return (
-    <article className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4">
+    <article className="sf-card rounded-2xl p-4 sm:p-5 space-y-4">
       {/* Header row with unboxed metadata */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
         <div className="min-w-0 space-y-1">
-          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate-500 dark:text-slate-400">
-            <span className="font-semibold text-[#082B5C] dark:text-slate-200">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-[#64748B] dark:text-slate-400">
+            <span className="font-semibold text-[#0F172A] dark:text-slate-200">
               {payload.institutionName || item.packageName}
             </span>
             <span aria-hidden="true">·</span>
@@ -260,7 +260,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
             )}
           </div>
 
-          <h4 className="text-sm sm:text-base font-bold text-[#082B5C] dark:text-white truncate">
+          <h4 className="font-display text-sm sm:text-base font-bold text-[#0F172A] dark:text-white truncate">
             {payload.merchantOrCounterparty || payload.title || 'Notificação bancária'}
           </h4>
         </div>
@@ -268,12 +268,12 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
         <div className="text-left sm:text-right shrink-0">
           {payload.amountCents !== null && payload.amountCents > 0 ? (
             <div
-              className={`text-base sm:text-lg font-extrabold tabular-nums ${
+              className={`font-money text-base sm:text-lg font-extrabold ${
                 payload.direction === 'INCOME'
-                  ? 'text-emerald-700 dark:text-emerald-400'
+                  ? 'text-[#059669] dark:text-[#10B981]'
                   : payload.kind === 'DECLINED'
                   ? 'text-slate-400 line-through'
-                  : 'text-[#082B5C] dark:text-white'
+                  : 'text-[#0F172A] dark:text-white'
               }`}
             >
               {formatarValor(fromCents(payload.amountCents), hideValues)}
@@ -507,7 +507,7 @@ export const NotificationCard: React.FC<NotificationCardProps> = ({
               <button
                 type="button"
                 onClick={handleConfirmClick}
-                className="min-h-11 px-5 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+                className="min-h-11 px-5 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
               >
                 <Check size={16} />
                 {kind === 'CREDIT_PURCHASE'

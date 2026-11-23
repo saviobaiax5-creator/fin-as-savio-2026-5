@@ -6,6 +6,7 @@ import type {
 } from '../../types/extractions';
 import { maskAccountNumber } from './fileSecurity';
 import { inferCategoryFromText, resolveInstitutionMatch } from './institutionRegistry';
+import { findBankByCodeOrIspb } from './banksRepository';
 
 export function identifySourceAccount(params: {
   extracted: IdentifiedAccountInfo;
@@ -106,16 +107,36 @@ export function identifySourceAccount(params: {
     }
   }
 
+  const repoMatch = findBankByCodeOrIspb(matchedInstitution?.code || extracted.bankCode);
+  const resolvedBankType =
+    extracted.bankType && extracted.bankType !== 'desconhecido'
+      ? extracted.bankType
+      : repoMatch?.tipo ??
+        (matchedInstitution?.category === 'BANCO_FISICO'
+          ? 'fisico'
+          : matchedInstitution?.category === 'BANCO_DIGITAL'
+            ? 'digital'
+            : 'desconhecido');
+
   const inferredCategory =
     matchedInstitution?.category ||
     extracted.institutionCategory ||
-    inferCategoryFromText(`${extracted.bankName || ''} ${fileName} ${extracted.accountType || ''}`);
+    (resolvedBankType === 'fisico'
+      ? 'BANCO_FISICO'
+      : resolvedBankType === 'digital'
+        ? 'BANCO_DIGITAL'
+        : inferCategoryFromText(`${extracted.bankName || ''} ${fileName} ${extracted.accountType || ''}`));
 
   return {
     ...extracted,
-    institutionId: matchedInstitution?.id || extracted.institutionId,
-    bankName: matchedInstitution?.commercialName || extracted.bankName,
-    bankCode: matchedInstitution?.code || extracted.bankCode,
+    institutionId: matchedInstitution?.id || extracted.institutionId || repoMatch?.institutionId,
+    bankName: matchedInstitution?.commercialName || repoMatch?.nome || extracted.bankName,
+    bankCode: matchedInstitution?.code || repoMatch?.codigo || extracted.bankCode,
+    bankIspb: extracted.bankIspb || repoMatch?.ispb,
+    bankType: resolvedBankType,
+    detectionConfidence:
+      extracted.detectionConfidence ||
+      (matchedInstitution || repoMatch ? 'alta' : 'baixa'),
     institutionCategory: inferredCategory,
     holderNature: verifiedNature,
     maskedAccountNumber: extracted.maskedAccountNumber

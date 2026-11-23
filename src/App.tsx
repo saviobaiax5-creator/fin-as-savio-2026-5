@@ -203,6 +203,8 @@ export default function App() {
   const [period, setPeriod] = useState(() => currentMonthLocal());
   const [hideValues, setHideValues] = useState<boolean>(() => {
     try {
+      const privacyStored = localStorage.getItem('savio_financas_privacy_mode');
+      if (privacyStored !== null) return privacyStored === 'true';
       return localStorage.getItem('savio_financas_hide_values') === 'true';
     } catch {
       return false;
@@ -226,6 +228,7 @@ export default function App() {
   useEffect(() => {
     try {
       localStorage.setItem('savio_financas_hide_values', String(hideValues));
+      localStorage.setItem('savio_financas_privacy_mode', String(hideValues));
     } catch {}
   }, [hideValues]);
 
@@ -2337,12 +2340,12 @@ export default function App() {
 
   if (!authReady) {
     return (
-      <div className="min-h-dvh bg-[#F4F7FB] dark:bg-[#061B3B] grid place-items-center p-6 text-center">
+      <div className="min-h-dvh bg-[#F8FAFC] dark:bg-[#050B42] grid place-items-center p-6 text-center">
         <div className="space-y-2">
-          <div className="text-xl font-extrabold text-[#082B5C] dark:text-white">
-            Sávio <span className="text-[#00A65A] dark:text-[#00A65A]">Finanças</span>
+          <div className="font-display text-xl font-extrabold text-[#0F172A] dark:text-white">
+            Sávio <span className="text-[#059669] dark:text-[#10B981]">Finanças</span>
           </div>
-          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+          <p className="text-xs font-medium text-[#64748B] dark:text-slate-400">
             Verificando sessão segura e integridade local...
           </p>
         </div>
@@ -2473,6 +2476,9 @@ export default function App() {
   return (
     <PrivacyProvider
       value={{
+        isPrivacyMode: hideValues,
+        togglePrivacyMode: toggleHideValues,
+        setPrivacyMode: setHideValues,
         hideValues,
         toggleHideValues,
         setHideValues,
@@ -2484,7 +2490,7 @@ export default function App() {
         setSidebarOpen,
       }}
     >
-      <div className="flex min-h-dvh bg-[#F4F7FB] dark:bg-[#061B3B] text-[#172536] dark:text-slate-100 font-sans">
+      <div className="flex min-h-dvh bg-[#F8FAFC] dark:bg-[#050B42] text-[#0F172A] dark:text-slate-100 font-sans">
         {/* Sidebar hidden on mobile and collapsible on PC */}
         <div className={sidebarOpen ? 'hidden md:flex' : 'hidden'}>
           <Sidebar
@@ -2508,6 +2514,7 @@ export default function App() {
             theme={theme}
             onToggleTheme={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}
             boletos={boletos}
+            accounts={derivedAccounts}
             onNavigate={handleNavigate}
             syncStatus={syncStatus}
             pendingSyncCount={pendingSyncCount}
@@ -2845,14 +2852,14 @@ export default function App() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-[calc(84px+env(safe-area-inset-bottom))] md:bottom-5 right-4 left-4 md:left-auto z-50 md:max-w-md bg-[#082B5C] dark:bg-slate-800 text-white rounded-2xl shadow-2xl border border-slate-700 px-4 py-3 flex items-center justify-between gap-3"
+          className="fixed bottom-[calc(84px+env(safe-area-inset-bottom))] md:bottom-5 right-4 left-4 md:left-auto z-50 md:max-w-md bg-[#061E3E] dark:bg-[#11185A] text-white rounded-xl shadow-lg border border-white/15 px-4 py-3 flex items-center justify-between gap-3"
         >
           <span className="text-xs sm:text-sm font-medium truncate">{pendingUndo.label}</span>
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               type="button"
               onClick={executeUndo}
-              className="px-3 min-h-9 rounded-xl bg-[#00A65A] hover:bg-[#00A65A]/90 text-white text-xs font-extrabold flex items-center gap-1 cursor-pointer"
+              className="px-3 min-h-9 rounded-xl bg-[#059669] hover:bg-[#059669]/90 text-white text-xs font-bold flex items-center gap-1 cursor-pointer"
             >
               <RotateCcw size={13} /> Desfazer
             </button>
@@ -2893,14 +2900,14 @@ export default function App() {
       >
         {reversalTarget && (
           <form onSubmit={confirmTransactionReversal} className="space-y-4">
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs space-y-1">
-              <div className="font-bold text-slate-900 dark:text-white">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/15 text-xs space-y-1">
+              <div className="font-bold text-[#0F172A] dark:text-white">
                 {reversalTarget.description}
               </div>
-              <div className="text-slate-500 dark:text-slate-400">
+              <div className="text-[#64748B] dark:text-slate-300">
                 {reversalTarget.date.split('-').reverse().join('/')} · {reversalTarget.account}
               </div>
-              <div className="font-extrabold text-[#082B5C] dark:text-emerald-400">
+              <div className="font-money font-bold text-[#0F172A] dark:text-white">
                 {reversalTarget.direction === 'INCOME' ? 'Entrada original: ' : 'Saída original: '}
                 {formatarValor(fromCents(getTransactionAmountCents(reversalTarget)), hideValues)}
               </div>

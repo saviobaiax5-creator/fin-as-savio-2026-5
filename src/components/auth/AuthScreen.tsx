@@ -114,16 +114,16 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
   };
 
   return (
-    <div className="min-h-dvh bg-[#F4F7FB] dark:bg-[#061B3B] text-[#061B3B] dark:text-slate-100 flex items-center justify-center p-4 sm:p-6">
-      <div className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-6 sm:p-8 space-y-6">
+    <div className="min-h-dvh bg-[#F8FAFC] dark:bg-[#050B42] text-[#0F172A] dark:text-slate-100 flex items-center justify-center p-4 sm:p-6">
+      <div className="w-full max-w-md sf-card rounded-2xl p-6 sm:p-8 space-y-6">
         <div className="space-y-1">
           <div className="flex items-center justify-between pb-2">
             <SavioFinancasLogo size={44} subtitle />
-            <span className="text-[11px] font-bold text-[#00A65A] dark:text-[#00A65A] flex items-center gap-1">
+            <span className="text-[11px] font-bold text-[#059669] dark:text-[#10B981] flex items-center gap-1">
               <ShieldCheck size={14} /> Conta Protegida
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             {mode === 'login' &&
               'Entre para acessar seus dados financeiros com sincronização em nuvem e funcionamento offline.'}
             {mode === 'signup' &&
@@ -155,7 +155,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                     );
                   }
                 }}
-                className="w-full min-h-9 px-3 rounded-xl bg-white dark:bg-slate-900 border border-sky-300 dark:border-sky-700 hover:bg-sky-100 dark:hover:bg-sky-900/40 text-sky-900 dark:text-sky-100 font-bold text-[11px] cursor-pointer"
+                className="w-full min-h-9 px-3 rounded-xl bg-white dark:bg-[#11185A] border border-sky-300 dark:border-sky-700 hover:bg-sky-100 dark:hover:bg-sky-900/40 text-sky-900 dark:text-sky-100 font-bold text-[11px] cursor-pointer"
               >
                 Salvar backup local e limpar cache para começar do zero
               </button>
@@ -187,7 +187,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
           type="button"
           disabled={busy}
           onClick={handleGoogleLogin}
-          className="w-full min-h-12 px-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-sm font-bold text-[#082B5C] dark:text-white flex items-center justify-center gap-2.5 shadow-xs transition-colors cursor-pointer disabled:opacity-60"
+          className="w-full min-h-12 px-4 rounded-xl border border-[#E2E8F0] dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-[#F8FAFC] dark:hover:bg-slate-700 text-sm font-bold text-[#0F172A] dark:text-white flex items-center justify-center gap-2.5 transition-colors cursor-pointer disabled:opacity-60"
         >
           <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
             <path
@@ -212,7 +212,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
 
         <div className="relative flex items-center justify-center">
           <span className="h-px bg-slate-200 dark:bg-slate-800 w-full" />
-          <span className="px-3 text-[11px] font-semibold text-slate-400 bg-white dark:bg-slate-900 uppercase tracking-wider shrink-0">
+          <span className="px-3 text-[11px] font-semibold text-slate-400 bg-white dark:bg-[#11185A] uppercase tracking-wider shrink-0">
             ou com e-mail
           </span>
           <span className="h-px bg-slate-200 dark:bg-slate-800 w-full" />
@@ -329,7 +329,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
           <button
             type="submit"
             disabled={busy}
-            className="w-full min-h-12 bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] dark:hover:bg-[#00A65A]/90 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer disabled:opacity-60"
+            className="w-full min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer disabled:opacity-60"
           >
             {busy ? (
               <>
@@ -361,7 +361,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                 setErrorMsg('');
                 setInfoMsg('');
               }}
-              className="font-semibold text-[#082B5C] dark:text-[#00A65A] hover:underline cursor-pointer"
+              className="font-semibold text-[#0F172A] dark:text-[#10B981] hover:underline cursor-pointer"
             >
               Já tenho conta · Entrar
             </button>
@@ -373,7 +373,7 @@ export const AuthScreen: React.FC<AuthScreenProps> = ({
                 setErrorMsg('');
                 setInfoMsg('');
               }}
-              className="font-semibold text-[#082B5C] dark:text-[#00A65A] hover:underline cursor-pointer"
+              className="font-semibold text-[#0F172A] dark:text-[#10B981] hover:underline cursor-pointer"
             >
               Criar nova conta
             </button>

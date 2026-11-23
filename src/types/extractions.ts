@@ -167,6 +167,9 @@ export type ReviewStatus =
 export interface IdentifiedAccountInfo {
   bankName?: string;
   bankCode?: string;
+  bankIspb?: string;
+  bankType?: 'fisico' | 'digital' | 'desconhecido';
+  detectionConfidence?: 'alta' | 'media' | 'baixa';
   institutionId?: string;
   institutionCategory?: InstitutionCategory;
   holderName?: string;

@@ -7,6 +7,8 @@ import { Sheet } from './Sheet';
 import { MoneyInputField } from './MoneyInputField';
 import { usePrivacy } from '../contexts/PrivacyContext';
 import { formatarValor } from '../utils/formatters';
+import { InstitutionAvatar } from './InstitutionAvatar';
+import { InstitutionSelectorDrawer } from './InstitutionSelectorDrawer';
 
 interface CardsViewProps {
   cards: CreditCardType[];
@@ -166,10 +168,10 @@ export const CardsView: React.FC<CardsViewProps> = ({
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Cartões de Crédito
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="font-sans text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Faturas em aberto, limite utilizado/disponível e datas de fechamento. Armazenamos apenas os 4 últimos dígitos.
           </p>
         </div>
@@ -179,7 +181,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
             setErrorMsg('');
             setModalOpen(true);
           }}
-          className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Novo cartão
@@ -196,18 +198,21 @@ export const CardsView: React.FC<CardsViewProps> = ({
           return (
             <div
               key={card.id}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs flex flex-col justify-between"
+              className="sf-card p-5 sm:p-6 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
-                  <span className="p-2.5 bg-slate-100 dark:bg-slate-800 rounded-xl text-[#082B5C] dark:text-emerald-400">
-                    <CreditCard className="w-5 h-5" />
-                  </span>
+                  <div className="flex items-center gap-2.5">
+                    <InstitutionAvatar name={card.institutionName} size="lg" />
+                    <span className="sf-icon-badge !w-8 !h-8 !rounded-lg">
+                      <CreditCard size={16} strokeWidth={2} />
+                    </span>
+                  </div>
                   <div className="flex items-center gap-2">
                     <span
                       className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         card.entityId === 'CPF'
-                          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                          ? 'bg-[#ECFDF5] text-[#059669] dark:bg-emerald-950/60 dark:text-[#10B981]'
                           : 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
                       }`}
                     >
@@ -224,33 +229,33 @@ export const CardsView: React.FC<CardsViewProps> = ({
                   </div>
                 </div>
 
-                <h3 className="text-base font-bold text-[#082B5C] dark:text-white">{card.cardName}</h3>
-                <p className="text-xs text-slate-400 mb-4">
+                <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">{card.cardName}</h3>
+                <p className="text-xs text-[#64748B] mb-4">
                   Final ···· {card.last4} ({card.institutionName})
                 </p>
 
                 <div className="space-y-2 text-xs py-3 border-y border-slate-100 dark:border-slate-800">
                   <div className="flex justify-between">
-                    <span className="text-slate-500 dark:text-slate-400">Limite total:</span>
-                    <span className="font-bold text-slate-800 dark:text-slate-200">
+                    <span className="text-[#64748B] dark:text-slate-400">Limite total:</span>
+                    <span className="font-money font-bold text-[#0F172A] dark:text-slate-200">
                       {formatarValor(card.limit, hideValues)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500 dark:text-slate-400">Disponível:</span>
-                    <span className="font-bold text-emerald-700 dark:text-emerald-400">
+                    <span className="text-[#64748B] dark:text-slate-400">Disponível:</span>
+                    <span className="font-money font-bold text-[#059669] dark:text-[#10B981]">
                       {formatarValor(available, hideValues)}
                     </span>
                   </div>
                   <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                     <div
-                      className={`h-full rounded-full ${usagePct > 80 ? 'bg-red-500' : 'bg-emerald-600'}`}
+                      className={`h-full rounded-full ${usagePct > 80 ? 'bg-red-500' : 'bg-[#059669]'}`}
                       style={{ width: `${usagePct}%` }}
                     />
                   </div>
                   <div className="flex justify-between pt-1">
-                    <span className="text-slate-500 dark:text-slate-400">Fechamento / Vencimento:</span>
-                    <span className="font-semibold text-slate-700 dark:text-slate-300">
+                    <span className="text-[#64748B] dark:text-slate-400">Fechamento / Vencimento:</span>
+                    <span className="font-semibold text-[#0F172A] dark:text-slate-300">
                       Dia {card.closingDay} / Dia {card.dueDay}
                     </span>
                   </div>
@@ -264,10 +269,10 @@ export const CardsView: React.FC<CardsViewProps> = ({
                       {card.status === 'PAID' ? 'Fatura quitada' : 'Fatura atual em aberto'}
                     </small>
                     <span
-                      className={`text-base font-extrabold ${
+                      className={`font-money text-base font-extrabold ${
                         card.currentInvoiceAmount > 0
                           ? 'text-red-700 dark:text-red-400'
-                          : 'text-emerald-700 dark:text-emerald-400'
+                          : 'text-[#059669] dark:text-[#10B981]'
                       }`}
                     >
                       {formatarValor(card.currentInvoiceAmount, hideValues)}
@@ -278,7 +283,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                       <button
                         type="button"
                         onClick={() => openChargeModal(card)}
-                        className="px-3 min-h-10 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-3 min-h-10 border border-[#E2E8F0] dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold hover:border-[#CBD5E1] hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <ReceiptText size={14} /> Fatura
                       </button>
@@ -287,7 +292,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                       <button
                         type="button"
                         onClick={() => openPayModal(card)}
-                        className="px-3.5 min-h-10 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-[#061B3B] dark:hover:bg-emerald-700 transition-colors cursor-pointer"
+                        className="px-3.5 min-h-10 bg-[#061E3E] dark:bg-[#059669] text-white rounded-xl text-xs font-semibold hover:bg-[#0F172A] dark:hover:bg-emerald-700 transition-colors cursor-pointer"
                       >
                         Pagar Fatura
                       </button>
@@ -314,6 +319,16 @@ export const CardsView: React.FC<CardsViewProps> = ({
             </div>
           )}
 
+          <InstitutionSelectorDrawer
+            selectedName={institutionName}
+            onSelect={(inst) => {
+              setInstitutionName(inst.nome);
+              setErrorMsg('');
+            }}
+            defaultOpen={false}
+            title="Selecionar Banco Emissor"
+          />
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <input
               type="text"
@@ -323,14 +338,19 @@ export const CardsView: React.FC<CardsViewProps> = ({
               onChange={(e) => setCardName(e.target.value)}
               className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-12"
             />
-            <input
-              type="text"
-              required
-              placeholder="Instituição (ex.: Banco Inter)"
-              value={institutionName}
-              onChange={(e) => setInstitutionName(e.target.value)}
-              className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-12"
-            />
+            <div className="flex items-center gap-2">
+              {institutionName.trim() && (
+                <InstitutionAvatar name={institutionName} size="md" />
+              )}
+              <input
+                type="text"
+                required
+                placeholder="Instituição (ex.: Banco Inter)"
+                value={institutionName}
+                onChange={(e) => setInstitutionName(e.target.value)}
+                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-12"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -419,7 +439,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
             </button>
             <button
               type="submit"
-              className="flex-[1.5] min-h-12 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-[1.5] min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
             >
               <CheckCircle2 size={16} /> Salvar cartão
             </button>
@@ -437,7 +457,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
           <div className="space-y-4">
             <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm">
               Valor da fatura:{' '}
-              <strong className="text-red-700 dark:text-red-400">
+              <strong className="font-money text-red-700 dark:text-red-400">
                 {formatarValor(payModalCard.currentInvoiceAmount, hideValues)}
               </strong>
             </div>
@@ -510,7 +530,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
           <div className="space-y-4">
             <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-sm flex justify-between items-center">
               <span className="text-slate-600 dark:text-slate-300">Fatura atual:</span>
-              <strong className="text-[#082B5C] dark:text-white">
+              <strong className="font-money text-[#0F172A] dark:text-white">
                 {formatarValor(chargeModalCard.currentInvoiceAmount, hideValues)}
               </strong>
             </div>
@@ -531,7 +551,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                 }}
                 className={`min-h-11 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                   chargeMode === 'add'
-                    ? 'bg-[#082B5C] text-white border-[#082B5C] dark:bg-emerald-600 dark:border-emerald-600'
+                    ? 'bg-[#061E3E] text-white border-[#061E3E] dark:bg-[#059669] dark:border-[#059669]'
                     : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                 }`}
               >
@@ -546,7 +566,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
                 }}
                 className={`min-h-11 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
                   chargeMode === 'set'
-                    ? 'bg-[#082B5C] text-white border-[#082B5C] dark:bg-emerald-600 dark:border-emerald-600'
+                    ? 'bg-[#061E3E] text-white border-[#061E3E] dark:bg-[#059669] dark:border-[#059669]'
                     : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                 }`}
               >
@@ -576,10 +596,10 @@ export const CardsView: React.FC<CardsViewProps> = ({
                   const nextCents =
                     chargeMode === 'add' ? addMoney(currentCents, parsedCents) : parsedCents;
                   return (
-                    <p className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 mt-1.5">
+                    <p className="text-[11px] font-semibold text-[#64748B] dark:text-slate-400 mt-1.5">
                       Fatura resultante:{' '}
-                      <strong className="text-[#082B5C] dark:text-emerald-400">
-                        R$ {formatCurrencyBRL(fromCents(nextCents))}
+                      <strong className="font-money text-[#0F172A] dark:text-[#10B981]">
+                        {formatarValor(fromCents(nextCents), hideValues)}
                       </strong>
                     </p>
                   );
@@ -600,7 +620,7 @@ export const CardsView: React.FC<CardsViewProps> = ({
               <button
                 type="button"
                 onClick={confirmUpdateInvoice}
-                className="flex-[1.5] min-h-12 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-sm font-bold cursor-pointer"
+                className="flex-[1.5] min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-sm font-bold cursor-pointer"
               >
                 Salvar na fatura
               </button>

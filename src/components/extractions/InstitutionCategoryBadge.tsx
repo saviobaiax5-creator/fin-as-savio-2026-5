@@ -25,7 +25,7 @@ const STYLE_BY_CATEGORY: Record<
 > = {
   BANCO_FISICO: {
     icon: Landmark,
-    classes: 'bg-[#082B5C]/10 text-[#082B5C] dark:bg-blue-950/70 dark:text-blue-300 border-[#082B5C]/20 dark:border-blue-800',
+    classes: 'bg-[#0F172A]/8 text-[#0F172A] dark:bg-blue-950/70 dark:text-blue-200 border-[#0F172A]/20 dark:border-blue-800',
   },
   BANCO_DIGITAL: {
     icon: Smartphone,

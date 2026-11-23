@@ -37,58 +37,58 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
   const { hideValues } = usePrivacy();
   const realAssetsTotal = assets.reduce((acc, a) => acc + (a.currentValue || 0), 0);
 
+  const isDark = theme === 'dark';
+
   const compositionData = [
-    { name: 'Capital inicial', value: Math.max(0, summary.initialAmount), color: '#082B5C' },
+    { name: 'Capital inicial', value: Math.max(0, summary.initialAmount), color: isDark ? '#38bdf8' : '#061E3E' },
     { name: 'Aportes', value: Math.max(0, summary.totalContributions), color: '#3b82f6' },
-    { name: 'Rendimento líquido', value: Math.max(0, summary.netProfit), color: '#00A65A' },
+    { name: 'Rendimento líquido', value: Math.max(0, summary.netProfit), color: '#059669' },
     ...(summary.tax.totalTax > 0
       ? [{ name: 'Impostos estimados', value: summary.tax.totalTax, color: '#F5B719' }]
       : []),
   ].filter((item) => item.value > 0);
 
-  const isDark = theme === 'dark';
-
   return (
     <div className="space-y-6">
       {/* Separation notice */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/70 px-4 py-3 text-xs text-slate-600 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="rounded-xl border border-[#E2E8F0] dark:border-white/10 bg-[#F8FAFC] dark:bg-[#11185A]/80 px-4 py-3 text-xs text-slate-600 dark:text-slate-300 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <span>
           <strong>Separação patrimonial:</strong> Simulações e projeções não alteram seu patrimônio cadastrado (
-          <span className="font-semibold tabular-nums">{formatarValor(realAssetsTotal, hideValues)}</span> em Ativos reais).
+          <span className="font-money font-semibold">{formatarValor(realAssetsTotal, hideValues)}</span> em Ativos reais).
         </span>
-        <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 shrink-0">
+        <span className="text-[11px] font-semibold text-[#64748B] dark:text-slate-400 shrink-0">
           {isProjection ? 'Projeção estimada' : 'Base histórica real BCB'} · {productLabel} ({formatPercentBR(cdiPercentage, 1)} CDI)
         </span>
       </div>
 
       {/* Primary KPI grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Capital inicial</span>
-          <div className="text-lg sm:text-xl font-bold text-[#082B5C] dark:text-white mt-1 tabular-nums">
+        <div className="sf-card p-4">
+          <span className="text-xs text-[#64748B] dark:text-slate-400">Capital inicial</span>
+          <div className="font-money text-lg sm:text-xl font-bold text-[#0F172A] dark:text-white mt-1">
             {formatarValor(summary.initialAmount, hideValues)}
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block tabular-nums">
+          <span className="font-money text-[11px] text-[#64748B] dark:text-slate-400 mt-1 block">
             Aportes: {formatarValor(summary.totalContributions, hideValues)}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Saldo bruto</span>
-          <div className="text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mt-1 tabular-nums">
+        <div className="sf-card p-4">
+          <span className="text-xs text-[#64748B] dark:text-slate-400">Saldo bruto</span>
+          <div className="font-money text-lg sm:text-xl font-bold text-blue-700 dark:text-blue-400 mt-1">
             {formatarValor(summary.grossValue, hideValues)}
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block tabular-nums">
+          <span className="font-money text-[11px] text-[#64748B] dark:text-slate-400 mt-1 block">
             Rendimento bruto: {hideValues ? formatarValor(summary.grossProfit, true) : `+${formatarValor(summary.grossProfit, false)}`}
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Imposto estimado</span>
-          <div className="text-lg sm:text-xl font-bold text-amber-700 dark:text-amber-400 mt-1 tabular-nums">
+        <div className="sf-card p-4">
+          <span className="text-xs text-[#64748B] dark:text-slate-400">Imposto estimado</span>
+          <div className="font-money text-lg sm:text-xl font-bold text-amber-700 dark:text-amber-400 mt-1">
             {formatarValor(summary.tax.totalTax, hideValues)}
           </div>
-          <span className="text-[11px] text-slate-400 mt-1 block">
+          <span className="text-[11px] text-[#64748B] dark:text-slate-400 mt-1 block">
             {summary.tax.taxExempt
               ? 'Produto isento de IR/IOF'
               : `IR ${(summary.tax.irRate * 100).toFixed(1).replace('.', ',')}%${
@@ -97,12 +97,12 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
           </span>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Saldo líquido</span>
-          <div className="text-lg sm:text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
+        <div className="sf-card p-4">
+          <span className="text-xs text-[#64748B] dark:text-slate-400">Saldo líquido</span>
+          <div className="font-money text-lg sm:text-xl font-extrabold text-[#059669] dark:text-[#10B981] mt-1">
             {formatarValor(summary.netValue, hideValues)}
           </div>
-          <span className="text-[11px] text-emerald-700/80 dark:text-emerald-300/80 mt-1 block tabular-nums">
+          <span className="font-money text-[11px] text-[#059669]/85 dark:text-[#10B981]/85 mt-1 block">
             Líquido: {hideValues ? formatarValor(summary.netProfit, true) : `+${formatarValor(summary.netProfit, false)}`} · {formatPercentBR(summary.cumulativeYieldPct)}
           </span>
         </div>
@@ -110,12 +110,12 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
 
       {/* Capital composition & comparison quick bridge */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+        <div className="sf-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
               Composição do Capital Acumulado
             </h3>
-            <span className="text-xs text-slate-400 tabular-nums">
+            <span className="font-money text-xs text-[#64748B] dark:text-slate-400">
               Total investido: {formatarValor(summary.investedValue, hideValues)}
             </span>
           </div>
@@ -144,8 +144,8 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: isDark ? '#061B3B' : '#ffffff',
-                      borderColor: isDark ? '#334155' : '#cbd5e1',
+                      backgroundColor: isDark ? '#11185A' : '#ffffff',
+                      borderColor: isDark ? 'rgba(255,255,255,0.16)' : '#cbd5e1',
                       borderRadius: '0.75rem',
                       color: isDark ? '#f8fafc' : '#172536',
                       fontSize: '12px',
@@ -159,33 +159,33 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 flex flex-col justify-between space-y-4">
+        <div className="sf-card p-5 flex flex-col justify-between space-y-4">
           <div className="space-y-3">
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
               Resumo Comparativo vs CDI 100%
             </h3>
 
             <div className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
               <div className="py-2.5 flex items-center justify-between">
-                <span className="text-slate-500 dark:text-slate-400">Saldo bruto CDI 100%</span>
-                <span className="font-bold text-slate-800 dark:text-slate-100 tabular-nums">
+                <span className="text-[#64748B] dark:text-slate-400">Saldo bruto CDI 100%</span>
+                <span className="font-money font-bold text-[#0F172A] dark:text-slate-100">
                   {formatarValor(summary.cdi100GrossValue, hideValues)}
                 </span>
               </div>
               <div className="py-2.5 flex items-center justify-between">
-                <span className="text-slate-500 dark:text-slate-400">
+                <span className="text-[#64748B] dark:text-slate-400">
                   Saldo bruto {formatPercentBR(cdiPercentage, 1)} CDI
                 </span>
-                <span className="font-bold text-emerald-700 dark:text-emerald-400 tabular-nums">
+                <span className="font-money font-bold text-[#059669] dark:text-[#10B981]">
                   {formatarValor(summary.grossValue, hideValues)}
                 </span>
               </div>
               <div className="py-2.5 flex items-center justify-between">
-                <span className="text-slate-500 dark:text-slate-400">Diferença bruta sobre CDI 100%</span>
+                <span className="text-[#64748B] dark:text-slate-400">Diferença bruta sobre CDI 100%</span>
                 <span
-                  className={`font-extrabold tabular-nums ${
+                  className={`font-money font-extrabold ${
                     summary.differenceVsCdiGross >= 0
-                      ? 'text-emerald-700 dark:text-emerald-400'
+                      ? 'text-[#059669] dark:text-[#10B981]'
                       : 'text-red-700 dark:text-red-400'
                   }`}
                 >
@@ -195,8 +195,8 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
                 </span>
               </div>
               <div className="py-2.5 flex items-center justify-between">
-                <span className="text-slate-500 dark:text-slate-400">Rendimento líquido estimado</span>
-                <span className="font-bold text-[#082B5C] dark:text-white tabular-nums">
+                <span className="text-[#64748B] dark:text-slate-400">Rendimento líquido estimado</span>
+                <span className="font-money font-bold text-[#0F172A] dark:text-white">
                   {hideValues
                     ? formatarValor(summary.netProfit, true)
                     : `+${formatarValor(summary.netProfit, false)}`}
@@ -204,7 +204,7 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
               </div>
             </div>
 
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+            <p className="text-[11px] text-[#64748B] dark:text-slate-400 leading-relaxed">
               {summary.tax.note}
             </p>
           </div>
@@ -213,14 +213,14 @@ export const InvestmentSummary: React.FC<InvestmentSummaryProps> = ({
             <button
               type="button"
               onClick={onGoToComparator}
-              className="flex-1 min-h-11 px-4 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-200 cursor-pointer whitespace-nowrap"
+              className="flex-1 min-h-11 px-4 rounded-xl border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-800 text-xs font-bold text-[#0F172A] dark:text-slate-200 cursor-pointer whitespace-nowrap transition-colors"
             >
               Abrir Comparador Real
             </button>
             <button
               type="button"
               onClick={onGoToSimulator}
-              className="flex-1 min-h-11 px-4 rounded-xl bg-[#082B5C] dark:bg-emerald-600 hover:opacity-95 text-white text-xs font-bold cursor-pointer whitespace-nowrap"
+              className="flex-1 min-h-11 px-4 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer whitespace-nowrap transition-colors"
             >
               Ajustar no Simulador
             </button>

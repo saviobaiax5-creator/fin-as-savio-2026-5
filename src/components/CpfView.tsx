@@ -154,22 +154,22 @@ export const CpfView: React.FC<CpfViewProps> = ({
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-md text-[10px] font-bold">
+            <span className="px-2 py-0.5 bg-[#ECFDF5] dark:bg-emerald-950 text-[#059669] dark:text-[#10B981] rounded-md text-[10px] font-bold">
               PESSOAL
             </span>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
               Finanças Pessoais · CPF
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Competência: <strong>{period === 'ALL' ? 'Todo período' : period}</strong> · Movimentações vinculadas à pessoa física (totais realizados confirmados).
+          <p className="font-sans text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
+            Competência: <strong className="font-semibold text-[#0F172A] dark:text-slate-200">{period === 'ALL' ? 'Todo período' : period}</strong> · Movimentações vinculadas à pessoa física (totais realizados confirmados).
           </p>
         </div>
 
         <button
           type="button"
           onClick={onAddTransaction}
-          className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Novo lançamento pessoal
@@ -178,25 +178,25 @@ export const CpfView: React.FC<CpfViewProps> = ({
 
       {/* Mini KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Entradas Realizadas CPF</span>
-          <div className="text-xl font-bold text-emerald-700 dark:text-emerald-400 mt-1">
+        <div className="sf-card p-4">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Entradas Realizadas CPF</span>
+          <div className="font-money text-xl font-bold text-[#059669] dark:text-[#10B981] mt-1">
             {formatarValor(totalCpfIncome, hideValues)}
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Saídas Realizadas CPF</span>
-          <div className="text-xl font-bold text-red-700 dark:text-red-400 mt-1">
+        <div className="sf-card p-4">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Saídas Realizadas CPF</span>
+          <div className="font-money text-xl font-bold text-[#DC3545] dark:text-red-400 mt-1">
             {formatarValor(totalCpfExpense, hideValues)}
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Resultado Realizado CPF</span>
-          <div className="text-xl font-bold text-[#082B5C] dark:text-white mt-1">
+        <div className="sf-card p-4">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Resultado Realizado CPF</span>
+          <div className="font-money text-xl font-bold text-[#0F172A] dark:text-white mt-1">
             {formatarValor(netCpf, hideValues)}
           </div>
           {(Math.abs(pendingCpfNet) >= 0.01 || Math.abs(plannedCpfNet) >= 0.01) && (
-            <div className="text-[11px] text-amber-700 dark:text-amber-300 mt-1">
+            <div className="text-[11px] text-amber-700 dark:text-amber-300 mt-1 font-money">
               Previsto adicional: {formatarValor(pendingCpfNet + plannedCpfNet, hideValues)}
             </div>
           )}
@@ -204,15 +204,15 @@ export const CpfView: React.FC<CpfViewProps> = ({
       </div>
 
       {/* Toolbar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <div className="sf-card p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
+          <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-[#64748B]" />
           <input
             type="text"
             placeholder="Buscar movimentação pessoal..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-slate-200 dark:border-slate-700 rounded-xl text-sm outline-none focus:border-emerald-500 bg-slate-50/50 dark:bg-slate-800 dark:text-white min-h-12"
+            className="w-full pl-10 pr-4 py-2.5 border border-[#E2E8F0] dark:border-slate-700 rounded-xl text-sm outline-none focus:border-[#059669] bg-[#F8FAFC] dark:bg-slate-800 dark:text-white min-h-12"
           />
         </div>
 
@@ -277,12 +277,12 @@ export const CpfView: React.FC<CpfViewProps> = ({
       )}
 
       {/* List / Table */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
             Histórico de lançamentos CPF
           </h3>
-          <span className="text-xs text-slate-400">{filtered.length} registros</span>
+          <span className="text-xs text-[#64748B] dark:text-slate-400">{filtered.length} registros</span>
         </div>
 
         {filtered.length === 0 ? (
@@ -311,9 +311,9 @@ export const CpfView: React.FC<CpfViewProps> = ({
                       </div>
                     </div>
                     <div
-                      className={`text-sm font-extrabold shrink-0 ${
+                      className={`font-money text-sm font-extrabold shrink-0 ${
                         t.direction === 'INCOME'
-                          ? 'text-emerald-700 dark:text-emerald-400'
+                          ? 'text-[#059669] dark:text-[#10B981]'
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
@@ -351,7 +351,7 @@ export const CpfView: React.FC<CpfViewProps> = ({
                         <button
                           type="button"
                           onClick={() => onTraceTransaction(t)}
-                          className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#00A65A] dark:text-slate-400 dark:hover:text-[#00A65A] rounded-lg cursor-pointer"
+                          className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#059669] dark:text-slate-400 dark:hover:text-[#10B981] rounded-lg cursor-pointer"
                           aria-label={`Rastrear movimentação ${t.description}`}
                           title="Rastrear movimentação"
                         >
@@ -361,7 +361,7 @@ export const CpfView: React.FC<CpfViewProps> = ({
                       <button
                         type="button"
                         onClick={() => onEditTransaction(t)}
-                        className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#082B5C] dark:text-slate-400 dark:hover:text-white rounded-lg cursor-pointer"
+                        className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#0F172A] dark:text-slate-400 dark:hover:text-white rounded-lg cursor-pointer"
                         aria-label={`Editar ${t.description}`}
                       >
                         <Pencil className="w-4 h-4" />
@@ -477,9 +477,9 @@ export const CpfView: React.FC<CpfViewProps> = ({
                         </td>
                         <td className="py-3.5 px-6 text-slate-600 dark:text-slate-300">{t.account}</td>
                         <td
-                          className={`py-3.5 px-6 text-right font-bold ${
+                          className={`font-money py-3.5 px-6 text-right font-bold ${
                             t.direction === 'INCOME'
-                              ? 'text-emerald-700 dark:text-emerald-400'
+                              ? 'text-[#059669] dark:text-[#10B981]'
                               : 'text-red-700 dark:text-red-400'
                           }`}
                         >
@@ -493,7 +493,7 @@ export const CpfView: React.FC<CpfViewProps> = ({
                               <button
                                 type="button"
                                 onClick={() => onTraceTransaction(t)}
-                                className="p-2 text-slate-400 hover:text-[#00A65A] hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-lg transition-colors cursor-pointer"
+                                className="p-2 text-slate-400 hover:text-[#059669] hover:bg-[#ECFDF5] dark:hover:bg-emerald-950/50 rounded-lg transition-colors cursor-pointer"
                                 aria-label={`Rastrear movimentação ${t.description}`}
                                 title="Rastrear movimentação"
                               >
@@ -503,7 +503,7 @@ export const CpfView: React.FC<CpfViewProps> = ({
                             <button
                               type="button"
                               onClick={() => onEditTransaction(t)}
-                              className="p-2 text-slate-400 hover:text-[#082B5C] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                              className="p-2 text-slate-400 hover:text-[#0F172A] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                               title="Editar"
                             >
                               <Pencil className="w-4 h-4" />

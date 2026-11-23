@@ -551,11 +551,11 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
           <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-md text-[10px] font-bold">
             CENTRAL DE DOCUMENTOS
           </span>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white">
             Leitor PDF, EPUB & Scanner OCR
           </h2>
         </div>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
           Extração multimodal em lote (vários lançamentos por PDF), classificação de operação (Pix/TED/Boleto/Cartão), ID E2E e pré-visualização antes de salvar.
         </p>
       </div>
@@ -584,8 +584,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
           }}
           className={`px-4 min-h-11 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
             activeTab === 'upload'
-              ? 'bg-[#082B5C] dark:bg-emerald-600 text-white shadow-xs'
-              : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200'
+              ? 'bg-[#061E3E] dark:bg-[#059669] text-white'
+              : 'bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 text-slate-700 dark:text-slate-200'
           }`}
         >
           <Upload className="w-4 h-4" /> Importar Arquivo (PDF / Imagem / EPUB)
@@ -596,8 +596,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
           onClick={startCamera}
           className={`px-4 min-h-11 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
             activeTab === 'camera'
-              ? 'bg-emerald-600 text-white shadow-xs'
-              : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200'
+              ? 'bg-[#059669] text-white'
+              : 'bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 text-slate-700 dark:text-slate-200'
           }`}
         >
           <Camera className="w-4 h-4" /> Scanner Câmera Mobile
@@ -609,8 +609,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
             onClick={() => setActiveTab('reader')}
             className={`px-4 min-h-11 rounded-xl text-xs font-bold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer ${
               activeTab === 'reader'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 text-slate-700 dark:text-slate-200'
             }`}
           >
             <BookOpen className="w-4 h-4" /> Visualizador ({selectedDoc.name})
@@ -619,20 +619,20 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       </div>
 
       {activeTab === 'upload' && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 sm:p-8 rounded-2xl shadow-xs text-center space-y-4">
-          <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 rounded-full grid place-items-center mx-auto">
+        <div className="sf-card p-6 sm:p-8 text-center space-y-4">
+          <div className="w-16 h-16 bg-[#ECFDF5] dark:bg-emerald-950/60 text-[#059669] dark:text-[#10B981] rounded-2xl grid place-items-center mx-auto">
             <FileSearch className="w-8 h-8" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
               Importar extrato PDF, comprovante Pix/boleto ou livro
             </h3>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
               Suporta múltiplos lançamentos por PDF, reconhecimento de E2E Pix, pagador/recebedor e detecção automática de duplicidade.
             </p>
           </div>
 
-          <label className="inline-flex items-center justify-center min-h-12 bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-6 rounded-xl text-sm font-bold cursor-pointer shadow-sm transition-all">
+          <label className="inline-flex items-center justify-center min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-6 rounded-xl text-sm font-bold cursor-pointer transition-all">
             Selecionar arquivo do dispositivo
             <input
               type="file"
@@ -645,8 +645,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       )}
 
       {activeTab === 'camera' && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4 text-center">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+        <div className="sf-card p-5 sm:p-6 space-y-4 text-center">
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
             Scanner ao vivo via Câmera
           </h3>
 
@@ -665,7 +665,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
               <button
                 type="button"
                 onClick={capturePhoto}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 min-h-12 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                className="bg-[#059669] hover:bg-emerald-700 text-white px-6 min-h-12 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               >
                 <Camera className="w-4 h-4" /> Capturar Documento
               </button>
@@ -673,7 +673,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
               <button
                 type="button"
                 onClick={startCamera}
-                className="bg-[#082B5C] hover:bg-[#061B3B] text-white px-6 min-h-12 rounded-xl text-sm font-bold shadow-md transition-all flex items-center gap-2 cursor-pointer"
+                className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-6 min-h-12 rounded-xl text-sm font-bold transition-all flex items-center gap-2 cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4" /> Ativar Câmera
               </button>
@@ -683,11 +683,11 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       )}
 
       {activeTab === 'reader' && selectedDoc && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
+        <div className="sf-card p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">{selectedDoc.name}</h3>
-              <p className="text-xs text-slate-400">
+              <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">{selectedDoc.name}</h3>
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
                 Tipo: {selectedDoc.type} · {selectedDoc.size}
               </p>
             </div>
@@ -763,7 +763,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                   <a
                     href={readerBlobUrl}
                     download={selectedDoc.name}
-                    className="inline-flex items-center gap-2 px-4 min-h-11 bg-[#082B5C] text-white rounded-xl text-xs font-bold"
+                    className="inline-flex items-center gap-2 px-4 min-h-11 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors"
                   >
                     Baixar {selectedDoc.name}
                   </a>
@@ -775,7 +775,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       )}
 
       {analyzing && (
-        <div className="p-6 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-2xl text-center space-y-3 animate-pulse">
+        <div className="p-6 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 rounded-xl text-center space-y-3 animate-pulse">
           <Sparkles className="w-8 h-8 text-blue-600 mx-auto animate-spin" />
           <p className="text-xs sm:text-sm font-bold text-blue-900 dark:text-blue-200">
             Extraindo lançamentos, tipo de operação, E2E/ID e confiança via Gemini multimodal...
@@ -787,30 +787,34 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       {drafts.length > 0 && !analyzing && (
         <form
           onSubmit={confirmAndSaveSelected}
-          className="bg-white dark:bg-slate-900 border-2 border-emerald-500/60 dark:border-emerald-700 p-4 sm:p-6 rounded-2xl shadow-md space-y-5"
+          className="sf-card border-2 border-[#059669]/60 dark:border-emerald-700 p-4 sm:p-6 space-y-5"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-            <div>
-              <h3 className="text-base font-extrabold text-[#082B5C] dark:text-white flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                Pré-visualização e Conferência ({drafts.length} lançamento{drafts.length !== 1 ? 's' : ''})
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Revise o grau de confiança, corrija qualquer campo e confirme antes de gravar no sistema.
-              </p>
+            <div className="flex items-start gap-3">
+              <span className="sf-icon-badge shrink-0">
+                <CheckCircle2 className="w-5 h-5" />
+              </span>
+              <div>
+                <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
+                  Pré-visualização e Conferência ({drafts.length} lançamento{drafts.length !== 1 ? 's' : ''})
+                </h3>
+                <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+                  Revise o grau de confiança, corrija qualquer campo e confirme antes de gravar no sistema.
+                </p>
+              </div>
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setDrafts([])}
-                className="px-4 min-h-11 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold cursor-pointer"
+                className="px-4 min-h-11 bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold cursor-pointer"
               >
                 Descartar Tudo
               </button>
               <button
                 type="submit"
-                className="px-5 min-h-11 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md cursor-pointer"
+                className="px-5 min-h-11 bg-[#059669] hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer transition-colors"
               >
                 Confirmar e Salvar ({selectedCount})
               </button>
@@ -838,7 +842,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
                         onChange={(e) => updateDraft(row.rowId, { selected: e.target.checked })}
                         className="w-5 h-5 min-h-5 accent-emerald-600"
                       />
-                      <span className="text-xs sm:text-sm font-bold text-[#082B5C] dark:text-white">
+                      <span className="text-xs sm:text-sm font-bold text-[#0F172A] dark:text-white">
                         Item #{idx + 1} · {OPERATION_TYPE_LABELS[row.operationType]}
                       </span>
                     </label>
@@ -1062,12 +1066,12 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
       )}
 
       {/* History */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
             Documentos carregados na sessão
           </h3>
-          <span className="text-xs text-slate-400">{documents.length} itens</span>
+          <span className="text-xs text-[#64748B] dark:text-slate-400">{documents.length} itens</span>
         </div>
 
         {documents.length === 0 ? (

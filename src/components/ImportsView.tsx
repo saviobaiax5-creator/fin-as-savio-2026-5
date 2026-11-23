@@ -9,7 +9,23 @@ import { checkDuplicateTransaction } from '../utils/financeCalculations';
 import { usePrivacy } from '../contexts/PrivacyContext';
 import { formatarValor } from '../utils/formatters';
 import { formatDateBR, todayLocal } from '../utils/dateUtils';
-import { Upload, CheckCircle2, AlertCircle, Lock, Sparkles, Tag, Trash2, Link2 } from 'lucide-react';
+import {
+  detectBankFromStatementAsync,
+  normalizeBankText,
+  type DetectedBankResult,
+} from '../domain/extractions/banksRepository';
+import {
+  Upload,
+  CheckCircle2,
+  AlertCircle,
+  Lock,
+  Sparkles,
+  Tag,
+  Trash2,
+  Link2,
+  Landmark,
+  Smartphone,
+} from 'lucide-react';
 
 interface ImportsViewProps {
   accounts: Account[];
@@ -122,6 +138,7 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
   const activeAccounts = accounts.filter((a) => !a.archived);
   const [fileName, setFileName] = useState('');
   const [targetAccountId, setTargetAccountId] = useState(activeAccounts[0]?.id || accounts[0]?.id || '');
+  const [detectedBank, setDetectedBank] = useState<DetectedBankResult | null>(null);
   const [previewRows, setPreviewRows] = useState<ParsedRow[]>([]);
   const [statusMsg, setStatusMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -136,6 +153,7 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
 
     setErrorMsg('');
     setStatusMsg('');
+    setDetectedBank(null);
     setFileName(file.name);
 
     const lower = file.name.toLowerCase();
@@ -146,8 +164,22 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
     }
 
     const reader = new FileReader();
-    reader.onload = () => {
+    reader.onload = async () => {
       const content = String(reader.result || '');
+      const detected = await detectBankFromStatementAsync(content, file.name);
+      setDetectedBank(detected);
+
+      if (detected.name) {
+        const normDetected = normalizeBankText(detected.name);
+        const matchingAccounts = activeAccounts.filter((a) => {
+          const accNorm = normalizeBankText(a.institutionName);
+          return accNorm.includes(normDetected) || normDetected.includes(accNorm);
+        });
+        if (matchingAccounts.length === 1) {
+          setTargetAccountId(matchingAccounts[0].id);
+        }
+      }
+
       const parsed = lower.endsWith('.ofx') ? parseBasicOfx(content) : parseSimpleCsv(content);
       if (parsed.length === 0) {
         setErrorMsg('Não foi possível identificar lançamentos válidos neste arquivo.');
@@ -254,10 +286,10 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
   return (
     <div className="space-y-6 animate-fadeIn">
       <div>
-        <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+        <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white">
           Extratos & Conciliação OFX/CSV
         </h2>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
           Auto-categorização por regras, deduplicação por idempotência e baixa automática de lançamentos Pendentes/Planejados compatíveis.
         </p>
       </div>
@@ -275,19 +307,19 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+        <div className="sf-card p-5 sm:p-6 space-y-4">
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
             Importar extrato (.ofx ou .csv)
           </h3>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1">
+            <label className="block text-xs font-semibold text-[#64748B] dark:text-slate-400 mb-1">
               Conta de destino dos lançamentos
             </label>
             <select
               value={targetAccountId}
               onChange={(e) => setTargetAccountId(e.target.value)}
-              className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-12"
+              className="w-full border border-[#E2E8F0] dark:border-slate-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-slate-800 text-[#0F172A] dark:text-white min-h-12"
             >
               {activeAccounts.map((a) => (
                 <option key={a.id} value={a.id}>
@@ -297,28 +329,54 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
             </select>
           </div>
 
-          <label className="border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-emerald-500 rounded-2xl p-7 flex flex-col items-center justify-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-800/40">
-            <Upload className="w-8 h-8 text-slate-400 mb-2" />
-            <span className="text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-200">
+          <label className="border-2 border-dashed border-[#E2E8F0] dark:border-slate-700 hover:border-[#059669] rounded-2xl p-7 flex flex-col items-center justify-center cursor-pointer transition-colors bg-[#F8FAFC] dark:bg-slate-800/40">
+            <Upload className="w-8 h-8 text-[#64748B] mb-2" />
+            <span className="text-xs sm:text-sm font-bold text-[#0F172A] dark:text-slate-200">
               {fileName || 'Clique para selecionar extrato (.ofx ou .csv)'}
             </span>
             <input type="file" accept=".ofx,.csv" onChange={handleFileChange} className="hidden" />
           </label>
+
+          {detectedBank && (
+            <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div className="min-w-0">
+                <span className="font-bold text-[#0F172A] dark:text-white block truncate">
+                  {detectedBank.name
+                    ? `${detectedBank.name}${detectedBank.code ? ` (${detectedBank.code})` : ''}`
+                    : 'Banco não identificado automaticamente — ajuste a conta acima'}
+                </span>
+                <span className="text-[11px] text-[#64748B] dark:text-slate-400">
+                  {detectedBank.ispb ? `ISPB ${detectedBank.ispb} · ` : ''}
+                  Confiança: {detectedBank.confidence}
+                </span>
+              </div>
+              {detectedBank.type === 'fisico' && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase bg-slate-100 text-[#0F172A] border-slate-300 dark:bg-blue-950/70 dark:text-blue-200 dark:border-blue-800 shrink-0">
+                  <Landmark size={11} /> Banco Físico
+                </span>
+              )}
+              {detectedBank.type === 'digital' && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase bg-indigo-50 text-indigo-800 border-indigo-200 dark:bg-indigo-950/70 dark:text-indigo-200 dark:border-indigo-800 shrink-0">
+                  <Smartphone size={11} /> Banco Digital
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
+        <div className="sf-card p-5 sm:p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
               Sincronização Automática DDA & Open Finance
             </h3>
             <span className="px-2.5 py-1 bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-md text-[10px] font-bold">
               Em breve (Fase 5)
             </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-300 leading-relaxed">
             A busca automática de boletos DDA e extratos Open Finance depende de integração bancária contratada e backend dedicado. Nenhuma credencial bancária é armazenada no navegador.
           </p>
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
+          <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 text-xs text-[#64748B] dark:text-slate-400 flex items-center gap-2">
             <Lock size={15} className="shrink-0" />
             <span>Contingência manual via OFX, CSV e leitura de boletos já está 100% operacional.</span>
           </div>
@@ -327,13 +385,13 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
 
       {/* Preview Before Saving */}
       {previewRows.length > 0 && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+        <div className="sf-card overflow-hidden">
           <div className="p-4 sm:px-6 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
                 Pré-visualização & Conciliação ({previewRows.length} lançamentos detectados)
               </h3>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
                 Duplicatas já confirmadas são desmarcadas; itens compatíveis com agendamentos recebem baixa automática.
               </p>
             </div>
@@ -412,9 +470,9 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
                       ))}
                     </select>
                     <span
-                      className={`text-sm font-extrabold shrink-0 ${
+                      className={`font-money text-sm font-extrabold shrink-0 ${
                         row.direction === 'INCOME'
-                          ? 'text-emerald-700 dark:text-emerald-400'
+                          ? 'text-[#059669] dark:text-[#10B981]'
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
@@ -432,19 +490,24 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
 
       {/* Custom Auto-Categorization Rules */}
       {onAddCategoryRule && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
-          <div>
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-              <Tag className="w-4 h-4 text-emerald-600" /> Regras Personalizadas de Auto-Categorização
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Sempre que a descrição de um extrato importado contiver a palavra-chave, a categoria escolhida será aplicada automaticamente.
-            </p>
+        <div className="sf-card p-5 sm:p-6 space-y-4">
+          <div className="flex items-start gap-3">
+            <span className="sf-icon-badge mt-0.5">
+              <Tag size={18} strokeWidth={2} />
+            </span>
+            <div>
+              <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
+                Regras Personalizadas de Auto-Categorização
+              </h3>
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+                Sempre que a descrição de um extrato importado contiver a palavra-chave, a categoria escolhida será aplicada automaticamente.
+              </p>
+            </div>
           </div>
 
           <form onSubmit={handleSaveRule} className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+              <label className="block text-[11px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">
                 Se a descrição contiver:
               </label>
               <input
@@ -455,18 +518,18 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
                   setRuleKeyword(e.target.value);
                   setRuleError('');
                 }}
-                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-11"
+                className="w-full border border-[#E2E8F0] dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm bg-white dark:bg-slate-800 text-[#0F172A] dark:text-white min-h-11"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
+              <label className="block text-[11px] font-semibold text-[#64748B] dark:text-slate-400 mb-1">
                 Aplicar categoria:
               </label>
               <select
                 value={ruleCategory}
                 onChange={(e) => setRuleCategory(e.target.value)}
-                className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-white min-h-11"
+                className="w-full border border-[#E2E8F0] dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm bg-white dark:bg-slate-800 text-[#0F172A] dark:text-white min-h-11"
               >
                 {APP_CATEGORIES.map((c) => (
                   <option key={c} value={c}>
@@ -478,7 +541,7 @@ export const ImportsView: React.FC<ImportsViewProps> = ({
 
             <button
               type="submit"
-              className="min-h-11 px-4 bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] dark:hover:bg-[#00A65A]/90 text-white rounded-xl text-xs font-bold cursor-pointer"
+              className="min-h-11 px-4 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer"
             >
               Adicionar regra
             </button>

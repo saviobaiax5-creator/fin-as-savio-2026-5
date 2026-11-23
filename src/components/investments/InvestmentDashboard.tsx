@@ -272,10 +272,10 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
       {/* Header strip + BCB Status */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Investimentos, Comparador CDI × CDB e Simulador
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Dados oficiais do Banco Central (SGS 12) ·{' '}
             {cdiFetchedAt
               ? `Última atualização CDI: ${formatIsoDateTimePtBr(cdiFetchedAt)}`
@@ -285,10 +285,10 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
 
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {realAnnualCdiPercent !== null && (
-            <div className="px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 font-semibold text-slate-700 dark:text-slate-200 tabular-nums">
-              CDI anualizado: <strong className="text-emerald-700 dark:text-emerald-400">{formatPercentBR(realAnnualCdiPercent)}</strong>
+            <div className="font-money px-3 py-2 rounded-xl border border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-slate-900 font-semibold text-slate-700 dark:text-slate-200">
+              CDI anualizado: <strong className="text-[#059669] dark:text-[#10B981]">{formatPercentBR(realAnnualCdiPercent)}</strong>
               {latestDailyRatePercent !== null && (
-                <span className="text-slate-400 ml-2">
+                <span className="text-[#64748B] ml-2">
                   ({latestDailyRatePercent.toFixed(6).replace('.', ',')}%/dia)
                 </span>
               )}
@@ -299,7 +299,7 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
             type="button"
             onClick={() => void loadCdiSeries(true)}
             disabled={loadingCdi}
-            className="min-h-10 px-3.5 rounded-xl bg-[#082B5C] dark:bg-emerald-600 text-white font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            className="min-h-10 px-3.5 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
           >
             <RefreshCw size={14} className={loadingCdi ? 'animate-spin' : ''} />
             Atualizar CDI
@@ -318,7 +318,7 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
       <div
         role="tablist"
         aria-label="Subseções de Investimentos"
-        className="flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800"
+        className="flex flex-wrap gap-1.5 p-1.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800"
       >
         {navTabs.map((t) => {
           const Icon = t.icon;
@@ -330,10 +330,10 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
               role="tab"
               aria-selected={active}
               onClick={() => setSubTab(t.id)}
-              className={`min-h-10 px-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap ${
+              className={`min-h-10 px-3.5 rounded-lg text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer whitespace-nowrap ${
                 active
-                  ? 'bg-white dark:bg-slate-800 text-[#082B5C] dark:text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-white dark:bg-slate-800 text-[#0F172A] dark:text-white border border-[#E2E8F0] dark:border-slate-700'
+                  : 'text-[#64748B] dark:text-slate-400 hover:text-[#0F172A] dark:hover:text-white'
               }`}
             >
               <Icon size={15} />
@@ -419,53 +419,53 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
       {subTab === 'analysis' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
-              <span className="text-xs text-slate-500 dark:text-slate-400">Taxa CDI anualizada (252 DU)</span>
-              <div className="text-2xl font-extrabold text-[#082B5C] dark:text-white mt-1 tabular-nums">
+            <div className="sf-card p-5">
+              <span className="text-xs text-[#64748B] dark:text-slate-400">Taxa CDI anualizada (252 DU)</span>
+              <div className="font-money text-2xl font-extrabold text-[#0F172A] dark:text-white mt-1">
                 {realAnnualCdiPercent !== null ? formatPercentBR(realAnnualCdiPercent) : 'Indisponível'}
               </div>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
                 Base: {cdiRates.length} pregões reais do BCB
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="sf-card p-5">
+              <span className="text-xs text-[#64748B] dark:text-slate-400">
                 Equivalência Isenta (LCI / LCA)
               </span>
-              <div className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
+              <div className="font-money text-2xl font-extrabold text-[#059669] dark:text-[#10B981] mt-1">
                 {formatPercentBR(equivalentExemptPct, 1)} do CDI
               </div>
-              <p className="text-xs text-slate-400 mt-1">
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
                 Para empatar líquido com CDB {formatPercentBR(cdbPercentage, 1)} CDI (IR{' '}
                 {(currentIrRate * 100).toFixed(1).replace('.', ',')}%)
               </p>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
-              <span className="text-xs text-slate-500 dark:text-slate-400">
+            <div className="sf-card p-5">
+              <span className="text-xs text-[#64748B] dark:text-slate-400">
                 Retorno Líquido Estimado no Período
               </span>
-              <div className="text-2xl font-extrabold text-blue-700 dark:text-blue-400 mt-1 tabular-nums">
+              <div className="font-money text-2xl font-extrabold text-blue-700 dark:text-blue-400 mt-1">
                 {formatarValor(activeSummary.netProfit, hideValues)}
               </div>
-              <p className="text-xs text-slate-400 mt-1 tabular-nums">
+              <p className="font-money text-xs text-[#64748B] dark:text-slate-400 mt-1">
                 Sobre {formatarValor(activeSummary.investedValue, hideValues)} aplicados
               </p>
             </div>
           </div>
 
           {/* Tabela regressiva de IR e isenções */}
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
+          <div className="sf-card overflow-hidden">
             <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
                 Tabela Regressiva de Tributação Aplicada (Estimativa)
               </h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
                 <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+                  <tr className="bg-[#F8FAFC] dark:bg-slate-800/60 text-[#64748B] dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
                     <th className="py-3 px-5 font-semibold">Prazo do Resgate</th>
                     <th className="py-3 px-5 font-semibold">Alíquota IR (CDB / Tesouro)</th>
                     <th className="py-3 px-5 font-semibold">LCI / LCA / Poupança</th>
@@ -474,27 +474,27 @@ export const InvestmentDashboard: React.FC<InvestmentDashboardProps> = ({
                 </thead>
                 <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                   <tr>
-                    <td className="py-3 px-5 font-semibold text-[#082B5C] dark:text-white">Até 180 dias</td>
-                    <td className="py-3 px-5 tabular-nums">22,5%</td>
-                    <td className="py-3 px-5 text-emerald-700 dark:text-emerald-400 font-semibold">Isento</td>
+                    <td className="py-3 px-5 font-semibold text-[#0F172A] dark:text-white">Até 180 dias</td>
+                    <td className="py-3 px-5 font-money">22,5%</td>
+                    <td className="py-3 px-5 text-[#059669] dark:text-[#10B981] font-semibold">Isento</td>
                     <td className="py-3 px-5">96% a 3% até o 29º dia; 0% a partir do 30º dia</td>
                   </tr>
                   <tr>
-                    <td className="py-3 px-5 font-semibold text-[#082B5C] dark:text-white">De 181 a 360 dias</td>
-                    <td className="py-3 px-5 tabular-nums">20,0%</td>
-                    <td className="py-3 px-5 text-emerald-700 dark:text-emerald-400 font-semibold">Isento</td>
+                    <td className="py-3 px-5 font-semibold text-[#0F172A] dark:text-white">De 181 a 360 dias</td>
+                    <td className="py-3 px-5 font-money">20,0%</td>
+                    <td className="py-3 px-5 text-[#059669] dark:text-[#10B981] font-semibold">Isento</td>
                     <td className="py-3 px-5">Isento</td>
                   </tr>
                   <tr>
-                    <td className="py-3 px-5 font-semibold text-[#082B5C] dark:text-white">De 361 a 720 dias</td>
-                    <td className="py-3 px-5 tabular-nums">17,5%</td>
-                    <td className="py-3 px-5 text-emerald-700 dark:text-emerald-400 font-semibold">Isento</td>
+                    <td className="py-3 px-5 font-semibold text-[#0F172A] dark:text-white">De 361 a 720 dias</td>
+                    <td className="py-3 px-5 font-money">17,5%</td>
+                    <td className="py-3 px-5 text-[#059669] dark:text-[#10B981] font-semibold">Isento</td>
                     <td className="py-3 px-5">Isento</td>
                   </tr>
                   <tr>
-                    <td className="py-3 px-5 font-semibold text-[#082B5C] dark:text-white">Acima de 720 dias</td>
-                    <td className="py-3 px-5 tabular-nums">15,0%</td>
-                    <td className="py-3 px-5 text-emerald-700 dark:text-emerald-400 font-semibold">Isento</td>
+                    <td className="py-3 px-5 font-semibold text-[#0F172A] dark:text-white">Acima de 720 dias</td>
+                    <td className="py-3 px-5 font-money">15,0%</td>
+                    <td className="py-3 px-5 text-[#059669] dark:text-[#10B981] font-semibold">Isento</td>
                     <td className="py-3 px-5">Isento</td>
                   </tr>
                 </tbody>

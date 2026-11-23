@@ -6,6 +6,7 @@ import {
   getTransactionAmountCents,
 } from '../utils/financeCalculations';
 import { formatDateBR, todayLocal } from '../utils/dateUtils';
+import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { usePrivacy } from '../contexts/PrivacyContext';
 import { formatarValor } from '../utils/formatters';
 
@@ -175,7 +176,7 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
 
     if (items.length === 0) {
       return (
-        <div className="p-6 text-center text-xs text-slate-400">
+        <div className="p-6 text-center text-xs text-[#64748B] dark:text-slate-300">
           {emptyMessage}
         </div>
       );
@@ -184,15 +185,15 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
     return (
       <div className="space-y-2.5">
         <div className="flex items-center justify-between text-xs px-1">
-          <span className="text-slate-500 dark:text-slate-400 font-medium">
+          <span className="font-sans text-[#64748B] dark:text-slate-300 font-medium">
             {items.length} lançamento{items.length !== 1 ? 's' : ''} no período
           </span>
-          <span className="font-bold text-[#082B5C] dark:text-white">
+          <span className="font-money font-bold text-[#0F172A] dark:text-white">
             Total: {formatarValor(totalAmount, hideValues)}
           </span>
         </div>
 
-        <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200/80 dark:border-slate-800 rounded-xl bg-white dark:bg-slate-900 max-h-80 overflow-y-auto">
+        <div className="sf-grouped-card sf-grouped-divider max-h-80 overflow-y-auto">
           {items.map((tx) => {
             const amt = fromCents(getTransactionAmountCents(tx));
             const isTransfer = Boolean(tx.isInternalTransfer);
@@ -202,13 +203,13 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
                 key={tx.id}
                 type="button"
                 onClick={() => onEditTransaction?.(tx)}
-                className="w-full text-left px-3.5 py-2.5 flex items-center justify-between gap-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors cursor-pointer"
+                className="w-full text-left px-3.5 py-2.5 flex items-center justify-between gap-3 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors cursor-pointer"
               >
-                <div className="min-w-0">
-                  <div className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate">
+                <div className="min-w-0 flex-1">
+                  <div className="text-xs sm:text-sm font-semibold text-[#0F172A] dark:text-white truncate">
                     {tx.description}
                   </div>
-                  <div className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 flex-wrap">
+                  <div className="text-[11px] text-[#64748B] dark:text-slate-300 flex items-center gap-1.5 flex-wrap">
                     <span>{formatDateBR(tx.date)}</span>
                     <span>·</span>
                     <span className="truncate">{tx.category}</span>
@@ -220,18 +221,21 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
                     )}
                   </div>
                 </div>
-                <div
-                  className={`text-xs sm:text-sm font-extrabold shrink-0 ${
-                    isTransfer
-                      ? 'text-blue-600 dark:text-blue-400'
-                      : isIncome
-                      ? 'text-emerald-700 dark:text-emerald-400'
-                      : 'text-red-700 dark:text-red-400'
-                  }`}
-                >
-                  {hideValues
-                    ? formatarValor(amt, true)
-                    : `${isTransfer ? '' : isIncome ? '+ ' : '− '}${formatarValor(amt, false)}`}
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span
+                    className={`font-money text-xs sm:text-sm font-bold ${
+                      isTransfer
+                        ? 'text-blue-600 dark:text-white'
+                        : isIncome
+                        ? 'text-[#059669] dark:text-white'
+                        : 'text-[#DC3545] dark:text-white'
+                    }`}
+                  >
+                    {hideValues
+                      ? formatarValor(amt, true)
+                      : `${isTransfer ? '' : isIncome ? '+ ' : '− '}${formatarValor(amt, false)}`}
+                  </span>
+                  <ChevronRight size={14} strokeWidth={1.75} className="text-[#94A3B8] dark:text-slate-400" />
                 </div>
               </button>
             );
@@ -246,21 +250,21 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
     { id: 'receitas', label: 'Receitas' },
     { id: 'transf', label: 'Transf.' },
     { id: 'extrato', label: 'Extrato' },
-    { id: 'agenda', label: '📅 Agenda' },
+    { id: 'agenda', label: 'Agenda' },
   ];
 
   const filterButtons: Array<{ id: AgendaFilter; label: string; dotClass?: string }> = [
     { id: 'all', label: 'Todos' },
-    { id: 'expense', label: 'Pagamentos', dotClass: 'bg-[#ef4444]' },
-    { id: 'income', label: 'Receitas', dotClass: 'bg-[#10b981]' },
-    { id: 'transfer', label: 'Transferências', dotClass: 'bg-[#3b82f6]' },
+    { id: 'expense', label: 'Pagamentos', dotClass: 'bg-[#EF4444]' },
+    { id: 'income', label: 'Receitas', dotClass: 'bg-[#10B981]' },
+    { id: 'transfer', label: 'Transferências', dotClass: 'bg-[#3B82F6]' },
   ];
 
   return (
-    <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
-      {/* Top 5-Tab Bar */}
+    <section className="sf-card overflow-hidden">
+      {/* Top 5-Tab Bar (Equal 5-col grid prevents horizontal clipping & truncation on mobile) */}
       <div
-        className="grid grid-cols-5 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800"
+        className="grid grid-cols-5 bg-white dark:bg-[#11185A] border-b border-[#E2E8F0] dark:border-white/10"
         role="tablist"
         aria-label="Abas de transações e agenda"
       >
@@ -273,10 +277,10 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
               role="tab"
               aria-selected={isActive}
               onClick={() => setActiveTab(tab.id)}
-              className={`py-3 px-1 text-[11px] sm:text-xs font-bold border-b-2 transition-colors whitespace-nowrap truncate cursor-pointer ${
+              className={`py-3 px-0.5 sm:px-3 text-[11.5px] sm:text-[13px] font-semibold border-b-2 transition-colors whitespace-nowrap text-center cursor-pointer ${
                 isActive
-                  ? 'text-red-600 dark:text-red-400 border-red-600 dark:border-red-400 bg-red-50/40 dark:bg-red-950/20'
-                  : 'text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-800 dark:hover:text-slate-200'
+                  ? 'text-[#DC2626] dark:text-white border-[#DC2626] dark:border-[#10B981] bg-red-50/40 dark:bg-white/10'
+                  : 'text-[#64748B] dark:text-slate-300 border-transparent hover:text-[#0F172A] dark:hover:text-white'
               }`}
             >
               {tab.label}
@@ -286,7 +290,7 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
       </div>
 
       {/* Tab Body */}
-      <div className="p-3 sm:p-4 bg-slate-50/50 dark:bg-slate-900/50">
+      <div className="p-3 sm:p-4 bg-[#F8FAFC]/80 dark:bg-[#0B1252]/60">
         {activeTab === 'despesas' &&
           renderTransactionRows(despesasList, 'Nenhuma despesa registrada neste período e escopo.')}
 
@@ -302,7 +306,7 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
         {activeTab === 'agenda' && (
           <div className="space-y-3">
             {/* Quick Filters inside Agenda */}
-            <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5">
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {filterButtons.map((fb) => {
                 const isSelected = agendaFilter === fb.id;
                 return (
@@ -310,10 +314,10 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
                     key={fb.id}
                     type="button"
                     onClick={() => setAgendaFilter(fb.id)}
-                    className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-full border text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-colors cursor-pointer ${
                       isSelected
-                        ? 'bg-[#082B5C] dark:bg-emerald-600 text-white border-[#082B5C] dark:border-emerald-600'
-                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700'
+                        ? 'bg-[#061E3E] dark:bg-[#059669] text-white border-[#061E3E] dark:border-[#059669]'
+                        : 'bg-white dark:bg-[#11185A] text-[#64748B] dark:text-slate-200 border-[#E2E8F0] dark:border-white/15 hover:bg-slate-100 dark:hover:bg-white/10'
                     }`}
                   >
                     {fb.dotClass && <span className={`w-2 h-2 rounded-full ${fb.dotClass}`} />}
@@ -324,58 +328,62 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
             </div>
 
             {/* Minimizable Calendar Drawer */}
-            <details
-              className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden"
-              open
-            >
-              <summary className="px-3.5 py-2.5 text-xs font-bold text-[#082B5C] dark:text-white flex items-center justify-between cursor-pointer select-none">
-                <span>📅 Minimizar / Expandir Calendário</span>
-                <span className="text-[10px] text-slate-400 group-open:rotate-180 transition-transform">
-                  ▼
+            <details className="group sf-card overflow-hidden" open>
+              <summary className="px-3.5 py-2.5 font-display text-xs sm:text-sm font-bold text-[#0F172A] dark:text-white flex items-center justify-between cursor-pointer select-none">
+                <span className="flex items-center gap-2.5">
+                  <span className="sf-icon-badge">
+                    <CalendarDays size={18} strokeWidth={1.75} />
+                  </span>
+                  <span>Calendário de Movimentações</span>
                 </span>
+                <ChevronDown
+                  size={16}
+                  strokeWidth={1.75}
+                  className="text-[#64748B] dark:text-slate-300 group-open:rotate-180 transition-transform"
+                />
               </summary>
 
-              <div className="px-3 pb-3 pt-1 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
+              <div className="px-3 pb-3 pt-1 border-t border-[#F1F5F9] dark:border-white/10 space-y-2.5">
                 {/* Month Navigation */}
                 <div className="flex justify-between items-center py-1">
                   <button
                     type="button"
                     onClick={handlePrevMonth}
-                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg w-8 h-8 text-sm font-bold flex items-center justify-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200"
+                    className="bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/15 rounded-lg w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-slate-100 dark:hover:bg-white/10 text-[#0F172A] dark:text-white"
                     aria-label="Mês anterior"
                   >
-                    ‹
+                    <ChevronLeft size={16} strokeWidth={1.75} />
                   </button>
-                  <strong className="text-xs sm:text-sm font-extrabold text-[#082B5C] dark:text-white">
+                  <strong className="font-display text-xs sm:text-sm font-bold text-[#0F172A] dark:text-white">
                     {MONTH_NAMES[month]} {year}
                   </strong>
                   <button
                     type="button"
                     onClick={handleNextMonth}
-                    className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg w-8 h-8 text-sm font-bold flex items-center justify-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200"
+                    className="bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/15 rounded-lg w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-slate-100 dark:hover:bg-white/10 text-[#0F172A] dark:text-white"
                     aria-label="Próximo mês"
                   >
-                    ›
+                    <ChevronRight size={16} strokeWidth={1.75} />
                   </button>
                 </div>
 
                 {/* Legend */}
-                <div className="flex justify-center gap-4 text-[11px] text-slate-500 dark:text-slate-400">
+                <div className="flex justify-center gap-4 text-[11px] text-[#64748B] dark:text-slate-300">
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#10b981] inline-block" /> Receita
+                    <span className="w-2 h-2 rounded-full bg-[#10B981] inline-block" /> Receita
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#ef4444] inline-block" /> Pagamento
+                    <span className="w-2 h-2 rounded-full bg-[#EF4444] inline-block" /> Pagamento
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#3b82f6] inline-block" /> Transferência
+                    <span className="w-2 h-2 rounded-full bg-[#3B82F6] inline-block" /> Transferência
                   </span>
                 </div>
 
                 {/* Weekdays */}
                 <div className="grid grid-cols-7 text-center gap-1">
                   {WEEKDAY_LABELS.map((w, idx) => (
-                    <div key={idx} className="text-[11px] font-bold text-slate-400 pb-0.5">
+                    <div key={idx} className="text-[11px] font-bold text-[#64748B] dark:text-slate-400 pb-0.5">
                       {w}
                     </div>
                   ))}
@@ -401,15 +409,15 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
                         onClick={() => setSelectedDateStr(item.dateStr)}
                         className={`h-10 rounded-lg p-1 text-xs font-semibold flex flex-col items-center justify-between transition-all cursor-pointer border ${
                           isSelected
-                            ? 'border-[#082B5C] dark:border-blue-400 bg-blue-50 dark:bg-blue-950/60 shadow-xs'
-                            : 'border-slate-200/80 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-emerald-500'
+                            ? 'border-[#061E3E] dark:border-[#10B981] bg-blue-50 dark:bg-[#059669]/25'
+                            : 'border-[#E2E8F0] dark:border-white/10 bg-white dark:bg-[#0B1252] hover:border-[#059669]'
                         }`}
                       >
-                        <span className="text-slate-800 dark:text-slate-200">{item.dayNumber}</span>
+                        <span className="text-[#0F172A] dark:text-white">{item.dayNumber}</span>
                         <div className="flex gap-1 h-1.5 items-center">
-                          {hasIncome && <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />}
-                          {hasExpense && <span className="w-1.5 h-1.5 rounded-full bg-[#ef4444]" />}
-                          {hasTransfer && <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]" />}
+                          {hasIncome && <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />}
+                          {hasExpense && <span className="w-1.5 h-1.5 rounded-full bg-[#EF4444]" />}
+                          {hasTransfer && <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />}
                         </div>
                       </button>
                     );
@@ -418,28 +426,28 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
               </div>
             </details>
 
-            {/* Selected Day Movements */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs space-y-2">
+            {/* Selected Day Movements (Grouped Fintech Container) */}
+            <div className="sf-grouped-card p-3 text-xs space-y-2">
               {!selectedDateStr ? (
-                <p className="text-slate-400 text-center py-2">
+                <p className="text-[#64748B] dark:text-slate-300 text-center py-2">
                   Toque em um dia marcado no calendário para ver os lançamentos.
                 </p>
               ) : selectedDayMovs.length === 0 ? (
-                <p className="text-slate-400 text-center py-2">
+                <p className="text-[#64748B] dark:text-slate-300 text-center py-2">
                   Nenhuma movimentação em {selectedDateStr.split('-').reverse().join('/')}.
                 </p>
               ) : (
-                <div className="space-y-1.5 divide-y divide-slate-100 dark:divide-slate-800">
-                  <div className="font-bold text-slate-700 dark:text-slate-300 pb-1">
-                    Movimentações de {selectedDateStr.split('-').reverse().join('/')}:
+                <div className="sf-grouped-divider">
+                  <div className="font-display font-bold text-[#0F172A] dark:text-white pb-2">
+                    Movimentações de {selectedDateStr.split('-').reverse().join('/')}
                   </div>
                   {selectedDayMovs.map((m) => {
                     const badgeCls =
                       m.tipo === 'income'
-                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-200'
                         : m.tipo === 'expense'
-                        ? 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300'
-                        : 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300';
+                        ? 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-200'
+                        : 'bg-blue-100 text-blue-800 dark:bg-blue-500/20 dark:text-blue-200';
                     const labelName =
                       m.tipo === 'income'
                         ? 'Receita'
@@ -452,29 +460,32 @@ export const FinancialCalendarWidget: React.FC<FinancialCalendarWidgetProps> = (
                         key={m.tx.id}
                         type="button"
                         onClick={() => onEditTransaction?.(m.tx)}
-                        className="w-full text-left pt-2 flex justify-between items-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg px-1 py-1 transition-colors cursor-pointer"
+                        className="w-full text-left py-2.5 flex justify-between items-center gap-2 hover:bg-slate-50 dark:hover:bg-white/5 px-1 transition-colors cursor-pointer"
                       >
-                        <div className="space-y-0.5 min-w-0">
-                          <strong className="block text-slate-900 dark:text-white truncate">
+                        <div className="space-y-0.5 min-w-0 flex-1">
+                          <strong className="block text-[#0F172A] dark:text-white truncate">
                             {m.tx.description}
                           </strong>
                           <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${badgeCls}`}>
                             {labelName}
                           </span>
                         </div>
-                        <strong
-                          className={`shrink-0 ${
-                            m.tipo === 'income'
-                              ? 'text-emerald-700 dark:text-emerald-400'
-                              : m.tipo === 'expense'
-                              ? 'text-red-700 dark:text-red-400'
-                              : 'text-blue-600 dark:text-blue-400'
-                          }`}
-                        >
-                          {hideValues
-                            ? formatarValor(m.amount, true)
-                            : `${m.tipo === 'income' ? '+ ' : m.tipo === 'expense' ? '− ' : ''}${formatarValor(m.amount, false)}`}
-                        </strong>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <strong
+                            className={`font-money ${
+                              m.tipo === 'income'
+                                ? 'text-[#059669] dark:text-white'
+                                : m.tipo === 'expense'
+                                ? 'text-[#DC3545] dark:text-white'
+                                : 'text-blue-600 dark:text-white'
+                            }`}
+                          >
+                            {hideValues
+                              ? formatarValor(m.amount, true)
+                              : `${m.tipo === 'income' ? '+ ' : m.tipo === 'expense' ? '− ' : ''}${formatarValor(m.amount, false)}`}
+                          </strong>
+                          <ChevronRight size={14} strokeWidth={1.75} className="text-[#94A3B8] dark:text-slate-400" />
+                        </div>
                       </button>
                     );
                   })}

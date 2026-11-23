@@ -321,8 +321,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         aria-modal="true"
         aria-labelledby="transaction-title"
       >
-        <header className="shrink-0 bg-[#082B5C] text-white p-5 flex justify-between items-center">
-          <h2 id="transaction-title" className="text-lg font-bold">
+        <header className="shrink-0 bg-[#061E3E] text-white p-5 flex justify-between items-center">
+          <h2 id="transaction-title" className="font-display text-lg font-bold">
             {editingTransaction ? 'Editar lançamento' : 'Novo lançamento'}
           </h2>
           <button
@@ -374,8 +374,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   onClick={() => setDirection('INCOME')}
                   className={`min-h-12 rounded-xl text-sm font-bold border transition-all cursor-pointer ${
                     direction === 'INCOME'
-                      ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-400 shadow-xs'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-[#ECFDF5] dark:bg-emerald-950/60 text-[#059669] dark:text-[#10B981] border-[#059669]'
+                      : 'border-[#E2E8F0] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-[#F8FAFC] dark:hover:bg-slate-800'
                   }`}
                 >
                   Receita (+)
@@ -385,8 +385,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   onClick={() => setDirection('EXPENSE')}
                   className={`min-h-12 rounded-xl text-sm font-bold border transition-all cursor-pointer ${
                     direction === 'EXPENSE'
-                      ? 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border-red-400 shadow-xs'
-                      : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border-red-400'
+                      : 'border-[#E2E8F0] dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-[#F8FAFC] dark:hover:bg-slate-800'
                   }`}
                 >
                   Despesa (−)
@@ -583,10 +583,10 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             </label>
 
             {!editingTransaction && onSaveBatch && (
-              <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-3">
+              <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800/70 border border-[#E2E8F0] dark:border-slate-700 space-y-3">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
-                    <Repeat className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-xs font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
+                    <Repeat className="w-3.5 h-3.5 text-[#059669]" />
                     Repetição / Parcelamento mensal
                   </span>
                 </div>
@@ -605,8 +605,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                       onClick={() => setRepeatKind(opt.id)}
                       className={`min-h-10 px-2 rounded-lg text-xs font-bold border transition-all cursor-pointer ${
                         repeatKind === opt.id
-                          ? 'bg-[#082B5C] text-white border-[#082B5C] dark:bg-emerald-600 dark:border-emerald-600'
-                          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                          ? 'bg-[#061E3E] text-white border-[#061E3E] dark:bg-[#059669] dark:border-[#059669]'
+                          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-[#E2E8F0] dark:border-slate-700'
                       }`}
                     >
                       {opt.label}
@@ -697,15 +697,15 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                           amountMode: repeatKind === 'INSTALLMENT' ? amountMode : 'PER_OCCURRENCE',
                         });
                         return (
-                          <div className="text-[11px] text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2">
+                          <div className="text-[11px] text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 rounded-lg px-3 py-2">
                             Serão criados <strong>{prev.occurrences} lançamentos</strong> de{' '}
                             <strong>{formatDateBR(prev.firstDate)}</strong> até{' '}
                             <strong>{formatDateBR(prev.lastDate)}</strong> · Parcela{' '}
-                            <strong>
+                            <strong className="font-money">
                               R$ {fromCents(prev.regularAmountCents).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </strong>{' '}
                             · Total{' '}
-                            <strong className="text-[#082B5C] dark:text-emerald-400">
+                            <strong className="font-money text-[#0F172A] dark:text-[#10B981]">
                               R$ {fromCents(prev.totalAmountCents).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </strong>
                           </div>
@@ -720,17 +720,17 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             )}
           </div>
 
-          <footer className="shrink-0 p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 pb-[calc(16px+env(safe-area-inset-bottom))] flex gap-3">
+          <footer className="shrink-0 p-4 border-t border-[#E2E8F0] dark:border-slate-800 bg-white dark:bg-slate-900 pb-[calc(16px+env(safe-area-inset-bottom))] flex gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 min-h-12 border border-slate-300 dark:border-slate-700 rounded-xl font-semibold text-sm text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              className="flex-1 min-h-12 border border-[#E2E8F0] dark:border-slate-700 rounded-xl font-semibold text-sm text-slate-700 dark:text-slate-200 hover:bg-[#F8FAFC] dark:hover:bg-slate-800 transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex-[1.5] min-h-12 bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] dark:hover:bg-[#00A65A]/90 text-white rounded-xl font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-[1.5] min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <Check className="w-5 h-5" />
               {editingTransaction ? 'Atualizar' : 'Salvar lançamento'}

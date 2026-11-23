@@ -8,6 +8,7 @@ import {
   sanitizeRawRowSnapshot,
 } from '../fileSecurity';
 import { parseFlexibleDate, parseFlexibleSignedAmount } from './csvParser';
+import { detectBankFromStatement } from '../banksRepository';
 
 const MAX_OCR_BASE64_LENGTH = 21_500_000;
 const CLIENT_OCR_TIMEOUT_MS = 65_000;
@@ -303,11 +304,27 @@ export function parseTextualPdfContent(extractedText: string, fileName = ''): Pa
     });
   }
 
+  const detectedBank = detectBankFromStatement(extractedText.slice(0, 2500), fileName);
+
   return {
     format: 'PDF',
     parseSource: 'LOCAL',
     identifiedAccount: {
-      bankName: fileName.replace(/\.pdf$/i, ''),
+      bankName:
+        detectedBank.type !== 'desconhecido' && detectedBank.name
+          ? detectedBank.name
+          : fileName.replace(/\.pdf$/i, ''),
+      bankCode: detectedBank.code,
+      bankIspb: detectedBank.ispb,
+      bankType: detectedBank.type,
+      detectionConfidence: detectedBank.confidence,
+      institutionId: detectedBank.institutionId,
+      institutionCategory:
+        detectedBank.type === 'fisico'
+          ? 'BANCO_FISICO'
+          : detectedBank.type === 'digital'
+            ? 'BANCO_DIGITAL'
+            : undefined,
       maskedDocument: docInfo?.masked,
       documentValid: docInfo?.valid,
       holderNature: docInfo?.valid ? docInfo.nature : undefined,
@@ -547,11 +564,27 @@ export async function requestRemoteOcrParse(params: {
       );
     }
 
+    const detectedFromFile = detectBankFromStatement('', params.fileName);
+
     return {
       format: params.format,
       parseSource: 'OCR_IA',
       identifiedAccount: {
-        bankName: params.fileName.replace(/\.(pdf|jpg|jpeg|png|webp)$/i, ''),
+        bankName:
+          detectedFromFile.type !== 'desconhecido' && detectedFromFile.name
+            ? detectedFromFile.name
+            : params.fileName.replace(/\.(pdf|jpg|jpeg|png|webp)$/i, ''),
+        bankCode: detectedFromFile.code,
+        bankIspb: detectedFromFile.ispb,
+        bankType: detectedFromFile.type,
+        detectionConfidence: detectedFromFile.confidence,
+        institutionId: detectedFromFile.institutionId,
+        institutionCategory:
+          detectedFromFile.type === 'fisico'
+            ? 'BANCO_FISICO'
+            : detectedFromFile.type === 'digital'
+              ? 'BANCO_DIGITAL'
+              : undefined,
         requiresConfirmation: true,
         confirmationReason: 'Revise os dados lidos comparando com o documento original antes de aprovar.',
       },

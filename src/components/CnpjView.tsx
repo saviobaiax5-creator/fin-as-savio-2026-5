@@ -165,18 +165,18 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
             <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-800 dark:text-blue-300 rounded-md text-[10px] font-bold">
               EMPRESA · MEI
             </span>
-            <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+            <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
               Empresa · CNPJ
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Competência: <strong>{period === 'ALL' ? 'Todo período' : period}</strong> · Controle separado das movimentações empresariais (totais confirmados).
+          <p className="font-sans text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
+            Competência: <strong className="font-semibold text-[#0F172A] dark:text-slate-200">{period === 'ALL' ? 'Todo período' : period}</strong> · Controle separado das movimentações empresariais (totais confirmados).
           </p>
         </div>
         <button
           type="button"
           onClick={onAddTransaction}
-          className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Registrar movimentação CNPJ
@@ -191,28 +191,28 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Receita Confirmada CNPJ</span>
-          <div className="text-lg sm:text-2xl font-bold text-emerald-700 dark:text-emerald-400 mt-1.5">
+        <div className="sf-card p-4 sm:p-5">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Receita Confirmada CNPJ</span>
+          <div className="font-money text-lg sm:text-2xl font-bold text-[#059669] dark:text-[#10B981] mt-1.5">
             {formatarValor(totalCnpjIncome, hideValues)}
           </div>
-          <small className="text-[11px] text-slate-400 mt-1 block">Faturamento realizado</small>
+          <small className="text-[11px] text-[#64748B] mt-1 block">Faturamento realizado</small>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Despesas Confirmadas PJ</span>
-          <div className="text-lg sm:text-2xl font-bold text-red-700 dark:text-red-400 mt-1.5">
+        <div className="sf-card p-4 sm:p-5">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Despesas Confirmadas PJ</span>
+          <div className="font-money text-lg sm:text-2xl font-bold text-[#DC3545] dark:text-red-400 mt-1.5">
             {formatarValor(totalCnpjExpense, hideValues)}
           </div>
-          <small className="text-[11px] text-slate-400 mt-1 block">Custos e insumos pagos</small>
+          <small className="text-[11px] text-[#64748B] mt-1 block">Custos e insumos pagos</small>
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Resultado operacional</span>
-          <div className="text-lg sm:text-2xl font-bold text-[#082B5C] dark:text-white mt-1.5">
+        <div className="sf-card p-4 sm:p-5">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Resultado operacional</span>
+          <div className="font-money text-lg sm:text-2xl font-bold text-[#0F172A] dark:text-white mt-1.5">
             {formatarValor(operationalResult, hideValues)}
           </div>
-          <small className="text-[11px] text-slate-400 mt-1 block">
+          <small className="text-[11px] text-[#64748B] mt-1 block font-money">
             {Math.abs(pendingCnpjNet) >= 0.01
               ? `Previsto adicional: ${formatarValor(pendingCnpjNet, hideValues)}`
               : 'Receitas menos despesas'}
@@ -222,10 +222,10 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
         <button
           type="button"
           onClick={() => onNavigate('boletos')}
-          className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 rounded-2xl hover:border-amber-400 transition-colors cursor-pointer"
+          className="sf-card-interactive text-left p-4 sm:p-5 cursor-pointer"
         >
-          <span className="text-xs text-slate-500 dark:text-slate-400">Obrigações / Boletos PJ</span>
-          <div className="text-lg sm:text-2xl font-bold text-amber-700 dark:text-amber-400 mt-1.5">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Obrigações / Boletos PJ</span>
+          <div className="font-money text-lg sm:text-2xl font-bold text-amber-600 dark:text-amber-400 mt-1.5">
             {formatarValor(totalPendingCnpjBoletos, hideValues)}
           </div>
           <small className="text-[11px] text-amber-800 dark:text-amber-300 mt-1 block">
@@ -236,9 +236,9 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
 
       {/* Real revenues & obligations derived from state */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs">
+        <div className="sf-card p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
               Entradas de serviços e vendas (confirmadas)
             </h3>
             <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 rounded text-[10px] font-bold">
@@ -246,18 +246,18 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
             </span>
           </div>
           {cnpjRevenues.length === 0 ? (
-            <p className="text-xs text-slate-400 py-4">Nenhuma receita confirmada CNPJ registrada neste período.</p>
+            <p className="text-xs text-[#64748B] py-4">Nenhuma receita confirmada CNPJ registrada neste período.</p>
           ) : (
             <ul className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
               {cnpjRevenues.map((r) => (
                 <li key={r.id} className="py-3 flex items-center justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="font-bold text-slate-800 dark:text-slate-100 truncate">{r.description}</p>
-                    <small className="text-slate-400">
+                    <p className="font-semibold text-[#0F172A] dark:text-slate-100 truncate">{r.description}</p>
+                    <small className="text-[#64748B]">
                       {r.date.split('-').reverse().join('/')} · {r.category}
                     </small>
                   </div>
-                  <span className="font-bold text-emerald-700 dark:text-emerald-400 shrink-0">
+                  <span className="font-money font-bold text-[#059669] dark:text-[#10B981] shrink-0">
                     {formatarValor(fromCents(getTransactionAmountCents(r)), hideValues)}
                   </span>
                 </li>
@@ -266,13 +266,13 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
           )}
         </div>
 
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs">
+        <div className="sf-card p-5 sm:p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">Boletos e guias PJ pendentes</h3>
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">Boletos e guias PJ pendentes</h3>
             <button
               type="button"
               onClick={() => onNavigate('boletos')}
-              className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
+              className="text-xs font-semibold text-[#059669] dark:text-[#10B981] hover:underline cursor-pointer"
             >
               Ver em Boletos
             </button>
@@ -289,7 +289,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                       Vencimento: {b.vencimento.split('-').reverse().join('/')}
                     </small>
                   </div>
-                  <span className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 rounded-md font-bold shrink-0">
+                  <span className="font-money px-2.5 py-1 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 rounded-md font-bold shrink-0">
                     {formatarValor(b.valorOriginal, hideValues)}
                   </span>
                 </li>
@@ -300,9 +300,9 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
       </div>
 
       {/* Search + Transactions */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="p-4 sm:px-6 border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
             Movimentações empresariais ({filtered.length})
           </h3>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
@@ -384,9 +384,9 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                       </div>
                     </div>
                     <div
-                      className={`text-sm font-extrabold shrink-0 ${
+                      className={`font-money text-sm font-extrabold shrink-0 ${
                         t.direction === 'INCOME'
-                          ? 'text-emerald-700 dark:text-emerald-400'
+                          ? 'text-[#059669] dark:text-[#10B981]'
                           : 'text-red-700 dark:text-red-400'
                       }`}
                     >
@@ -417,7 +417,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                         <button
                           type="button"
                           onClick={() => onTraceTransaction(t)}
-                          className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#00A65A] dark:text-slate-400 dark:hover:text-[#00A65A] cursor-pointer"
+                          className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#059669] dark:text-slate-400 dark:hover:text-[#10B981] cursor-pointer"
                           aria-label={`Rastrear movimentação ${t.description}`}
                           title="Rastrear movimentação"
                         >
@@ -427,7 +427,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                       <button
                         type="button"
                         onClick={() => onEditTransaction(t)}
-                        className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#082B5C] dark:text-slate-400 dark:hover:text-white cursor-pointer"
+                        className="min-w-10 min-h-10 grid place-items-center text-slate-500 hover:text-[#0F172A] dark:text-slate-400 dark:hover:text-white cursor-pointer"
                         aria-label={`Editar ${t.description}`}
                       >
                         <Pencil className="w-4 h-4" />
@@ -540,9 +540,9 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                         </td>
                         <td className="py-3.5 px-6 text-slate-600 dark:text-slate-300">{t.account}</td>
                         <td
-                          className={`py-3.5 px-6 text-right font-bold ${
+                          className={`font-money py-3.5 px-6 text-right font-bold ${
                             t.direction === 'INCOME'
-                              ? 'text-emerald-700 dark:text-emerald-400'
+                              ? 'text-[#059669] dark:text-[#10B981]'
                               : 'text-red-700 dark:text-red-400'
                           }`}
                         >
@@ -556,7 +556,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                               <button
                                 type="button"
                                 onClick={() => onTraceTransaction(t)}
-                                className="p-2 text-slate-400 hover:text-[#00A65A] hover:bg-emerald-50 dark:hover:bg-emerald-950/50 rounded-lg cursor-pointer"
+                                className="p-2 text-slate-400 hover:text-[#059669] hover:bg-[#ECFDF5] dark:hover:bg-emerald-950/50 rounded-lg cursor-pointer"
                                 aria-label={`Rastrear movimentação ${t.description}`}
                                 title="Rastrear movimentação"
                               >
@@ -566,7 +566,7 @@ export const CnpjView: React.FC<CnpjViewProps> = ({
                             <button
                               type="button"
                               onClick={() => onEditTransaction(t)}
-                              className="p-2 text-slate-400 hover:text-[#082B5C] dark:hover:text-white rounded-lg cursor-pointer"
+                              className="p-2 text-slate-400 hover:text-[#0F172A] dark:hover:text-white rounded-lg cursor-pointer"
                               title="Editar"
                             >
                               <Pencil className="w-4 h-4" />

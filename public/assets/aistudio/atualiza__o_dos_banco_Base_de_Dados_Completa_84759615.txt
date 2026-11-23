@@ -1,0 +1,264 @@
+
+Base de Dados Completa (instituicoes.js)
+
+Este arquivo reúne os 20 bancos digitais/carteiras (incluindo o 99Pay) e as 10 cooperativas de crédito (incluindo Sicredi e Sicoob), já com as siglas e cores oficiais configuradas para funcionar offline:
+javascript
+export const INSTITUICOES_FINANCEIRAS = [
+  // --- BANCOS DIGITAIS E CARTEIRAS (20) ---
+  { id: "99pay", nome: "99Pay", sigla: "99", codigo: "301", tipo: "Carteira Digital", cor: "#FFCC00", texto: "#1E293B" },
+  { id: "nubank", nome: "Nubank", sigla: "NU", codigo: "260", tipo: "Conta Digital", cor: "#820AD1", texto: "#FFFFFF" },
+  { id: "inter", nome: "Banco Inter", sigla: "IN", codigo: "077", tipo: "Banco Digital", cor: "#FF7A00", texto: "#FFFFFF" },
+  { id: "picpay", nome: "PicPay", sigla: "PP", codigo: "380", tipo: "Carteira Digital", cor: "#21C25E", texto: "#FFFFFF" },
+  { id: "mercadopago", nome: "Mercado Pago", sigla: "MP", codigo: "323", tipo: "Carteira Digital", cor: "#009EE3", texto: "#FFFFFF" },
+  { id: "c6bank", nome: "C6 Bank", sigla: "C6", codigo: "336", tipo: "Banco Digital", cor: "#1A1A1A", texto: "#FFFFFF" },
+  { id: "pagbank", nome: "PagBank", sigla: "PB", codigo: "290", tipo: "Carteira Digital", cor: "#00A859", texto: "#FFFFFF" },
+  { id: "iti", nome: "iti Itaú", sigla: "IT", codigo: "341", tipo: "Carteira Digital", cor: "#EC008C", texto: "#FFFFFF" },
+  { id: "neon", nome: "Neon", sigla: "NE", codigo: "735", tipo: "Banco Digital", cor: "#00D7D7", texto: "#0F172A" },
+  { id: "next", nome: "Next", sigla: "NX", codigo: "237", tipo: "Banco Digital", cor: "#00FF5F", texto: "#0F172A" },
+  { id: "willbank", nome: "Will Bank", sigla: "WL", codigo: "280", tipo: "Banco Digital", cor: "#FFD400", texto: "#0F172A" },
+  { id: "btgpactual", nome: "BTG Pactual", sigla: "BT", codigo: "208", tipo: "Banco Digital", cor: "#001E62", texto: "#FFFFFF" },
+  { id: "sofisadireto", nome: "Sofisa Direto", sigla: "SD", codigo: "637", tipo: "Banco Digital", cor: "#00A88F", texto: "#FFFFFF" },
+  { id: "original", nome: "Banco Original", sigla: "OR", codigo: "212", tipo: "Banco Digital", cor: "#00A859", texto: "#FFFFFF" },
+  { id: "pan", nome: "Banco PAN", sigla: "PN", codigo: "623", tipo: "Banco Digital", cor: "#00AEEF", texto: "#FFFFFF" },
+  { id: "bs2", nome: "Banco BS2", sigla: "BS", codigo: "218", tipo: "Banco Digital", cor: "#0033A0", texto: "#FFFFFF" },
+  { id: "nomad", nome: "Nomad", sigla: "NM", codigo: "000", tipo: "Conta Global", cor: "#FFD100", texto: "#0F172A" },
+  { id: "wise", nome: "Wise", sigla: "WS", codigo: "000", tipo: "Conta Global", cor: "#9FE870", texto: "#163300" },
+  { id: "recargapay", nome: "RecargaPay", sigla: "RP", codigo: "350", tipo: "Carteira Digital", cor: "#0055FF", texto: "#FFFFFF" },
+  { id: "ame", nome: "Ame Digital", sigla: "AM", codigo: "364", tipo: "Carteira Digital", cor: "#F60054", texto: "#FFFFFF" },
+
+  // --- COOPERATIVAS DE CRÉDITO (10) ---
+  { id: "sicredi", nome: "Sicredi", sigla: "SI", codigo: "748", tipo: "Cooperativa", cor: "#3FA110", texto: "#FFFFFF" },
+  { id: "sicoob", nome: "Sicoob", sigla: "SC", codigo: "756", tipo: "Cooperativa", cor: "#003641", texto: "#FFFFFF" },
+  { id: "cresol", nome: "Cresol", sigla: "CR", codigo: "133", tipo: "Cooperativa", cor: "#F37021", texto: "#FFFFFF" },
+  { id: "unicred", nome: "Unicred", sigla: "UN", codigo: "136", tipo: "Cooperativa", cor: "#00594C", texto: "#FFFFFF" },
+  { id: "ailos", nome: "Ailos / Viacredi", sigla: "AI", codigo: "085", tipo: "Cooperativa", cor: "#005CA9", texto: "#FFFFFF" },
+  { id: "uniprime", nome: "Uniprime", sigla: "UP", codigo: "084", tipo: "Cooperativa", cor: "#004B87", texto: "#FFFFFF" },
+  { id: "sisprime", nome: "Sisprime", sigla: "SP", codigo: "084", tipo: "Cooperativa", cor: "#006633", texto: "#FFFFFF" },
+  { id: "credisis", nome: "CrediSIS", sigla: "CS", codigo: "097", tipo: "Cooperativa", cor: "#007A33", texto: "#FFFFFF" },
+  { id: "credicoamo", nome: "Credicoamo", sigla: "CC", codigo: "098", tipo: "Cooperativa Rural", cor: "#006837", texto: "#FFFFFF" },
+  { id: "sulcredi", nome: "Sulcredi", sigla: "SL", codigo: "322", tipo: "Cooperativa", cor: "#005A9C", texto: "#FFFFFF" }
+];
+Use o código com cuidado.
+
+Passo 2: Tela Completa Pronta para Rodar (index.html)
+
+Este código monta o Seletor de Instituições com Busca Instantânea, gera os Avatares Coloridos Offline e inclui uma Gaveta Minimizável para não ocupar espaço no celular:
+html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instituições Financeiras - Mobile Offline</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #f1f5f9; color: #1e293b; padding: 16px; }
+
+    /* Gaveta Recolhível */
+    details.box-bancos {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      overflow: hidden;
+      max-width: 480px;
+      margin: auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    details.box-bancos summary {
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    details.box-bancos summary::after { content: "▲"; font-size: 11px; color: #64748b; }
+    details.box-bancos:not([open]) summary::after { content: "▼"; }
+
+    .conteudo-bancos { padding: 12px 16px 16px; border-top: 1px solid #f1f5f9; }
+
+    /* Campo de Busca */
+    .campo-busca {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      outline: none;
+    }
+
+    /* Filtros de Categoria */
+    .filtros {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filtro-btn {
+      padding: 6px 12px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      background: #f8fafc;
+      font-size: 12px;
+      font-weight: 600;
+      color: #475569;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .filtro-btn.ativo { background: #0f172a; color: #fff; border-color: #0f172a; }
+
+    /* Grade Mobile (2 colunas sem rolagem horizontal) */
+    .grade-bancos {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .card-banco {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: #ffffff;
+      cursor: pointer;
+      text-align: left;
+    }
+    .card-banco.selecionado {
+      border-color: #0f172a;
+      background: #f8fafc;
+      box-shadow: inset 0 0 0 1px #0f172a;
+    }
+
+    /* Avatar Offline com Sigla e Cor Oficial */
+    .avatar-sigla {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: -0.5px;
+      flex-shrink: 0;
+    }
+
+    .info-banco { overflow: hidden; }
+    .nome-banco {
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cod-banco { font-size: 11px; color: #64748b; }
+  </style>
+</head>
+<body>
+
+  <details class="box-bancos" open>
+    <summary>🏦 Selecionar Instituição (30 disponíveis)</summary>
+    <div class="conteudo-bancos">
+      
+      <!-- Busca Rápida -->
+      <input type="text" id="input-busca" class="campo-busca" placeholder="Buscar por nome ou código (ex: 99Pay, 748...)" onkeyup="atualizarLista()">
+
+      <!-- Botões de Filtro -->
+      <div class="filtros">
+        <button class="filtro-btn ativo" onclick="definirFiltro('Todos', this)">Todos (30)</button>
+        <button class="filtro-btn" onclick="definirFiltro('Digital', this)">Bancos & Carteiras</button>
+        <button class="filtro-btn" onclick="definirFiltro('Cooperativa', this)">Cooperativas</button>
+      </div>
+
+      <!-- Grade onde os avatares serão desenhados -->
+      <div class="grade-bancos" id="container-bancos"></div>
+
+    </div>
+  </details>
+
+  <script>
+    const INSTITUICOES = [
+      { id: "99pay", nome: "99Pay", sigla: "99", codigo: "301", grupo: "Digital", cor: "#FFCC00", texto: "#1E293B" },
+      { id: "nubank", nome: "Nubank", sigla: "NU", codigo: "260", grupo: "Digital", cor: "#820AD1", texto: "#FFFFFF" },
+      { id: "inter", nome: "Banco Inter", sigla: "IN", codigo: "077", grupo: "Digital", cor: "#FF7A00", texto: "#FFFFFF" },
+      { id: "picpay", nome: "PicPay", sigla: "PP", codigo: "380", grupo: "Digital", cor: "#21C25E", texto: "#FFFFFF" },
+      { id: "mercadopago", nome: "Mercado Pago", sigla: "MP", codigo: "323", grupo: "Digital", cor: "#009EE3", texto: "#FFFFFF" },
+      { id: "c6bank", nome: "C6 Bank", sigla: "C6", codigo: "336", grupo: "Digital", cor: "#1A1A1A", texto: "#FFFFFF" },
+      { id: "pagbank", nome: "PagBank", sigla: "PB", codigo: "290", grupo: "Digital", cor: "#00A859", texto: "#FFFFFF" },
+      { id: "iti", nome: "iti Itaú", sigla: "IT", codigo: "341", grupo: "Digital", cor: "#EC008C", texto: "#FFFFFF" },
+      { id: "neon", nome: "Neon", sigla: "NE", codigo: "735", grupo: "Digital", cor: "#00D7D7", texto: "#0F172A" },
+      { id: "next", nome: "Next", sigla: "NX", codigo: "237", grupo: "Digital", cor: "#00FF5F", texto: "#0F172A" },
+      { id: "willbank", nome: "Will Bank", sigla: "WL", codigo: "280", grupo: "Digital", cor: "#FFD400", texto: "#0F172A" },
+      { id: "btgpactual", nome: "BTG Pactual", sigla: "BT", codigo: "208", grupo: "Digital", cor: "#001E62", texto: "#FFFFFF" },
+      { id: "sofisadireto", nome: "Sofisa Direto", sigla: "SD", codigo: "637", grupo: "Digital", cor: "#00A88F", texto: "#FFFFFF" },
+      { id: "original", nome: "Banco Original", sigla: "OR", codigo: "212", grupo: "Digital", cor: "#00A859", texto: "#FFFFFF" },
+      { id: "pan", nome: "Banco PAN", sigla: "PN", codigo: "623", grupo: "Digital", cor: "#00AEEF", texto: "#FFFFFF" },
+      { id: "bs2", nome: "Banco BS2", sigla: "BS", codigo: "218", grupo: "Digital", cor: "#0033A0", texto: "#FFFFFF" },
+      { id: "nomad", nome: "Nomad", sigla: "NM", codigo: "000", grupo: "Digital", cor: "#FFD100", texto: "#0F172A" },
+      { id: "wise", nome: "Wise", sigla: "WS", codigo: "000", grupo: "Digital", cor: "#9FE870", texto: "#163300" },
+      { id: "recargapay", nome: "RecargaPay", sigla: "RP", codigo: "350", grupo: "Digital", cor: "#0055FF", texto: "#FFFFFF" },
+      { id: "ame", nome: "Ame Digital", sigla: "AM", codigo: "364", grupo: "Digital", cor: "#F60054", texto: "#FFFFFF" },
+      { id: "sicredi", nome: "Sicredi", sigla: "SI", codigo: "748", grupo: "Cooperativa", cor: "#3FA110", texto: "#FFFFFF" },
+      { id: "sicoob", nome: "Sicoob", sigla: "SC", codigo: "756", grupo: "Cooperativa", cor: "#003641", texto: "#FFFFFF" },
+      { id: "cresol", nome: "Cresol", sigla: "CR", codigo: "133", grupo: "Cooperativa", cor: "#F37021", texto: "#FFFFFF" },
+      { id: "unicred", nome: "Unicred", sigla: "UN", codigo: "136", grupo: "Cooperativa", cor: "#00594C", texto: "#FFFFFF" },
+      { id: "ailos", nome: "Ailos / Viacredi", sigla: "AI", codigo: "085", grupo: "Cooperativa", cor: "#005CA9", texto: "#FFFFFF" },
+      { id: "uniprime", nome: "Uniprime", sigla: "UP", codigo: "084", grupo: "Cooperativa", cor: "#004B87", texto: "#FFFFFF" },
+      { id: "sisprime", nome: "Sisprime", sigla: "SP", codigo: "084", grupo: "Cooperativa", cor: "#006633", texto: "#FFFFFF" },
+      { id: "credisis", nome: "CrediSIS", sigla: "CS", codigo: "097", grupo: "Cooperativa", cor: "#007A33", texto: "#FFFFFF" },
+      { id: "credicoamo", nome: "Credicoamo", sigla: "CC", codigo: "098", grupo: "Cooperativa", cor: "#006837", texto: "#FFFFFF" },
+      { id: "sulcredi", nome: "Sulcredi", sigla: "SL", codigo: "322", grupo: "Cooperativa", cor: "#005A9C", texto: "#FFFFFF" }
+    ];
+
+    let grupoAtivo = "Todos";
+    let bancoSelecionadoId = "99pay";
+
+    function definirFiltro(grupo, botao) {
+      grupoAtivo = grupo;
+      document.querySelectorAll(".filtro-btn").forEach(b => b.classList.remove("ativo"));
+      botao.classList.add("ativo");
+      atualizarLista();
+    }
+
+    function atualizarLista() {
+      const termo = document.getElementById("input-busca").value.toLowerCase();
+      const container = document.getElementById("container-bancos");
+
+      const filtrados = INSTITUICOES.filter(item => {
+        const bateGrupo = grupoAtivo === "Todos" || item.grupo === grupoAtivo;
+        const bateTexto = item.nome.toLowerCase().includes(termo) || item.codigo.includes(termo);
+        return bateGrupo && bateTexto;
+      });
+
+      container.innerHTML = filtrados.map(b => `
+        <button type="button" class="card-banco ${b.id === bancoSelecionadoId ? 'selecionado' : ''}" onclick="selecionarBanco('${b.id}')">
+          <div class="avatar-sigla" style="background:${b.cor}; color:${b.texto};">${b.sigla}</div>
+          <div class="info-banco">
+            <div class="nome-banco">${b.nome}</div>
+            <div class="cod-banco">Cód. ${b.codigo}</div>
+          </div>
+        </button>
+      `).join("");
+    }
+
+    function selecionarBanco(id) {
+      bancoSelecionadoId = id;
+      atualizarLista();
+      // Aqui você pode salvar o ID selecionado no seu formulário ou localStorage
+      console.log("Banco ativo:", id);
+    }
+
+    atualizarLista();
+  </script>
+</body>
+</html>

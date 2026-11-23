@@ -305,10 +305,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Configurações & Ergonomia
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Backup completo com pré-visualização, recuperação automática, tema, densidade e Google Workspace.
           </p>
         </div>
@@ -320,15 +320,20 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
       {/* Cloud Account, Sync Status & Cloud Backups (Dual Backup) */}
       {currentUser && (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-5">
+        <div className="sf-card p-5 sm:p-6 space-y-5">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-                <Cloud className="w-4 h-4 text-emerald-600" /> Conta, Nuvem & Backup Duplo
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Conectado como <strong className="text-slate-800 dark:text-slate-200">{currentUser.displayName}</strong> ({currentUser.email})
-              </p>
+            <div className="flex items-start gap-3">
+              <span className="sf-icon-badge shrink-0">
+                <Cloud className="w-5 h-5" />
+              </span>
+              <div>
+                <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
+                  Conta, Nuvem & Backup Duplo
+                </h3>
+                <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+                  Conectado como <strong className="text-slate-800 dark:text-slate-200">{currentUser.displayName}</strong> ({currentUser.email})
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -337,7 +342,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   type="button"
                   disabled={syncStatus === 'SYNCING'}
                   onClick={() => void onSyncNow()}
-                  className="px-4 min-h-10 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="px-4 min-h-10 bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-100 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer disabled:opacity-60 transition-colors"
                 >
                   <RefreshCw size={14} className={syncStatus === 'SYNCING' ? 'animate-spin' : ''} />
                   Sincronizar agora
@@ -357,7 +362,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                       setAccountActionMsg('Snapshot validado e salvo na nuvem (retenção dos 5 mais recentes).');
                     }
                   }}
-                  className="px-4 min-h-10 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer disabled:opacity-60"
+                  className="px-4 min-h-10 bg-[#059669] hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer disabled:opacity-60 transition-colors"
                 >
                   <CloudUpload size={14} /> {cloudBackupBusy ? 'Salvando...' : 'Criar backup na nuvem'}
                 </button>
@@ -366,9 +371,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
-              <div className="text-[11px] text-slate-400">Status da sincronização</div>
-              <div className="font-bold text-[#082B5C] dark:text-white mt-0.5">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800/70 border border-[#E2E8F0] dark:border-slate-700">
+              <div className="text-[11px] text-[#64748B] dark:text-slate-400">Status da sincronização</div>
+              <div className="font-bold text-[#0F172A] dark:text-white mt-0.5">
                 {syncStatusMessage ||
                   (syncStatus === 'SYNCED'
                     ? 'Sincronização com a nuvem concluída.'
@@ -377,15 +382,15 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     : 'Seus dados estão salvos neste dispositivo.')}
               </div>
             </div>
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
-              <div className="text-[11px] text-slate-400">Última sincronização</div>
-              <div className="font-bold text-[#082B5C] dark:text-white mt-0.5">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800/70 border border-[#E2E8F0] dark:border-slate-700">
+              <div className="text-[11px] text-[#64748B] dark:text-slate-400">Última sincronização</div>
+              <div className="font-bold text-[#0F172A] dark:text-white mt-0.5">
                 {lastSyncedAt ? new Date(lastSyncedAt).toLocaleString('pt-BR') : 'Ainda não sincronizado'}
               </div>
             </div>
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700">
-              <div className="text-[11px] text-slate-400">Último backup na nuvem</div>
-              <div className="font-bold text-[#082B5C] dark:text-white mt-0.5">
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800/70 border border-[#E2E8F0] dark:border-slate-700">
+              <div className="text-[11px] text-[#64748B] dark:text-slate-400">Último backup na nuvem</div>
+              <div className="font-bold text-[#0F172A] dark:text-white mt-0.5">
                 {cloudBackups[0]
                   ? new Date(cloudBackups[0].createdAt).toLocaleString('pt-BR')
                   : 'Nenhum snapshot na nuvem'}
@@ -488,10 +493,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                     className="p-3 bg-slate-50/70 dark:bg-slate-800/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs"
                   >
                     <div className="space-y-0.5 min-w-0">
-                      <div className="font-bold text-[#082B5C] dark:text-white">
+                      <div className="font-bold text-[#0F172A] dark:text-white">
                         {new Date(item.createdAt).toLocaleString('pt-BR')} · {item.deviceLabel}
                       </div>
-                      <div className="text-slate-500 dark:text-slate-400">
+                      <div className="text-[#64748B] dark:text-slate-400">
                         {item.counts.accounts} conta(s) · {item.counts.transactions} lançamento(s) · Hash{' '}
                         <span className="font-mono">{item.integrityHash.slice(0, 14)}</span>
                       </div>
@@ -512,7 +517,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                             );
                           }
                         }}
-                        className="px-3 min-h-9 rounded-lg bg-[#082B5C] hover:bg-[#061B3B] text-white font-bold cursor-pointer shrink-0 disabled:opacity-60"
+                        className="px-3 min-h-9 rounded-lg bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white font-bold cursor-pointer shrink-0 disabled:opacity-60 transition-colors"
                       >
                         Restaurar esta versão
                       </button>
@@ -526,14 +531,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       )}
 
       {/* Ergonomics & Appearance Card */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-6">
-        <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-          <Sliders className="w-4 h-4 text-emerald-600" /> Aparência & Ergonomia Multidispositivo
-        </h3>
+      <div className="sf-card p-5 sm:p-6 space-y-6">
+        <div className="flex items-center gap-3">
+          <span className="sf-icon-badge shrink-0">
+            <Sliders className="w-5 h-5" />
+          </span>
+          <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
+            Aparência & Ergonomia Multidispositivo
+          </h3>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div>
-            <label className="block text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
+            <label className="block text-xs font-semibold text-[#64748B] dark:text-slate-400 mb-2">
               Tema da Interface
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -542,8 +552,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 onClick={() => setTheme('light')}
                 className={`min-h-12 px-3 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition-all cursor-pointer ${
                   theme === 'light'
-                    ? 'bg-[#082B5C] text-white border-[#082B5C]'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700'
+                    ? 'bg-[#061E3E] text-white border-[#061E3E]'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-[#E2E8F0] dark:border-slate-700'
                 }`}
               >
                 <Sun className="w-4 h-4 text-amber-400" /> Claro
@@ -553,8 +563,8 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 onClick={() => setTheme('dark')}
                 className={`min-h-12 px-3 rounded-xl text-xs font-bold border flex items-center justify-center gap-2 transition-all cursor-pointer ${
                   theme === 'dark'
-                    ? 'bg-emerald-600 text-white border-emerald-600'
-                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700'
+                    ? 'bg-[#059669] text-white border-[#059669]'
+                    : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-[#E2E8F0] dark:border-slate-700'
                 }`}
               >
                 <Moon className="w-4 h-4 text-indigo-300" /> Escuro
@@ -609,11 +619,11 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             }`}
           >
             <div className="min-w-0">
-              <div className="text-xs font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
-                {hideValues ? <EyeOff size={15} className="text-amber-600" /> : <Eye size={15} className="text-emerald-600" />}
+              <div className="text-xs font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
+                {hideValues ? <EyeOff size={15} className="text-amber-600" /> : <Eye size={15} className="text-[#059669]" />}
                 <span>Ocultar valores (Privacidade)</span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                 {hideValues ? 'Ativo — exibe R$ ••••• em todo o app' : 'Desativado — valores visíveis'}
               </p>
             </div>
@@ -629,19 +639,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             className={`p-3.5 rounded-xl border text-left flex items-center justify-between gap-3 transition-all cursor-pointer ${
               !showScopeBar
                 ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-700'
-                : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                : 'bg-[#F8FAFC] dark:bg-slate-800/60 border-[#E2E8F0] dark:border-slate-700'
             }`}
           >
             <div className="min-w-0">
-              <div className="text-xs font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
                 <Layers size={15} className="text-blue-600" />
                 <span>Barra de abas (Consolidado/CPF/CNPJ)</span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                 {showScopeBar ? 'Visível no topo (Celular e PC)' : 'Escondida para ganhar espaço na tela'}
               </p>
             </div>
-            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0 ${showScopeBar ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}`}>
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0 ${showScopeBar ? 'bg-[#059669] text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}`}>
               {showScopeBar ? 'VISÍVEL' : 'ESCONDIDA'}
             </span>
           </button>
@@ -653,19 +663,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             className={`hidden md:flex p-3.5 rounded-xl border text-left items-center justify-between gap-3 transition-all cursor-pointer ${
               !sidebarOpen
                 ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-700'
-                : 'bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700'
+                : 'bg-[#F8FAFC] dark:bg-slate-800/60 border-[#E2E8F0] dark:border-slate-700'
             }`}
           >
             <div className="min-w-0">
-              <div className="text-xs font-bold text-[#082B5C] dark:text-white flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[#0F172A] dark:text-white flex items-center gap-1.5">
                 <PanelLeftClose size={15} className="text-slate-600 dark:text-slate-300" />
                 <span>Menu lateral no PC</span>
               </div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-[11px] text-[#64748B] dark:text-slate-400 mt-0.5">
                 {sidebarOpen ? 'Expandido na lateral esquerda' : 'Minimizado para ampliar área útil'}
               </p>
             </div>
-            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0 ${sidebarOpen ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}`}>
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold shrink-0 ${sidebarOpen ? 'bg-[#059669] text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200'}`}>
               {sidebarOpen ? 'ABERTO' : 'OCULTO'}
             </span>
           </button>
@@ -673,22 +683,27 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Full Backup Export / Import with Preview & Snapshot */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-5">
+      <div className="sf-card p-5 sm:p-6 space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-              <Database className="w-4 h-4 text-blue-600" /> Backup Completo & Recuperação Segura
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Inclui contas ({currentCounts.accounts}), lançamentos ({currentCounts.transactions}), cartões ({currentCounts.creditCards}), boletos ({currentCounts.boletos}), dívidas ({currentCounts.debts}), bens ({currentCounts.assets}) e metadados de documentos ({currentCounts.documents}).
-            </p>
+          <div className="flex items-start gap-3">
+            <span className="sf-icon-badge shrink-0">
+              <Database className="w-5 h-5" />
+            </span>
+            <div>
+              <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
+                Backup Completo & Recuperação Segura
+              </h3>
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+                Inclui contas ({currentCounts.accounts}), lançamentos ({currentCounts.transactions}), cartões ({currentCounts.creditCards}), boletos ({currentCounts.boletos}), dívidas ({currentCounts.debts}), bens ({currentCounts.assets}) e metadados de documentos ({currentCounts.documents}).
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
               onClick={handleExportFullBackup}
-              className="px-4 min-h-11 bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer"
+              className="px-4 min-h-11 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer transition-colors"
             >
               <Download size={15} /> Exportar backup (.json)
             </button>
@@ -696,12 +711,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
             <button
               type="button"
               onClick={handleExportCsv}
-              className="px-4 min-h-11 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer"
+              className="px-4 min-h-11 bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-100 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer transition-colors"
             >
               <FileSpreadsheet size={15} /> Exportar lançamentos (.csv)
             </button>
 
-            <label className="px-4 min-h-11 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer">
+            <label className="px-4 min-h-11 bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-[#0F172A] dark:text-slate-100 rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer transition-colors">
               <Upload size={15} /> Importar backup (.json)
               <input type="file" accept=".json,application/json" onChange={handleSelectBackupFile} className="hidden" />
             </label>
@@ -727,10 +742,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <div className="p-4 sm:p-5 rounded-2xl border-2 border-emerald-500/60 bg-emerald-50/40 dark:bg-emerald-950/20 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <h4 className="text-sm font-extrabold text-[#082B5C] dark:text-white">
+                <h4 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
                   Pré-visualização do Backup: {importFileName}
                 </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-[#64748B] dark:text-slate-400">
                   Exportado em: {new Date(importPreview.payload.exportedAt).toLocaleString('pt-BR')} · Schema v{importPreview.payload.schemaVersion}
                   {importPreview.periodRange && (
                     <> · Período: {formatDateBR(importPreview.periodRange.start)} a {formatDateBR(importPreview.periodRange.end)}</>
@@ -748,7 +763,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                   setImportPreview(null);
                   setImportFileName('');
                 }}
-                className="px-3 min-h-9 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 cursor-pointer"
+                className="px-3 min-h-9 rounded-lg text-xs font-semibold bg-white dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-slate-600 dark:text-slate-300 cursor-pointer"
               >
                 Cancelar
               </button>
@@ -774,10 +789,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               ].map((stat) => (
                 <div
                   key={stat.label}
-                  className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl p-2.5 text-center"
+                  className="bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-700 rounded-xl p-2.5 text-center"
                 >
-                  <div className="text-[11px] text-slate-400">{stat.label}</div>
-                  <div className="text-base font-extrabold text-[#082B5C] dark:text-white">
+                  <div className="text-[11px] text-[#64748B] dark:text-slate-400">{stat.label}</div>
+                  <div className="font-money text-base font-extrabold text-[#0F172A] dark:text-white">
                     {stat.value}
                   </div>
                 </div>
@@ -811,7 +826,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               <button
                 type="button"
                 onClick={confirmBackupImport}
-                className="px-5 min-h-11 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer shrink-0"
+                className="px-5 min-h-11 bg-[#059669] hover:bg-emerald-700 text-white rounded-xl text-xs font-bold cursor-pointer shrink-0 transition-colors"
               >
                 Confirmar Importação
               </button>
@@ -821,14 +836,14 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 
         {/* Pre-reset snapshot recovery */}
         {preResetSnapshot && (
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="p-4 rounded-xl bg-[#F8FAFC] dark:bg-slate-800/70 border border-[#E2E8F0] dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-start gap-2.5">
               <History size={18} className="text-blue-600 shrink-0 mt-0.5" />
               <div className="text-xs">
-                <div className="font-bold text-[#082B5C] dark:text-white">
+                <div className="font-bold text-[#0F172A] dark:text-white">
                   Snapshot automático disponível ({preResetSnapshot.reason === 'reset' ? 'pré-reset' : 'pré-restauração'})
                 </div>
-                <div className="text-slate-500 dark:text-slate-400">
+                <div className="text-[#64748B] dark:text-slate-400">
                   Salvo em {new Date(preResetSnapshot.savedAt).toLocaleString('pt-BR')} ·{' '}
                   {preResetSnapshot.backup.data.transactions.length} lançamentos ·{' '}
                   {preResetSnapshot.backup.data.accounts.length} contas
@@ -906,20 +921,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Accounting Audit Trail */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
+      <div className="sf-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between gap-2">
-          <div>
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-              <History className="w-4 h-4 text-emerald-600" /> Trilha de Auditoria Contábil ({auditLogs.length})
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Registro imutável de estornos, cancelamentos, restaurações e transferências pareadas entre contas.
-            </p>
+          <div className="flex items-start gap-3">
+            <span className="sf-icon-badge shrink-0">
+              <History className="w-5 h-5" />
+            </span>
+            <div>
+              <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
+                Trilha de Auditoria Contábil ({auditLogs.length})
+              </h3>
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+                Registro imutável de estornos, cancelamentos, restaurações e transferências pareadas entre contas.
+              </p>
+            </div>
           </div>
         </div>
 
         {auditLogs.length === 0 ? (
-          <p className="text-xs text-slate-400 py-2">
+          <p className="text-xs text-[#64748B] dark:text-slate-400 py-2">
             Nenhum evento contábil registrado até o momento.
           </p>
         ) : (
@@ -951,7 +971,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                       <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${badgeClass[entry.action]}`}>
                         {actionLabels[entry.action]}
                       </span>
-                      <span className="text-[11px] text-slate-400">
+                      <span className="text-[11px] text-[#64748B] dark:text-slate-400">
                         {new Date(entry.timestamp).toLocaleString('pt-BR')}
                       </span>
                     </div>
@@ -959,7 +979,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                       {entry.reason}
                     </div>
                   </div>
-                  <div className="font-extrabold text-[#082B5C] dark:text-white shrink-0">
+                  <div className="font-money font-bold text-[#0F172A] dark:text-white shrink-0">
                     {hideValues ? formatarValor(fromCents(entry.amountCents), true) : formatMoneyBRL(entry.amountCents)}
                   </div>
                 </div>
@@ -972,27 +992,27 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       {/* Google Workspace Integration Panel */}
       <GoogleWorkspacePanel transactions={transactions} boletos={boletos} fullBackup={fullBackup} />
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-6">
+      <div className="sf-card p-5 sm:p-6 space-y-6">
         <div className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-                {vaultEnabled ? (
-                  <Lock className="w-4 h-4 text-emerald-600" />
-                ) : (
-                  <KeyRound className="w-4 h-4 text-slate-500" />
-                )}
-                Cofre Local Criptografado (PBKDF2 + AES-GCM-256)
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Proteja saldos e lançamentos com um PIN local derivado via WebCrypto PBKDF2 (150.000 iterações SHA-256) e snapshot AES-GCM-256.
-              </p>
+            <div className="flex items-start gap-3">
+              <span className="sf-icon-badge shrink-0">
+                {vaultEnabled ? <Lock className="w-5 h-5" /> : <KeyRound className="w-5 h-5" />}
+              </span>
+              <div>
+                <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
+                  Cofre Local Criptografado (PBKDF2 + AES-GCM-256)
+                </h3>
+                <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
+                  Proteja saldos e lançamentos com um PIN local derivado via WebCrypto PBKDF2 (150.000 iterações SHA-256) e snapshot AES-GCM-256.
+                </p>
+              </div>
             </div>
             {vaultEnabled && onLockVault && (
               <button
                 type="button"
                 onClick={onLockVault}
-                className="px-4 min-h-10 bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer"
+                className="px-4 min-h-10 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-xs font-bold flex items-center gap-2 cursor-pointer transition-colors"
               >
                 <Lock size={14} /> Bloquear aplicativo agora
               </button>
@@ -1075,22 +1095,34 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2 mb-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-600" /> Privacidade e LGPD
-          </h3>
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-            O Sávio Finanças nunca solicita ou armazena senhas bancárias, código de segurança (CVV) ou número completo de cartões de crédito — apenas os 4 últimos dígitos para identificação.
-          </p>
+          <div className="flex items-start gap-3">
+            <span className="sf-icon-badge shrink-0">
+              <ShieldCheck className="w-5 h-5" />
+            </span>
+            <div>
+              <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white mb-1">
+                Privacidade e LGPD
+              </h3>
+              <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400 leading-relaxed">
+                O Sávio Finanças nunca solicita ou armazena senhas bancárias, código de segurança (CVV) ou número completo de cartões de crédito — apenas os 4 últimos dígitos para identificação.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-4">
-          <div>
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2 mb-1">
-              <RefreshCw className="w-4 h-4 text-slate-500" /> Gerenciamento de Sessão, Cache & Reinicialização
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-              Ações separadas por impacto para evitar perda acidental de dados:
-            </p>
+          <div className="flex items-start gap-3">
+            <span className="sf-icon-badge shrink-0">
+              <RefreshCw className="w-5 h-5" />
+            </span>
+            <div>
+              <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white mb-1">
+                Gerenciamento de Sessão, Cache & Reinicialização
+              </h3>
+              <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400 leading-relaxed">
+                Ações separadas por impacto para evitar perda acidental de dados:
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-2.5">

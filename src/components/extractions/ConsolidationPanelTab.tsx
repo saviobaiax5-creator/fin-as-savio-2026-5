@@ -192,7 +192,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
       valueCents: summary.disponibilidadesCents,
       sub: `Bancos físicos ${fmtAmt(summary.disponibilidadeBancosFisicosCents)} · Digitais ${fmtAmt(summary.disponibilidadeBancosDigitaisCents)}`,
       icon: Wallet,
-      color: 'text-[#082B5C] dark:text-blue-300',
+      color: 'text-[#0F172A] dark:text-blue-300',
       bucket: summary.breakdownByBucket.disponibilidades,
     },
     {
@@ -200,7 +200,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
       valueCents: summary.investimentosCents,
       sub: 'Ações, FIIs, CDB/RDB, Tesouro e fundos (separado de saldo à vista)',
       icon: TrendingUp,
-      color: 'text-[#00A65A]',
+      color: 'text-[#059669] dark:text-[#10B981]',
       bucket: summary.breakdownByBucket.investimentos,
     },
     {
@@ -224,7 +224,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
       valueCents: summary.receitasPeriodoCents,
       sub: 'Exclui transferências próprias e resgates de principal',
       icon: TrendingUp,
-      color: 'text-[#00A65A]',
+      color: 'text-[#059669] dark:text-[#10B981]',
       bucket: summary.breakdownByBucket.receitas,
     },
     {
@@ -240,7 +240,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
       valueCents: summary.patrimonioBrutoCents,
       sub: 'Disponibilidades + Investimentos + Cripto selecionados',
       icon: Layers,
-      color: 'text-[#082B5C] dark:text-white',
+      color: 'text-[#0F172A] dark:text-white',
       bucket: [
         ...summary.breakdownByBucket.disponibilidades,
         ...summary.breakdownByBucket.investimentos,
@@ -254,7 +254,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
       icon: Scale,
       color:
         summary.patrimonioLiquidoCents >= 0
-          ? 'text-[#00A65A]'
+          ? 'text-[#059669] dark:text-[#10B981]'
           : 'text-[#DC3545]',
       bucket: [
         ...summary.breakdownByBucket.disponibilidades,
@@ -269,13 +269,13 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
   return (
     <div className="space-y-5">
       {/* Mode Switcher & Preferences */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4">
+      <div className="sf-card rounded-2xl p-4 sm:p-5 space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           <div>
-            <h3 className="text-base font-extrabold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-base font-extrabold text-[#0F172A] dark:text-white">
               Consolidação Financeira Transparente
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#64748B] dark:text-slate-400">
               Alterne entre visão individual, por categoria, consolidada ou seleção personalizada. Clique em qualquer indicador para inspecionar sua composição exata.
             </p>
           </div>
@@ -295,7 +295,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                 onClick={() => onUpdatePreferences({ ...preferences, mode: m.id })}
                 className={`px-3 py-2 rounded-lg text-xs font-bold cursor-pointer transition-all ${
                   preferences.mode === m.id
-                    ? 'bg-[#082B5C] text-white dark:bg-[#00A65A] shadow-xs'
+                    ? 'bg-[#061E3E] text-white dark:bg-[#059669] shadow-sm'
                     : 'text-slate-600 dark:text-slate-300'
                 }`}
               >
@@ -433,7 +433,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
               key={btn.id}
               type="button"
               onClick={() => applyQuickCommand(btn.id)}
-              className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-[11px] font-bold text-[#082B5C] dark:text-slate-200 cursor-pointer"
+              className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-[11px] font-bold text-[#0F172A] dark:text-slate-200 cursor-pointer"
             >
               {btn.label}
             </button>
@@ -442,7 +442,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
 
         {/* Individual Account Selection Strip when in CUSTOM mode */}
         {preferences.mode === 'CUSTOM' && (
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div className="pt-2 border-t border-slate-100 dark:border-white/10">
             <div className="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1.5">
               <CheckSquare size={13} /> Marque as contas que participam da consolidação ({summary.selectedCount} selecionadas):
             </div>
@@ -459,7 +459,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                     key={a.id}
                     className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs cursor-pointer ${
                       checked
-                        ? 'border-[#00A65A] bg-[#00A65A]/10 text-[#082B5C] dark:text-emerald-300 font-bold'
+                        ? 'border-[#059669] bg-[#059669]/10 text-[#0F172A] dark:text-emerald-300 font-bold'
                         : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'
                     }`}
                   >
@@ -467,7 +467,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                       type="checkbox"
                       checked={checked}
                       onChange={() => toggleAccountSelection(a.id)}
-                      className="accent-[#00A65A]"
+                      className="accent-[#059669]"
                     />
                     <span>
                       {a.institutionName} · {a.accountName}
@@ -511,15 +511,15 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
               key={card.title}
               type="button"
               onClick={() => setInspectBucket({ title: card.title, items: card.bucket })}
-              className="text-left bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-[#082B5C] dark:hover:border-[#00A65A] rounded-2xl p-4 space-y-2 transition-colors cursor-pointer group"
+              className="sf-card-interactive text-left rounded-2xl p-4 space-y-2 cursor-pointer group"
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="text-xs font-bold text-slate-500 dark:text-slate-400">
+                <span className="text-xs font-bold text-[#64748B] dark:text-slate-400">
                   {card.title}
                 </span>
                 <Icon size={16} className={`${card.color} shrink-0`} />
               </div>
-              <div className={`text-xl font-extrabold tabular-nums ${card.color}`}>
+              <div className={`font-money text-xl font-extrabold ${card.color}`}>
                 {fmtAmt(card.valueCents)}
               </div>
               <div className="flex items-center justify-between gap-2 pt-1 text-[11px] text-slate-400">
@@ -532,9 +532,9 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
       </div>
 
       {/* Detailed Institution Breakdown */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
-        <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
-          <h4 className="text-xs sm:text-sm font-bold text-[#082B5C] dark:text-white">
+      <div className="sf-card rounded-2xl overflow-hidden">
+        <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-white/10 flex flex-wrap items-center justify-between gap-2">
+          <h4 className="font-display text-xs sm:text-sm font-bold text-[#0F172A] dark:text-white">
             Relação por Instituição ({summary.institutionRows.length})
           </h4>
           <span className="text-[11px] text-slate-400">
@@ -547,14 +547,14 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
             Nenhuma instituição selecionada para consolidação.
           </div>
         ) : (
-          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="divide-y divide-slate-100 dark:divide-white/10">
             {summary.institutionRows.map((row) => (
               <div
                 key={`${row.institutionId}-${row.category}`}
                 className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
                 <div className="flex flex-wrap items-center gap-2 min-w-0">
-                  <span className="font-bold text-sm text-slate-900 dark:text-white">
+                  <span className="font-bold text-sm text-[#0F172A] dark:text-white">
                     {row.institutionName}
                   </span>
                   <InstitutionCategoryBadge category={row.category} compact />
@@ -565,16 +565,16 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                   )}
                 </div>
 
-                <div className="grid grid-cols-3 gap-3 text-right text-xs tabular-nums shrink-0">
+                <div className="grid grid-cols-3 gap-3 text-right text-xs font-money shrink-0">
                   <div>
                     <span className="block text-[10px] text-slate-400">Disponível</span>
-                    <strong className="text-[#082B5C] dark:text-blue-300">
+                    <strong className="text-[#0F172A] dark:text-blue-300">
                       {fmtAmt(row.disponibilidadesCents)}
                     </strong>
                   </div>
                   <div>
                     <span className="block text-[10px] text-slate-400">Investido</span>
-                    <strong className="text-[#00A65A]">
+                    <strong className="text-[#059669] dark:text-[#10B981]">
                       {fmtAmt(row.investimentosCents)}
                     </strong>
                   </div>
@@ -606,14 +606,14 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                 Nenhum registro compõe este indicador com os filtros atuais.
               </p>
             ) : (
-              <div className="divide-y divide-slate-100 dark:divide-slate-800 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+              <div className="divide-y divide-slate-100 dark:divide-white/10 border border-slate-200 dark:border-white/10 rounded-xl overflow-hidden">
                 {inspectBucket.items.map((item) => (
                   <div
                     key={`${item.sourceKind}-${item.id}`}
-                    className="p-3 flex items-center justify-between gap-3 bg-white dark:bg-slate-900"
+                    className="p-3 flex items-center justify-between gap-3 bg-white dark:bg-[#11185A]"
                   >
                     <div className="min-w-0 space-y-1">
-                      <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
+                      <div className="text-xs font-bold text-[#0F172A] dark:text-white truncate">
                         {item.label}
                       </div>
                       <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-slate-500">
@@ -625,7 +625,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                       </div>
                     </div>
                     <div className="text-right shrink-0">
-                      <div className="text-xs font-extrabold tabular-nums text-[#082B5C] dark:text-emerald-400">
+                      <div className="font-money text-xs font-extrabold text-[#0F172A] dark:text-white">
                         {fmtAmt(item.convertedBrlCents)}
                       </div>
                       {item.currency !== preferences.targetCurrency && (
@@ -641,7 +641,7 @@ export const ConsolidationPanelTab: React.FC<ConsolidationPanelTabProps> = ({
                             setInspectBucket(null);
                             onNavigateModule(item.targetTab!);
                           }}
-                          className="text-[10px] font-bold text-[#00A65A] hover:underline cursor-pointer"
+                          className="text-[10px] font-bold text-[#059669] dark:text-[#10B981] hover:underline cursor-pointer"
                         >
                           Abrir módulo
                         </button>

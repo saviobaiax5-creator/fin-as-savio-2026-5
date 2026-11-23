@@ -604,10 +604,10 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
       {/* Header Toolbar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Salários e Evolução da Renda
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Histórico estruturado por instituição, evolução anual, reajustes, 13º, férias e integração controlada com o extrato.
           </p>
         </div>
@@ -617,7 +617,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
             aria-label="Ano de referência"
             value={selectedYear}
             onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="min-h-10 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-[#082B5C] dark:text-white cursor-pointer"
+            className="min-h-10 px-3 py-1.5 rounded-xl border border-[#E2E8F0] dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-[#0F172A] dark:text-white cursor-pointer"
           >
             {availableYears.map((yr) => (
               <option key={yr} value={yr}>
@@ -630,7 +630,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
             aria-label="Mês de referência"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="min-h-10 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-slate-700 dark:text-slate-200 cursor-pointer"
+            className="min-h-10 px-3 py-1.5 rounded-xl border border-[#E2E8F0] dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-semibold text-[#0F172A] dark:text-slate-200 cursor-pointer"
           >
             {MONTHS_PT_FULL.map((mName, idx) => (
               <option key={mName} value={idx + 1}>
@@ -642,7 +642,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
           <button
             type="button"
             onClick={() => setYearSheetOpen(true)}
-            className="min-h-10 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0"
+            className="min-h-10 px-3 py-2 rounded-xl border border-[#E2E8F0] dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-[#F8FAFC] dark:hover:bg-slate-800 text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 transition-colors"
           >
             <CalendarPlus size={15} />
             Novo ano
@@ -651,7 +651,7 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
           <button
             type="button"
             onClick={() => setShowImportPanel((o) => !o)}
-            className="min-h-10 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0"
+            className="min-h-10 px-3.5 py-2 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 transition-colors"
           >
             <FileSpreadsheet size={15} />
             {showImportPanel ? 'Fechar importador' : 'Importar Excel'}
@@ -686,8 +686,8 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
               onClick={() => setAreaTab(tab.id)}
               className={`min-h-10 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
                 active
-                  ? 'bg-[#082B5C] dark:bg-emerald-600 text-white shadow-xs'
-                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                  ? 'bg-[#061E3E] dark:bg-[#059669] text-white'
+                  : 'bg-white dark:bg-slate-900 border border-[#E2E8F0] dark:border-slate-800 text-[#64748B] dark:text-slate-300 hover:bg-[#F8FAFC] dark:hover:bg-slate-800'
               }`}
             >
               <Icon size={14} />
@@ -714,26 +714,26 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
       {/* AREA 2: CADASTRO DE SALÁRIOS */}
       {areaTab === 'sources' && (
         <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="sf-card p-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
                 Fontes de renda e instituições ({dataset.sources.length})
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
                 Exemplos comuns: Câmara Municipal, UNIP, UNIGRANDE, CEI, SENAR, serviços extras. Arquivar preserva o histórico completo.
               </p>
             </div>
             <button
               type="button"
               onClick={() => openNewSourceSheet('salary')}
-              className="min-h-10 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0"
+              className="min-h-10 px-4 py-2 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 transition-colors"
             >
               <Plus size={15} /> Cadastrar nova fonte
             </button>
           </div>
 
           {dataset.sources.length === 0 ? (
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 text-center text-xs text-slate-400">
+            <div className="sf-card p-8 text-center text-xs text-[#64748B] dark:text-slate-400">
               Nenhuma fonte de renda cadastrada. Clique em &ldquo;Cadastrar nova fonte&rdquo; ou importe sua planilha Excel.
             </div>
           ) : (
@@ -743,28 +743,26 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                 return (
                   <div
                     key={src.id}
-                    className={`rounded-2xl border p-5 space-y-3 bg-white dark:bg-slate-900 ${
-                      src.active
-                        ? 'border-slate-200 dark:border-slate-800'
-                        : 'border-slate-200/70 dark:border-slate-800/60 opacity-75'
+                    className={`sf-card p-5 space-y-3 ${
+                      src.active ? '' : 'opacity-75'
                     }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <h4 className="font-bold text-sm text-[#082B5C] dark:text-white truncate">
+                        <h4 className="font-display font-bold text-sm text-[#0F172A] dark:text-white truncate">
                           {src.name}
                         </h4>
-                        <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        <div className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
                           {SALARY_CATEGORY_LABELS[src.category]} ·{' '}
                           {src.active ? 'Ativa' : 'Arquivada'}
                         </div>
                       </div>
-                      <span className="text-xs font-extrabold text-[#082B5C] dark:text-white tabular-nums shrink-0">
+                      <span className="font-money text-xs font-extrabold text-[#0F172A] dark:text-white shrink-0">
                         {formatarValor(yearTotal, hideValues)}
                       </span>
                     </div>
 
-                    <div className="text-[11px] text-slate-400">
+                    <div className="text-[11px] text-[#64748B] dark:text-slate-400">
                       Total recebido em {selectedYear} · Início: {src.startDate || src.createdAt.slice(0, 10)}
                     </div>
 
@@ -772,14 +770,14 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                       <button
                         type="button"
                         onClick={() => openEditSourceSheet(src)}
-                        className="flex-1 min-h-9 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold flex items-center justify-center gap-1 cursor-pointer"
+                        className="flex-1 min-h-9 px-3 py-1.5 rounded-lg border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-800 text-xs font-semibold flex items-center justify-center gap-1 cursor-pointer transition-colors"
                       >
                         <Edit3 size={13} /> Editar
                       </button>
                       <button
                         type="button"
                         onClick={() => handleToggleArchiveSource(src.id)}
-                        className="flex-1 min-h-9 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold flex items-center justify-center gap-1 cursor-pointer"
+                        className="flex-1 min-h-9 px-3 py-1.5 rounded-lg border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-800 text-xs font-semibold flex items-center justify-center gap-1 cursor-pointer transition-colors"
                       >
                         {src.active ? (
                           <>
@@ -835,13 +833,13 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <form
             onSubmit={handleAddAdjustment}
-            className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 lg:col-span-1"
+            className="sf-card p-5 space-y-4 lg:col-span-1"
           >
             <div>
-              <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
                 Registrar reajuste salarial
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              <p className="text-xs text-[#64748B] dark:text-slate-400 mt-0.5">
                 Mantém histórico dos aumentos sem alterar registros salariais de meses anteriores.
               </p>
             </div>
@@ -930,18 +928,18 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
 
             <button
               type="submit"
-              className="w-full min-h-11 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer"
+              className="w-full min-h-11 px-4 py-2.5 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer transition-colors"
             >
               Salvar reajuste no histórico
             </button>
           </form>
 
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-4 lg:col-span-2">
-            <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+          <div className="sf-card p-5 space-y-4 lg:col-span-2">
+            <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
               Histórico de reajustes ({dataset.adjustments.length})
             </h3>
             {dataset.adjustments.length === 0 ? (
-              <div className="py-12 text-center text-xs text-slate-400">
+              <div className="py-12 text-center text-xs text-[#64748B] dark:text-slate-400">
                 Nenhum reajuste registrado ainda.
               </div>
             ) : (
@@ -954,18 +952,18 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                       className="py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs"
                     >
                       <div>
-                        <div className="font-bold text-[#082B5C] dark:text-white">
+                        <div className="font-bold text-[#0F172A] dark:text-white">
                           {src?.name || 'Fonte'} · {adj.description}
                         </div>
-                        <div className="text-slate-400 mt-0.5">
+                        <div className="text-[#64748B] dark:text-slate-400 mt-0.5">
                           Vigência: {adj.effectiveDate}
                         </div>
                       </div>
-                      <div className="text-right tabular-nums">
-                        <div className="font-bold text-[#082B5C] dark:text-white">
+                      <div className="text-right font-money">
+                        <div className="font-bold text-[#0F172A] dark:text-white">
                           {formatarValor(adj.previousAmount, hideValues)} → {formatarValor(adj.newAmount, hideValues)}
                         </div>
-                        <div className="text-emerald-700 dark:text-emerald-400 font-semibold">
+                        <div className="text-[#059669] dark:text-[#10B981] font-semibold">
                           {adj.percentage !== null
                             ? `${adj.percentage >= 0 ? '+' : ''}${adj.percentage.toFixed(2)}%`
                             : '—'}
@@ -983,12 +981,12 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
       {/* AREA 6: OUTRAS FONTES (13º, FÉRIAS E RENDAS EXTRAS) */}
       {areaTab === 'extras' && (
         <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="sf-card p-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
                 Décimo terceiro, férias e rendas extraordinárias ({selectedYear})
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
                 Controlados em categoria própria para não distorcer a média do salário mensal recorrente.
               </p>
             </div>
@@ -996,23 +994,23 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
               <button
                 type="button"
                 onClick={() => openNewSourceSheet('thirteenth')}
-                className="min-h-10 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-semibold cursor-pointer whitespace-nowrap shrink-0"
+                className="min-h-10 px-3.5 py-2 rounded-xl border border-[#E2E8F0] dark:border-slate-700 text-xs font-semibold cursor-pointer whitespace-nowrap shrink-0"
               >
                 + Fonte 13º / Férias
               </button>
               <button
                 type="button"
                 onClick={() => openQuickRecordModal('occasional')}
-                className="min-h-10 px-4 py-2 rounded-xl bg-[#082B5C] dark:bg-emerald-600 text-white text-xs font-bold cursor-pointer whitespace-nowrap shrink-0"
+                className="min-h-10 px-4 py-2 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer whitespace-nowrap shrink-0 transition-colors"
               >
                 Lançar renda extra
               </button>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+          <div className="sf-card p-5">
             {extraordinaryRecords.length === 0 ? (
-              <div className="py-8 text-center text-xs text-slate-400">
+              <div className="py-8 text-center text-xs text-[#64748B] dark:text-slate-400">
                 Nenhum lançamento de 13º salário, férias, bonificação ou serviço extra em {selectedYear}.
               </div>
             ) : (
@@ -1025,16 +1023,16 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
                       className="py-3 flex flex-wrap items-center justify-between gap-3 text-xs"
                     >
                       <div>
-                        <div className="font-bold text-[#082B5C] dark:text-white">
+                        <div className="font-bold text-[#0F172A] dark:text-white">
                           {src?.name || 'Fonte extraordinária'}
                         </div>
-                        <div className="text-slate-400">
+                        <div className="text-[#64748B] dark:text-slate-400">
                           {MONTHS_PT_FULL[rec.month - 1]}/{rec.year} ·{' '}
                           {src ? SALARY_CATEGORY_LABELS[src.category] : 'Extraordinária'} ·{' '}
                           {SALARY_STATUS_LABELS[rec.status]}
                         </div>
                       </div>
-                      <div className="text-sm font-extrabold text-blue-700 dark:text-blue-400 tabular-nums">
+                      <div className="font-money text-sm font-extrabold text-blue-700 dark:text-blue-400">
                         {formatarValor(rec.amount ?? 0, hideValues)}
                       </div>
                     </div>
@@ -1049,40 +1047,40 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
       {/* AREA 7: RELATÓRIOS E COMPARATIVOS */}
       {areaTab === 'reports' && (
         <div className="space-y-4">
-          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="sf-card p-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
                 Relatório comparativo de rendas ({selectedYear})
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
                 Totais recalculados diretamente dos lançamentos mensais, evitando contagem dupla com o extrato.
               </p>
             </div>
             <button
               type="button"
               onClick={handleExportSalaryCsv}
-              className="min-h-10 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0"
+              className="min-h-10 px-4 py-2 rounded-xl bg-[#059669] hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 cursor-pointer whitespace-nowrap shrink-0 transition-colors"
             >
               <Download size={15} /> Exportar CSV ({selectedYear})
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2 text-xs">
-              <div className="font-bold text-sm text-[#082B5C] dark:text-white">
+            <div className="sf-card p-5 space-y-2 text-xs">
+              <div className="font-display font-bold text-sm text-[#0F172A] dark:text-white">
                 Comparativo {yearlyComparison.yearA} × {yearlyComparison.yearB}
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 tabular-nums">
-                <span className="text-slate-500">Total anual {yearlyComparison.yearA}:</span>
+              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 font-money">
+                <span className="font-sans text-[#64748B]">Total anual {yearlyComparison.yearA}:</span>
                 <strong>{formatarValor(yearlyComparison.totalYearA, hideValues)}</strong>
               </div>
-              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 tabular-nums">
-                <span className="text-slate-500">Total anual {yearlyComparison.yearB}:</span>
+              <div className="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800 font-money">
+                <span className="font-sans text-[#64748B]">Total anual {yearlyComparison.yearB}:</span>
                 <strong>{formatarValor(yearlyComparison.totalYearB, hideValues)}</strong>
               </div>
-              <div className="flex justify-between py-1 tabular-nums">
-                <span className="text-slate-500">Crescimento (mesmos meses em comum):</span>
-                <strong className="text-emerald-700 dark:text-emerald-400">
+              <div className="flex justify-between py-1 font-money">
+                <span className="font-sans text-[#64748B]">Crescimento (mesmos meses em comum):</span>
+                <strong className="text-[#059669] dark:text-[#10B981]">
                   {yearlyComparison.samePeriodGrowthPct === null
                     ? '—'
                     : `${yearlyComparison.samePeriodGrowthPct >= 0 ? '+' : ''}${yearlyComparison.samePeriodGrowthPct.toFixed(1)}%`}
@@ -1090,16 +1088,16 @@ export const SalaryView: React.FC<SalaryViewProps> = ({
               </div>
             </div>
 
-            <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-2 text-xs">
-              <div className="font-bold text-sm text-[#082B5C] dark:text-white">
+            <div className="sf-card p-5 space-y-2 text-xs">
+              <div className="font-display font-bold text-sm text-[#0F172A] dark:text-white">
                 Resumo consolidado por ano cadastrado
               </div>
               {availableYears.map((yr) => (
                 <div
                   key={`rep-${yr}`}
-                  className="flex justify-between py-1 border-b last:border-0 border-slate-100 dark:border-slate-800 tabular-nums"
+                  className="flex justify-between py-1 border-b last:border-0 border-slate-100 dark:border-slate-800 font-money"
                 >
-                  <span className="text-slate-500">Ano {yr}:</span>
+                  <span className="font-sans text-[#64748B]">Ano {yr}:</span>
                   <strong>
                     {formatarValor(getAnnualTotal(dataset.records, yr, dataset.sources), hideValues)}
                   </strong>

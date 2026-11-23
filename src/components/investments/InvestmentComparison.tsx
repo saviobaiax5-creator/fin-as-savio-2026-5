@@ -116,13 +116,13 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
   return (
     <div className="space-y-6">
       {/* Period filter + controls */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5 space-y-4">
+      <div className="sf-card p-4 sm:p-5 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
               Comparador Histórico Real · CDI × {productType}
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#64748B] dark:text-slate-400">
               Calculado dia a dia sobre a série histórica oficial do CDI (Banco Central SGS 12).
             </p>
           </div>
@@ -130,7 +130,7 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
             type="button"
             onClick={onRefresh}
             disabled={loading}
-            className="min-h-10 px-3.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            className="min-h-10 px-3.5 rounded-xl border border-[#E2E8F0] dark:border-slate-700 hover:bg-[#F8FAFC] dark:hover:bg-slate-800 text-xs font-semibold text-[#0F172A] dark:text-slate-200 flex items-center gap-1.5 cursor-pointer disabled:opacity-50 transition-colors"
           >
             <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
             {loading ? 'Consultando BCB...' : 'Atualizar BCB'}
@@ -146,8 +146,8 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
               onClick={() => setPeriodFilter(opt.id)}
               className={`min-h-10 px-3.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
                 periodFilter === opt.id
-                  ? 'bg-[#082B5C] dark:bg-emerald-600 text-white'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                  ? 'bg-[#061E3E] dark:bg-[#059669] text-white'
+                  : 'bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               {opt.label}
@@ -232,10 +232,10 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
                   key={pct}
                   type="button"
                   onClick={() => setCdbPercentage(pct)}
-                  className={`px-2 py-1 rounded-lg text-[11px] font-bold cursor-pointer ${
+                  className={`px-2 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition-colors ${
                     cdbPercentage === pct
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300'
+                      ? 'bg-[#059669] text-white'
+                      : 'bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-[#64748B] dark:text-slate-300'
                   }`}
                 >
                   {pct}%
@@ -281,25 +281,25 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
 
       {/* Real benchmark table */}
       {pureComparison && (
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
+        <div className="sf-card overflow-hidden">
           <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
-            <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
               Faixas comparativas no período (capital único de {formatarValor(safeInitial, hideValues)})
             </h3>
-            <span className="text-xs text-slate-400 tabular-nums">{rates.length} dias úteis BCB</span>
+            <span className="font-money text-xs text-[#64748B] dark:text-slate-400">{rates.length} dias úteis BCB</span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
+                <tr className="bg-[#F8FAFC] dark:bg-slate-800/60 text-[#64748B] dark:text-slate-400 border-b border-slate-100 dark:border-slate-800">
                   <th className="py-3 px-5 font-semibold">Referência</th>
                   <th className="py-3 px-5 font-semibold text-right">Saldo Bruto</th>
                   <th className="py-3 px-5 font-semibold text-right">Rendimento Bruto</th>
                   <th className="py-3 px-5 font-semibold text-right">Ganho vs CDI 100%</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 tabular-nums">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-money">
                 {[
                   { label: 'CDI 100%', val: pureComparison.c100.cdi, profit: pureComparison.c100.cdiProfit, diff: 0 },
                   {
@@ -331,12 +331,12 @@ export const InvestmentComparison: React.FC<InvestmentComparisonProps> = ({
                       ]
                     : []),
                 ].map((row) => (
-                  <tr key={row.label} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                    <td className="py-3.5 px-5 font-bold text-[#082B5C] dark:text-white">{row.label}</td>
-                    <td className="py-3.5 px-5 text-right font-bold text-slate-800 dark:text-slate-100">
+                  <tr key={row.label} className="hover:bg-[#F8FAFC] dark:hover:bg-slate-800/40">
+                    <td className="py-3.5 px-5 font-sans font-bold text-[#0F172A] dark:text-white">{row.label}</td>
+                    <td className="py-3.5 px-5 text-right font-bold text-[#0F172A] dark:text-slate-100">
                       {formatarValor(row.val, hideValues)}
                     </td>
-                    <td className="py-3.5 px-5 text-right font-semibold text-emerald-700 dark:text-emerald-400">
+                    <td className="py-3.5 px-5 text-right font-semibold text-[#059669] dark:text-[#10B981]">
                       {hideValues ? formatarValor(row.profit, true) : `+${formatarValor(row.profit, false)}`}
                     </td>
                     <td className="py-3.5 px-5 text-right font-bold text-blue-700 dark:text-blue-400">

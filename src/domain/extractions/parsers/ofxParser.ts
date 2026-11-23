@@ -7,6 +7,7 @@ import {
   sanitizeExtractedText,
   sanitizeRawRowSnapshot,
 } from '../fileSecurity';
+import { detectBankFromStatement } from '../banksRepository';
 
 function extractTag(block: string, tag: string): string | undefined {
   const xmlRegex = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`, 'i');
@@ -183,12 +184,27 @@ export function parseOfxStatement(rawContent: string, fileName = ''): ParseResul
   const availableBalanceCents =
     availAmt !== undefined ? (Math.round(availAmt * 100) as MoneyCents) : undefined;
 
+  const detectedBank = detectBankFromStatement(rawContent, fileName);
+
   return {
     format: 'OFX',
     parseSource: 'LOCAL',
     identifiedAccount: {
-      bankName: org || (fileName ? fileName.replace(/\.ofx$/i, '') : undefined),
-      bankCode: bankId,
+      bankName:
+        detectedBank.type !== 'desconhecido' && detectedBank.name
+          ? detectedBank.name
+          : org || (fileName ? fileName.replace(/\.ofx$/i, '') : undefined),
+      bankCode: bankId || detectedBank.code,
+      bankIspb: detectedBank.ispb,
+      bankType: detectedBank.type,
+      detectionConfidence: detectedBank.confidence,
+      institutionId: detectedBank.institutionId,
+      institutionCategory:
+        detectedBank.type === 'fisico'
+          ? 'BANCO_FISICO'
+          : detectedBank.type === 'digital'
+            ? 'BANCO_DIGITAL'
+            : undefined,
       maskedDocument: docInfo?.masked,
       documentValid: docInfo?.valid,
       holderNature: docInfo?.valid ? docInfo.nature : undefined,

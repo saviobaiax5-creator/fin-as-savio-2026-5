@@ -88,10 +88,10 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
     >
       <div className="space-y-4 text-xs sm:text-sm">
         {/* Chain Overview */}
-        <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 space-y-2.5">
+        <div className="p-4 rounded-xl bg-[#F8FAFC] dark:bg-slate-800/80 border border-[#E2E8F0] dark:border-white/10 space-y-2.5">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2 font-bold text-[#082B5C] dark:text-white">
-              <Landmark size={16} className="text-[#00A65A]" />
+            <div className="flex items-center gap-2 font-bold text-[#0F172A] dark:text-white">
+              <Landmark size={16} className="text-[#059669] dark:text-[#10B981]" />
               <span>{institution?.commercialName || batch.identifiedAccount.bankName || 'Instituição identificada'}</span>
             </div>
             <InstitutionCategoryBadge category={instCategory} compact />
@@ -106,7 +106,7 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
             <ArrowRight size={11} />
             <span>Lote {batch.id.slice(-8)}</span>
             <ArrowRight size={11} />
-            <span className="font-bold text-[#00A65A]">
+            <span className="font-bold text-[#059669] dark:text-[#10B981]">
               {movement.integratedModule || 'Sistema Financeiro'}
             </span>
           </div>
@@ -129,9 +129,9 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
             )}
           </div>
 
-          <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-1">
+          <div className="p-3.5 rounded-xl border border-slate-200 dark:border-white/10 space-y-1">
             <span className="text-[11px] font-semibold text-slate-400">Valor & Integração</span>
-            <div className="text-lg font-extrabold tabular-nums text-[#082B5C] dark:text-emerald-400">
+            <div className="font-money text-lg font-extrabold text-[#0F172A] dark:text-white">
               {movement.currency === 'BRL'
                 ? formatarValor(movement.amount, hideValues)
                 : `${movement.currency} ${hideValues ? '•••••' : formatCurrencyBRL(movement.amount)}`}
@@ -149,9 +149,9 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
         </div>
 
         {/* File & Period Metadata */}
-        <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+        <div className="p-3.5 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2 font-bold text-[#082B5C] dark:text-white">
+            <div className="flex items-center gap-2 font-bold text-[#0F172A] dark:text-white">
               <FileText size={15} />
               <span>Documento Original ({batch.format})</span>
             </div>
@@ -159,7 +159,7 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
               <a
                 href={previewUrl}
                 download={batch.fileName}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#082B5C] hover:bg-[#061B3B] text-white text-xs font-bold"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#061E3E] hover:bg-[#0F172A] text-white text-xs font-bold transition-colors"
               >
                 <Download size={13} /> Baixar original
               </a>
@@ -235,18 +235,18 @@ export const TraceabilitySheet: React.FC<TraceabilitySheetProps> = ({
         )}
 
         {/* Lineage Timeline */}
-        <div className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
-          <div className="flex items-center gap-2 font-bold text-[#082B5C] dark:text-white">
+        <div className="p-3.5 rounded-xl border border-slate-200 dark:border-white/10 space-y-2">
+          <div className="flex items-center gap-2 font-bold text-[#0F172A] dark:text-white">
             <History size={15} />
             <span>Trilha completa de auditoria</span>
           </div>
           <div className="space-y-2">
             {movement.lineage.map((ev, i) => (
               <div key={i} className="flex items-start gap-2.5 text-xs">
-                <CheckCircle2 size={14} className="text-[#00A65A] shrink-0 mt-0.5" />
+                <CheckCircle2 size={14} className="text-[#059669] dark:text-[#10B981] shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-bold text-[#082B5C] dark:text-white">{ev.stage}</span>
+                    <span className="font-bold text-[#0F172A] dark:text-white">{ev.stage}</span>
                     <span className="text-[10px] text-slate-400">
                       {new Date(ev.timestamp).toLocaleString('pt-BR')} · {ev.actor}
                     </span>

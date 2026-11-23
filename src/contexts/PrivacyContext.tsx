@@ -1,6 +1,11 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useCallback, useContext } from 'react';
+import type { MoneyCents } from '../domain/money/money';
+import { formatCurrency, type FormatCurrencyOptions } from '../utils/formatters';
 
 export interface UiPreferencesContextValue {
+  isPrivacyMode: boolean;
+  togglePrivacyMode: () => void;
+  setPrivacyMode: (value: boolean) => void;
   hideValues: boolean;
   toggleHideValues: () => void;
   setHideValues: (value: boolean) => void;
@@ -13,6 +18,9 @@ export interface UiPreferencesContextValue {
 }
 
 const UiPreferencesContext = createContext<UiPreferencesContextValue>({
+  isPrivacyMode: false,
+  togglePrivacyMode: () => {},
+  setPrivacyMode: () => {},
   hideValues: false,
   toggleHideValues: () => {},
   setHideValues: () => {},
@@ -37,4 +45,33 @@ export const PrivacyProvider: React.FC<{
 
 export function usePrivacy(): UiPreferencesContextValue {
   return useContext(UiPreferencesContext);
+}
+
+export function useCurrencyFormatter() {
+  const {
+    isPrivacyMode,
+    hideValues,
+    togglePrivacyMode,
+    toggleHideValues,
+    setPrivacyMode,
+    setHideValues,
+  } = usePrivacy();
+
+  const privacyActive = isPrivacyMode ?? hideValues;
+
+  const format = useCallback(
+    (
+      value: number | string | MoneyCents | undefined | null,
+      options?: FormatCurrencyOptions
+    ) => formatCurrency(value, privacyActive, options),
+    [privacyActive]
+  );
+
+  return {
+    isPrivacyMode: privacyActive,
+    togglePrivacyMode: togglePrivacyMode ?? toggleHideValues,
+    setPrivacyMode: setPrivacyMode ?? setHideValues,
+    formatCurrency: format,
+    privacyBlurClass: privacyActive ? 'sf-privacy-blur' : '',
+  };
 }

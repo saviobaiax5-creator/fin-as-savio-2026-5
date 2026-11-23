@@ -74,8 +74,8 @@ export default function GraficoComparativo({
   const isDark = theme === 'dark';
   const gridStroke = isDark ? '#334155' : '#e2e8f0';
   const tickColor = isDark ? '#94a3b8' : '#64748b';
-  const tooltipBg = isDark ? '#061B3B' : '#ffffff';
-  const tooltipBorder = isDark ? '#334155' : '#cbd5e1';
+  const tooltipBg = isDark ? '#11185A' : '#ffffff';
+  const tooltipBorder = isDark ? 'rgba(255,255,255,0.16)' : '#cbd5e1';
   const tooltipText = isDark ? '#f8fafc' : '#172536';
 
   const chartSeries = useMemo(
@@ -86,11 +86,11 @@ export default function GraficoComparativo({
   const isPercentMode = mode === 'percent';
 
   return (
-    <div className="w-full rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 sm:p-5">
+    <div className="sf-card w-full p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div>
-          <h3 className="text-base font-bold text-[#082B5C] dark:text-white">{title}</h3>
-          <span className="text-xs text-slate-500 dark:text-slate-400 tabular-nums">
+          <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">{title}</h3>
+          <span className="font-money text-xs text-[#64748B] dark:text-slate-400">
             {data.length} ponto{data.length === 1 ? '' : 's'} calculado{data.length === 1 ? '' : 's'}
           </span>
         </div>
@@ -98,15 +98,15 @@ export default function GraficoComparativo({
         <div
           role="group"
           aria-label="Modo de exibição do gráfico"
-          className="inline-flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 border border-slate-200 dark:border-slate-700 text-xs font-semibold"
+          className="inline-flex rounded-xl bg-[#F8FAFC] dark:bg-slate-800 p-1 border border-[#E2E8F0] dark:border-slate-700 text-xs font-semibold"
         >
           <button
             type="button"
             onClick={() => setMode('currency')}
             className={`px-3 min-h-8 rounded-lg transition-colors cursor-pointer ${
               mode === 'currency'
-                ? 'bg-white dark:bg-slate-900 text-[#082B5C] dark:text-white shadow-xs'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                ? 'bg-white dark:bg-[#11185A] text-[#0F172A] dark:text-white border border-[#E2E8F0] dark:border-white/15'
+                : 'text-[#64748B] dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             Valor (R$)
@@ -116,8 +116,8 @@ export default function GraficoComparativo({
             onClick={() => setMode('percent')}
             className={`px-3 min-h-8 rounded-lg transition-colors cursor-pointer ${
               mode === 'percent'
-                ? 'bg-white dark:bg-slate-900 text-[#082B5C] dark:text-white shadow-xs'
-                : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                ? 'bg-white dark:bg-[#11185A] text-[#0F172A] dark:text-white border border-[#E2E8F0] dark:border-white/15'
+                : 'text-[#64748B] dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             Rentabilidade (%)
@@ -195,7 +195,7 @@ export default function GraficoComparativo({
                 type="monotone"
                 dataKey="cdb"
                 name={cdbLabel}
-                stroke="#00A65A"
+                stroke="#059669"
                 strokeWidth={3}
                 dot={false}
                 activeDot={{ r: 5 }}

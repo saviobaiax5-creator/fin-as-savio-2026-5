@@ -175,11 +175,11 @@ export const AiAssistantView: React.FC<AiAssistantViewProps> = ({
           <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 rounded-md text-[10px] font-bold">
             GEMINI IA
           </span>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white">
             Inteligência Artificial Financeira
           </h2>
         </div>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
           Análises fundamentadas exclusivamente nos seus totais agregados reais ({period}, {scope}).
         </p>
       </div>
@@ -191,7 +191,7 @@ export const AiAssistantView: React.FC<AiAssistantViewProps> = ({
             key={idx}
             type="button"
             onClick={() => handleSend(q)}
-            className="px-3.5 min-h-10 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 text-slate-700 dark:text-slate-200 rounded-full text-xs font-medium whitespace-nowrap shadow-xs transition-all cursor-pointer"
+            className="sf-card-interactive px-3.5 min-h-10 rounded-full text-slate-700 dark:text-slate-200 text-xs font-medium whitespace-nowrap cursor-pointer"
           >
             {q}
           </button>
@@ -199,7 +199,7 @@ export const AiAssistantView: React.FC<AiAssistantViewProps> = ({
       </div>
 
       {/* Chat Messages Box */}
-      <div className="flex-1 min-h-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs p-4 sm:p-6 overflow-y-auto space-y-4">
+      <div className="flex-1 min-h-0 sf-card p-4 sm:p-6 overflow-y-auto space-y-4">
         {messages.map((m) => (
           <div
             key={m.id}
@@ -207,23 +207,23 @@ export const AiAssistantView: React.FC<AiAssistantViewProps> = ({
           >
             <div
               className={`w-9 h-9 rounded-xl grid place-items-center text-xs font-bold shrink-0 ${
-                m.sender === 'user' ? 'bg-[#082B5C] text-white' : 'bg-[#00A65A] text-white'
+                m.sender === 'user' ? 'bg-[#061E3E] text-white' : 'bg-[#ECFDF5] text-[#059669] dark:bg-emerald-950/70 dark:text-[#10B981]'
               }`}
             >
               {m.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
             </div>
 
             <div
-              className={`max-w-[85%] sm:max-w-xl p-3.5 sm:p-4 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-xs break-words ${
+              className={`max-w-[85%] sm:max-w-xl p-3.5 sm:p-4 rounded-2xl text-xs sm:text-sm leading-relaxed break-words ${
                 m.sender === 'user'
-                  ? 'bg-[#082B5C] text-white rounded-tr-xs'
-                  : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-xs'
+                  ? 'bg-[#061E3E] text-white rounded-tr-xs'
+                  : 'bg-[#F8FAFC] dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-xs'
               }`}
             >
               <p className="whitespace-pre-wrap">{m.text}</p>
               <span
                 className={`block text-[10px] mt-2 ${
-                  m.sender === 'user' ? 'text-slate-300' : 'text-slate-400'
+                  m.sender === 'user' ? 'text-white/75' : 'text-[#64748B] dark:text-slate-400'
                 }`}
               >
                 {m.timestamp}
@@ -234,10 +234,10 @@ export const AiAssistantView: React.FC<AiAssistantViewProps> = ({
 
         {loading && (
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white grid place-items-center">
+            <div className="sf-icon-badge">
               <Sparkles className="w-4 h-4 animate-spin" />
             </div>
-            <div className="p-3.5 bg-slate-100 dark:bg-slate-800 rounded-2xl text-xs sm:text-sm text-slate-500 dark:text-slate-300 animate-pulse">
+            <div className="p-3.5 bg-[#F8FAFC] dark:bg-slate-800 rounded-2xl text-xs sm:text-sm text-[#64748B] dark:text-slate-300 animate-pulse">
               Analisando resumo financeiro...
             </div>
           </div>
@@ -245,20 +245,20 @@ export const AiAssistantView: React.FC<AiAssistantViewProps> = ({
       </div>
 
       {/* Input Bar */}
-      <div className="shrink-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 sm:p-3 rounded-2xl shadow-xs flex items-center gap-2">
+      <div className="shrink-0 sf-card p-2 sm:p-3 flex items-center gap-2">
         <input
           type="text"
           placeholder="Pergunte sobre gastos, receitas, boletos ou faturas..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-          className="flex-1 px-3 py-2 text-base sm:text-sm outline-none bg-transparent text-slate-800 dark:text-white min-h-12"
+          className="flex-1 px-3 py-2 text-base sm:text-sm outline-none bg-transparent text-[#0F172A] dark:text-white min-h-12"
         />
         <button
           type="button"
           onClick={() => handleSend()}
           disabled={loading}
-          className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] dark:hover:bg-[#00A65A]/90 text-white px-4 sm:px-5 min-h-12 rounded-xl text-xs sm:text-sm font-bold shadow-sm transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
+          className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-4 sm:px-5 min-h-12 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"
         >
           <Send className="w-4 h-4" />
           <span className="hidden sm:inline">Enviar</span>

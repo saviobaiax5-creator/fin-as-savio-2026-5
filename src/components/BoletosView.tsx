@@ -284,10 +284,10 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
   const renderGroup = (title: string, items: Boleto[], accentClass: string) => {
     if (items.length === 0) return null;
     return (
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h3 className={`text-sm font-bold ${accentClass}`}>{title}</h3>
-          <span className="text-xs text-slate-400">{items.length} item(ns)</span>
+          <h3 className={`font-display text-sm font-bold ${accentClass}`}>{title}</h3>
+          <span className="text-xs text-[#64748B] dark:text-slate-400">{items.length} item(ns)</span>
         </div>
 
         {/* Mobile Cards */}
@@ -306,11 +306,11 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
                     </div>
                   </div>
                   <div className="text-right shrink-0">
-                    <div className="text-sm font-extrabold text-slate-900 dark:text-white">
+                    <div className="font-money text-sm font-extrabold text-[#0F172A] dark:text-white">
                       {formatarValor(b.status === 'PAID' && typeof b.paidAmount === 'number' ? b.paidAmount : b.valorOriginal, hideValues)}
                     </div>
                     {b.status === 'PAID' && typeof b.paidAmount === 'number' && Math.abs(b.paidAmount - b.valorOriginal) > 0.009 && (
-                      <div className="text-[10px] text-slate-400">
+                      <div className="font-money text-[10px] text-[#64748B] dark:text-slate-400">
                         Orig.: {formatarValor(b.valorOriginal, hideValues)}
                       </div>
                     )}
@@ -397,12 +397,12 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
                         {countdown.label}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-right font-extrabold text-slate-900 dark:text-white">
+                    <td className="font-money py-4 px-6 text-right font-extrabold text-[#0F172A] dark:text-white">
                       <div>
                         {formatarValor(b.status === 'PAID' && typeof b.paidAmount === 'number' ? b.paidAmount : b.valorOriginal, hideValues)}
                       </div>
                       {b.status === 'PAID' && typeof b.paidAmount === 'number' && Math.abs(b.paidAmount - b.valorOriginal) > 0.009 && (
-                        <small className="font-normal text-slate-400">
+                        <small className="font-normal text-[#64748B] dark:text-slate-400">
                           Original: {formatarValor(b.valorOriginal, hideValues)}
                         </small>
                       )}
@@ -413,7 +413,7 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
                           <button
                             type="button"
                             onClick={() => openPaymentConfirm(b)}
-                            className="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-all cursor-pointer"
+                            className="px-3 py-1.5 bg-[#059669] hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold transition-all cursor-pointer"
                           >
                             Marcar como Pago
                           </button>
@@ -447,11 +447,11 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
           <span className="px-2 py-0.5 bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 rounded-md text-[10px] font-bold">
             VALIDAÇÃO FEBRABAN MOD 10/11
           </span>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white">
             Boletos e Contas a Pagar
           </h2>
         </div>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
           Validação matemática real de código de barras (44, 47 e 48 dígitos), prevenção de duplicidade e controle por vencimento.
         </p>
       </div>
@@ -471,11 +471,16 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
       )}
 
       {/* Entry Card */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
+      <div className="sf-card p-5 sm:p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-emerald-600" /> Adicionar Boleto ou Conta a Pagar
-          </h3>
+          <div className="flex items-center gap-3">
+            <span className="sf-icon-badge">
+              <Sparkles size={18} strokeWidth={2} />
+            </span>
+            <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
+              Adicionar Boleto ou Conta a Pagar
+            </h3>
+          </div>
 
           <div className="flex gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl">
             <button
@@ -483,8 +488,8 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
               onClick={() => setEntryMode('barcode')}
               className={`px-3 min-h-9 rounded-lg text-xs font-semibold cursor-pointer ${
                 entryMode === 'barcode'
-                  ? 'bg-white dark:bg-slate-900 text-[#082B5C] dark:text-white shadow-xs'
-                  : 'text-slate-500 dark:text-slate-400'
+                  ? 'bg-white dark:bg-slate-900 text-[#0F172A] dark:text-white'
+                  : 'text-[#64748B] dark:text-slate-400'
               }`}
             >
               Linha digitável
@@ -494,8 +499,8 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
               onClick={() => setEntryMode('manual')}
               className={`px-3 min-h-9 rounded-lg text-xs font-semibold cursor-pointer ${
                 entryMode === 'manual'
-                  ? 'bg-white dark:bg-slate-900 text-[#082B5C] dark:text-white shadow-xs'
-                  : 'text-slate-500 dark:text-slate-400'
+                  ? 'bg-white dark:bg-slate-900 text-[#0F172A] dark:text-white'
+                  : 'text-[#64748B] dark:text-slate-400'
               }`}
             >
               Cadastro manual
@@ -546,7 +551,7 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
               <button
                 type="submit"
                 disabled={analyzing}
-                className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-6 min-h-12 rounded-xl text-sm font-bold shadow-sm transition-all cursor-pointer shrink-0"
+                className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-6 min-h-12 rounded-xl text-sm font-bold transition-all cursor-pointer shrink-0"
               >
                 {analyzing ? 'Validando boleto...' : 'Validar e Adicionar Boleto'}
               </button>
@@ -613,7 +618,7 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
 
             <button
               type="submit"
-              className="w-full sm:w-auto bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-6 min-h-12 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full sm:w-auto bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-6 min-h-12 rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus size={16} /> Salvar Conta a Pagar
             </button>
@@ -622,7 +627,7 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <div className="sf-card p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400" />
           <input
@@ -662,15 +667,15 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
 
       {/* Grouped Lists */}
       {filteredBoletos.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center text-sm text-slate-500 dark:text-slate-400">
+        <div className="sf-card p-8 text-center text-sm text-[#64748B] dark:text-slate-400">
           Nenhum boleto encontrado com os filtros selecionados.
         </div>
       ) : (
         <div className="space-y-5">
           {renderGroup('1. Boletos Vencidos', grouped.overdue, 'text-red-700 dark:text-red-400')}
           {renderGroup('2. Próximos do Vencimento (Hoje até 3 dias)', grouped.upcoming, 'text-amber-700 dark:text-amber-400')}
-          {renderGroup('3. Boletos Futuros', grouped.future, 'text-[#082B5C] dark:text-white')}
-          {renderGroup('4. Boletos Pagos', grouped.paid, 'text-emerald-700 dark:text-emerald-400')}
+          {renderGroup('3. Boletos Futuros', grouped.future, 'text-[#0F172A] dark:text-white')}
+          {renderGroup('4. Boletos Pagos', grouped.paid, 'text-[#059669] dark:text-[#10B981]')}
         </div>
       )}
 
@@ -690,10 +695,10 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
               </div>
             )}
 
-            <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-xs space-y-1">
-              <div className="font-bold text-slate-900 dark:text-white">{payingBoleto.beneficiario}</div>
-              <div className="text-slate-500 dark:text-slate-400">
-                Valor original: <strong className="text-slate-800 dark:text-slate-200">{formatarValor(payingBoleto.valorOriginal, hideValues)}</strong>
+            <div className="p-3.5 rounded-xl bg-[#F8FAFC] dark:bg-slate-800 text-xs space-y-1">
+              <div className="font-bold text-[#0F172A] dark:text-white">{payingBoleto.beneficiario}</div>
+              <div className="text-[#64748B] dark:text-slate-400">
+                Valor original: <strong className="font-money text-[#0F172A] dark:text-slate-200">{formatarValor(payingBoleto.valorOriginal, hideValues)}</strong>
               </div>
               <div className="text-slate-500 dark:text-slate-400">
                 Vencimento: {payingBoleto.vencimento.split('-').reverse().join('/')}
@@ -730,8 +735,8 @@ export const BoletosView: React.FC<BoletosViewProps> = ({
                 return (
                   <p className={`text-[11px] font-semibold mt-1 ${diffCents > 0 ? 'text-amber-700 dark:text-amber-300' : 'text-emerald-700 dark:text-emerald-400'}`}>
                     {diffCents > 0
-                      ? `Inclui juros/multa de R$ ${formatCurrencyBRL(absDiff)}`
-                      : `Com desconto de R$ ${formatCurrencyBRL(absDiff)}`}
+                      ? `Inclui juros/multa de ${formatarValor(absDiff, hideValues)}`
+                      : `Com desconto de ${formatarValor(absDiff, hideValues)}`}
                   </p>
                 );
               })()}

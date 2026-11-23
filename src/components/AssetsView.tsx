@@ -68,10 +68,10 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Patrimônio e Investimentos
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="font-sans text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Reservas, aplicações financeiras, estoque e bens patrimoniais.
           </p>
         </div>
@@ -81,29 +81,29 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
             setErrorMsg('');
             setModalOpen(true);
           }}
-          className="bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+          className="bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white px-4 min-h-11 rounded-xl text-xs sm:text-sm font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Novo ativo
         </button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs flex items-center justify-between">
+      <div className="sf-card p-5 sm:p-6 flex items-center justify-between gap-4">
         <div>
-          <span className="text-xs font-semibold text-slate-400">Patrimônio Bruto Consolidado</span>
-          <div className="text-2xl sm:text-3xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1">
+          <span className="font-sans text-xs font-medium text-[#64748B] dark:text-slate-400">Patrimônio Bruto Consolidado</span>
+          <div className="font-money text-2xl sm:text-3xl font-extrabold text-[#059669] dark:text-[#10B981] mt-1">
             {formatarValor(totalAssets, hideValues)}
           </div>
         </div>
-        <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 rounded-2xl">
-          <TrendingUp className="w-8 h-8" />
+        <div className="sf-icon-badge">
+          <TrendingUp size={20} strokeWidth={2} />
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs overflow-hidden">
+      <div className="sf-card overflow-hidden">
         <div className="px-5 sm:px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <h3 className="text-sm font-bold text-[#082B5C] dark:text-white">Ativos cadastrados</h3>
-          <span className="text-xs text-slate-400">{assets.length} ativos</span>
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">Ativos cadastrados</h3>
+          <span className="text-xs text-[#64748B]">{assets.length} ativos</span>
         </div>
 
         {!isDesktop ? (
@@ -112,12 +112,12 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
               <div key={a.id} className="p-4 space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <div className="font-bold text-sm text-slate-900 dark:text-white">{a.description}</div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400">
+                    <div className="font-display font-bold text-sm text-[#0F172A] dark:text-white">{a.description}</div>
+                    <div className="text-xs text-[#64748B] dark:text-slate-400">
                       {a.institutionName} · {a.assetType}
                     </div>
                   </div>
-                  <div className="text-sm font-extrabold text-emerald-700 dark:text-emerald-400">
+                  <div className="font-money text-sm font-bold text-[#059669] dark:text-[#10B981]">
                     {formatarValor(a.currentValue, hideValues)}
                   </div>
                 </div>
@@ -125,7 +125,7 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
                   <span
                     className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                       a.entityId === 'CPF'
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                        ? 'bg-[#ECFDF5] text-[#059669] dark:bg-emerald-950/60 dark:text-[#10B981]'
                         : 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
                     }`}
                   >
@@ -147,7 +147,7 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/60 text-slate-400 border-b border-slate-100 dark:border-slate-800">
+                <tr className="bg-[#F8FAFC] dark:bg-slate-800/60 text-[#64748B] border-b border-slate-100 dark:border-slate-800">
                   <th className="py-3 px-6 font-semibold">Descrição / Ativo</th>
                   <th className="py-3 px-6 font-semibold">Tipo</th>
                   <th className="py-3 px-6 font-semibold">Instituição</th>
@@ -159,25 +159,25 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
                 {assets.map((a) => (
                   <tr key={a.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                    <td className="py-4 px-6 font-bold text-slate-800 dark:text-white">{a.description}</td>
+                    <td className="py-4 px-6 font-semibold text-[#0F172A] dark:text-white">{a.description}</td>
                     <td className="py-4 px-6">
-                      <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-md text-[10px] font-medium">
+                      <span className="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-[#64748B] dark:text-slate-300 rounded-md text-[10px] font-medium">
                         {a.assetType}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-slate-600 dark:text-slate-300">{a.institutionName}</td>
+                    <td className="py-4 px-6 text-[#64748B] dark:text-slate-300">{a.institutionName}</td>
                     <td className="py-4 px-6">
                       <span
                         className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           a.entityId === 'CPF'
-                            ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                            ? 'bg-[#ECFDF5] text-[#059669] dark:bg-emerald-950/60 dark:text-[#10B981]'
                             : 'bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300'
                         }`}
                       >
                         {a.entityId}
                       </span>
                     </td>
-                    <td className="py-4 px-6 text-right font-extrabold text-emerald-700 dark:text-emerald-400">
+                    <td className="font-money py-4 px-6 text-right font-bold text-[#059669] dark:text-[#10B981]">
                       {formatarValor(a.currentValue, hideValues)}
                     </td>
                     <td className="py-4 px-6 text-center">
@@ -271,7 +271,7 @@ export const AssetsView: React.FC<AssetsViewProps> = ({ assets, onAddAsset, onDe
             </button>
             <button
               type="submit"
-              className="flex-[1.5] min-h-12 bg-[#082B5C] dark:bg-emerald-600 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-[1.5] min-h-12 bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white rounded-xl text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors"
             >
               <CheckCircle2 size={16} /> Salvar ativo
             </button>

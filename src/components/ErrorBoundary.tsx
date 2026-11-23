@@ -87,23 +87,23 @@ export class ErrorBoundary extends React.Component<
     }
 
     return (
-      <div className="min-h-dvh bg-[#F4F7FB] dark:bg-[#061B3B] text-[#172536] dark:text-slate-100 flex items-center justify-center p-6">
-        <div className="max-w-lg w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-5">
+      <div className="min-h-dvh bg-[#F8FAFC] dark:bg-[#050B42] text-[#0F172A] dark:text-slate-100 flex items-center justify-center p-6">
+        <div className="max-w-lg w-full sf-card rounded-2xl p-6 sm:p-8 space-y-5">
           <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300">
-              <AlertTriangle size={24} />
+            <div className="sf-icon-badge-danger">
+              <AlertTriangle size={20} />
             </div>
             <div>
-              <h1 className="text-lg font-extrabold text-[#082B5C] dark:text-white">
+              <h1 className="font-display text-lg font-bold text-[#0F172A] dark:text-white">
                 Algo deu errado na exibição
               </h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
                 Seus registros salvos permanecem protegidos no dispositivo.
               </p>
             </div>
           </div>
 
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300 break-words">
+          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-[#E2E8F0] dark:border-slate-700 text-xs font-mono text-slate-700 dark:text-slate-300 break-words">
             {this.state.errorMessage}
           </div>
 
@@ -111,7 +111,7 @@ export class ErrorBoundary extends React.Component<
             <button
               type="button"
               onClick={this.handleEmergencyBackup}
-              className="flex-1 min-h-12 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 min-h-12 px-4 bg-[#059669] hover:bg-emerald-700 text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
             >
               <Download size={16} />
               Baixar backup de emergência
@@ -119,7 +119,7 @@ export class ErrorBoundary extends React.Component<
             <button
               type="button"
               onClick={() => void this.handleClearCacheAndReload()}
-              className="flex-1 min-h-12 px-4 bg-[#082B5C] hover:bg-[#061B3B] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
+              className="flex-1 min-h-12 px-4 bg-[#061E3E] hover:bg-[#0F172A] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
             >
               <RefreshCw size={16} />
               Atualizar e recarregar

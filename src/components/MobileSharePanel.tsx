@@ -36,7 +36,7 @@ const MobileShareContent: React.FC<MobileShareContentProps> = ({ compact = false
       margin: 1,
       errorCorrectionLevel: 'M',
       color: {
-        dark: '#082B5C',
+        dark: '#061E3E',
         light: '#ffffff',
       },
     })
@@ -75,7 +75,7 @@ const MobileShareContent: React.FC<MobileShareContentProps> = ({ compact = false
   return (
     <div className={compact ? 'space-y-4' : 'space-y-5'}>
       <div className="flex flex-col md:flex-row items-center md:items-start gap-5">
-        <div className="shrink-0 bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex flex-col items-center gap-1.5">
+        <div className="shrink-0 sf-card p-3 flex flex-col items-center gap-1.5">
           {qrDataUrl ? (
             <img
               src={qrDataUrl}
@@ -107,12 +107,12 @@ const MobileShareContent: React.FC<MobileShareContentProps> = ({ compact = false
                 readOnly
                 value={shareInfo.shareUrl}
                 onFocus={(e) => e.currentTarget.select()}
-                className="flex-1 min-w-0 px-3 py-2.5 min-h-11 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs sm:text-sm font-mono text-[#082B5C] dark:text-slate-100 outline-none select-all"
+                className="flex-1 min-w-0 px-3 py-2.5 min-h-11 rounded-xl border border-[#E2E8F0] dark:border-slate-700 bg-[#F8FAFC] dark:bg-slate-800 text-xs sm:text-sm font-mono text-[#0F172A] dark:text-slate-100 outline-none select-all"
               />
               <button
                 type="button"
                 onClick={() => void handleCopy()}
-                className="px-4 min-h-11 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] dark:hover:bg-[#00A65A]/90 text-white text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer"
+                className="px-4 min-h-11 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 shrink-0 cursor-pointer"
               >
                 {copied ? <Check size={15} /> : <Copy size={15} />}
                 <span>{copied ? 'Copiado!' : 'Copiar'}</span>
@@ -173,14 +173,19 @@ const MobileShareContent: React.FC<MobileShareContentProps> = ({ compact = false
 
 export const MobileShareCard: React.FC = () => {
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
-      <div>
-        <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-          <Smartphone className="w-4 h-4 text-[#00A65A]" /> Acesso no Celular & Link de Compartilhamento
-        </h3>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-          Escaneie o QR Code ou envie o link abaixo para abrir o Sávio Finanças diretamente no smartphone sem perder a sincronização da sua conta.
-        </p>
+    <div className="sf-card p-5 sm:p-6 space-y-4">
+      <div className="flex items-start gap-3">
+        <span className="sf-icon-badge mt-0.5">
+          <Smartphone size={18} strokeWidth={2} />
+        </span>
+        <div>
+          <h3 className="font-display text-sm font-bold text-[#0F172A] dark:text-white">
+            Acesso no Celular & Link de Compartilhamento
+          </h3>
+          <p className="text-xs text-[#64748B] dark:text-slate-400 mt-1">
+            Escaneie o QR Code ou envie o link abaixo para abrir o Sávio Finanças diretamente no smartphone sem perder a sincronização da sua conta.
+          </p>
+        </div>
       </div>
       <MobileShareContent />
     </div>

@@ -74,6 +74,7 @@ import {
   Scale,
   ScanSearch,
   ShieldCheck,
+  Smartphone,
   Sparkles,
   Tag,
   Trash2,
@@ -581,6 +582,41 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
     });
   };
 
+  const handleBindBatchInstitution = (institutionId: string) => {
+    if (!activeBatch) return;
+    const inst = institutions.find((i) => i.id === institutionId);
+    if (!inst) {
+      updateActiveBatch((b) => ({
+        ...b,
+        confirmedInstitutionId: undefined,
+      }));
+      return;
+    }
+    const nextBankType =
+      inst.category === 'BANCO_FISICO'
+        ? 'fisico'
+        : inst.category === 'BANCO_DIGITAL'
+          ? 'digital'
+          : activeBatch.identifiedAccount.bankType || 'desconhecido';
+    updateActiveBatch((b) => ({
+      ...b,
+      confirmedInstitutionId: inst.id,
+      identifiedAccount: {
+        ...b.identifiedAccount,
+        institutionId: inst.id,
+        bankName: inst.commercialName,
+        bankCode: inst.code || b.identifiedAccount.bankCode,
+        bankType: nextBankType,
+        institutionCategory: inst.category,
+        detectionConfidence: 'alta',
+      },
+    }));
+    setBanner({
+      type: 'ok',
+      text: `Instituição ajustada manualmente para ${inst.commercialName}.`,
+    });
+  };
+
   const handleBindBatchCard = (cardId: string) => {
     const card = creditCards.find((c) => c.id === cardId);
     if (!card || !activeBatch) return;
@@ -1017,14 +1053,14 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
       {/* Module Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="w-12 h-12 rounded-2xl bg-[#082B5C] text-white grid place-items-center shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-[#061E3E] dark:bg-[#11185A] border border-white/10 text-white grid place-items-center shrink-0">
             <FileSpreadsheet size={24} />
           </div>
           <div className="min-w-0">
-            <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white truncate">
+            <h2 className="font-display text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white truncate">
               Central de Extrações Financeiras
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
               Extração isolada na origem, aprovação manual obrigatória, rastreabilidade e consolidação transparente.
             </p>
           </div>
@@ -1064,7 +1100,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
       {/* Sub-navigation Tabs (Responsive wrapping without horizontal page overflow) */}
       <nav
         aria-label="Seções da Central de Extrações"
-        className="flex flex-wrap gap-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-1.5 rounded-2xl"
+        className="flex flex-wrap gap-1.5 bg-white dark:bg-[#11185A] border border-[#E2E8F0] dark:border-white/10 p-1.5 rounded-2xl"
       >
         {(
           [
@@ -1089,8 +1125,8 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
               onClick={() => setSubTab(tab.id)}
               className={`min-h-10 px-3 py-2 rounded-xl text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer transition-colors ${
                 active
-                  ? 'bg-[#082B5C] text-white dark:bg-[#00A65A]'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-[#061E3E] text-white dark:bg-[#059669]'
+                  : 'text-[#64748B] dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10'
               }`}
             >
               <Icon size={14} />
@@ -1114,8 +1150,8 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   onClick={card.onClick}
                   className={`min-w-0 flex items-center gap-3 p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     card.primary
-                      ? 'bg-[#082B5C] border-[#082B5C] text-white hover:bg-[#061B3B]'
-                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-[#082B5C] dark:text-white hover:border-[#00A65A]'
+                      ? 'bg-[#061E3E] border-[#061E3E] dark:bg-[#11185A] dark:border-white/20 text-white hover:bg-[#0F172A]'
+                      : 'bg-white dark:bg-[#11185A] border-[#E2E8F0] dark:border-white/10 text-[#0F172A] dark:text-white hover:border-[#059669]'
                   }`}
                 >
                   <span className="shrink-0">
@@ -1125,7 +1161,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                     <strong className="block text-sm font-bold truncate">{card.title}</strong>
                     <small
                       className={`block text-[11px] truncate ${
-                        card.primary ? 'text-blue-100' : 'text-slate-500 dark:text-slate-400'
+                        card.primary ? 'text-blue-100' : 'text-[#64748B] dark:text-slate-400'
                       }`}
                     >
                       {card.desc}
@@ -1140,10 +1176,10 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
           {/* 8 Overview KPIs */}
           <section className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
             {[
-              { label: 'Arquivos', value: overviewStats.totalFiles, tone: 'text-[#082B5C] dark:text-white' },
-              { label: 'Identificadas', value: overviewStats.identified, tone: 'text-[#082B5C] dark:text-blue-300' },
+              { label: 'Arquivos', value: overviewStats.totalFiles, tone: 'text-[#0F172A] dark:text-white' },
+              { label: 'Identificadas', value: overviewStats.identified, tone: 'text-[#0F172A] dark:text-blue-300' },
               { label: 'Pendentes', value: overviewStats.pending, tone: 'text-amber-700 dark:text-amber-300' },
-              { label: 'Aprovadas', value: overviewStats.approved, tone: 'text-[#00A65A]' },
+              { label: 'Aprovadas', value: overviewStats.approved, tone: 'text-[#059669] dark:text-[#10B981]' },
               { label: 'Integradas', value: overviewStats.integrated, tone: 'text-emerald-700 dark:text-emerald-300' },
               { label: 'Duplicidades', value: overviewStats.duplicates, tone: 'text-amber-700 dark:text-amber-400' },
               { label: 'Não reconhec.', value: overviewStats.unknown, tone: 'text-purple-700 dark:text-purple-300' },
@@ -1151,12 +1187,12 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
             ].map((k) => (
               <div
                 key={k.label}
-                className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3"
+                className="bg-white dark:bg-[#11185A] border border-[#E2E8F0] dark:border-white/10 rounded-xl p-3"
               >
                 <span className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wide truncate">
                   {k.label}
                 </span>
-                <strong className={`block text-lg font-extrabold tabular-nums mt-0.5 ${k.tone}`}>
+                <strong className={`font-money block text-lg font-extrabold tabular-nums mt-0.5 ${k.tone}`}>
                   {k.value}
                 </strong>
               </div>
@@ -1165,24 +1201,24 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
 
           {/* Upload Zone + 7-Stage Pipeline */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+            <section className="sf-card p-5 space-y-4">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+                  <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
                     Importar extrato ou documento financeiro
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Processamento local prioritário. OFX tem maior fidelidade de identificadores.
+                  <p className="text-xs text-[#64748B] dark:text-slate-400">
+                    Processamento local prioritário e identificação automática do banco (Físico/Digital).
                   </p>
                 </div>
-                <ShieldCheck size={20} className="text-[#00A65A] shrink-0" />
+                <ShieldCheck size={20} className="text-[#059669] dark:text-[#10B981] shrink-0" />
               </div>
 
               <button
                 type="button"
                 disabled={processing}
                 onClick={() => inputRef.current?.click()}
-                className="w-full min-h-36 p-5 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-[#00A65A] rounded-2xl bg-[#F4F7FB] dark:bg-slate-800/50 flex flex-col items-center justify-center gap-2 text-[#082B5C] dark:text-white cursor-pointer transition-colors"
+                className="w-full min-h-36 p-5 border-2 border-dashed border-[#CBD5E1] dark:border-white/20 hover:border-[#059669] rounded-2xl bg-[#F8FAFC] dark:bg-white/5 flex flex-col items-center justify-center gap-2 text-[#0F172A] dark:text-white cursor-pointer transition-colors"
               >
                 <Upload size={28} />
                 <strong className="text-sm break-all">
@@ -1190,36 +1226,74 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                     ? selectedFileMeta.name
                     : 'Selecionar arquivo (OFX, CSV, XLSX, PDF, XML, JSON ou foto)'}
                 </strong>
-                <span className="text-xs text-slate-500 dark:text-slate-400">
+                <span className="text-xs text-[#64748B] dark:text-slate-400">
                   {selectedFileMeta
                     ? `${(selectedFileMeta.size / 1024).toFixed(1)} KB`
                     : 'Máximo 15 MB por arquivo'}
                 </span>
               </button>
 
-              <div className="flex flex-wrap gap-1.5 text-[11px] font-bold text-[#082B5C] dark:text-slate-200">
-                <span className="px-2.5 py-1 rounded-lg bg-[#F4F7FB] dark:bg-slate-800 inline-flex items-center gap-1">
+              {activeBatch && (
+                <div className="p-3 rounded-xl bg-[#F8FAFC] dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div className="min-w-0 space-y-0.5">
+                    <div className="font-bold text-[#0F172A] dark:text-white truncate">
+                      Banco identificado: {activeBatch.identifiedAccount.bankName || 'Não identificado'}
+                      {activeBatch.identifiedAccount.bankCode ? ` (${activeBatch.identifiedAccount.bankCode})` : ''}
+                    </div>
+                    <div className="text-[11px] text-[#64748B] dark:text-slate-400 flex flex-wrap items-center gap-2">
+                      {activeBatch.identifiedAccount.bankIspb && (
+                        <span>ISPB: {activeBatch.identifiedAccount.bankIspb}</span>
+                      )}
+                      {activeBatch.identifiedAccount.detectionConfidence && (
+                        <span>Confiança: {activeBatch.identifiedAccount.detectionConfidence}</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {activeBatch.identifiedAccount.bankType === 'fisico' && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase bg-slate-100 text-[#0F172A] border-slate-300 dark:bg-blue-950/70 dark:text-blue-200 dark:border-blue-800">
+                        <Landmark size={11} /> Banco Físico
+                      </span>
+                    )}
+                    {activeBatch.identifiedAccount.bankType === 'digital' && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase bg-indigo-50 text-indigo-800 border-indigo-200 dark:bg-indigo-950/70 dark:text-indigo-200 dark:border-indigo-800">
+                        <Smartphone size={11} /> Banco Digital
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => setSubTab('review')}
+                      className="px-2.5 py-1 rounded-lg bg-[#059669] text-white font-bold cursor-pointer"
+                    >
+                      Revisar
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-1.5 text-[11px] font-bold text-[#0F172A] dark:text-slate-200">
+                <span className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-white/10 inline-flex items-center gap-1">
                   <FileSpreadsheet size={13} /> OFX (Prioritário)
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#F4F7FB] dark:bg-slate-800 inline-flex items-center gap-1">
+                <span className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-white/10 inline-flex items-center gap-1">
                   <FileSpreadsheet size={13} /> CSV / XLSX
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#F4F7FB] dark:bg-slate-800 inline-flex items-center gap-1">
+                <span className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-white/10 inline-flex items-center gap-1">
                   <FileText size={13} /> PDF / XML / JSON
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#F4F7FB] dark:bg-slate-800 inline-flex items-center gap-1">
+                <span className="px-2.5 py-1 rounded-lg bg-[#F8FAFC] dark:bg-white/10 inline-flex items-center gap-1">
                   <ImageIcon size={13} /> Imagem OCR
                 </span>
               </div>
 
               {/* Explicit OCR Consent Checkbox (Privacy Gate) */}
-              <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 space-y-2 text-xs">
+              <div className="p-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-[#E2E8F0] dark:border-white/10 space-y-2 text-xs">
                 <label className="flex items-start gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={ocrAuthorized}
                     onChange={(e) => setOcrAuthorized(e.target.checked)}
-                    className="accent-[#00A65A] mt-0.5"
+                    className="accent-[#059669] mt-0.5"
                   />
                   <span className="text-slate-700 dark:text-slate-200 leading-snug">
                     Autorizar leitura inteligente OCR externa apenas para PDFs digitalizados ou fotografias de extratos (arquivos OFX, CSV, XLSX, XML e JSON são lidos 100% no dispositivo).
@@ -1233,7 +1307,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                       type="button"
                       disabled={processing}
                       onClick={() => void handleRunOcrOnActiveBatch()}
-                      className="min-h-9 px-3 rounded-lg bg-[#082B5C] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                      className="min-h-9 px-3 rounded-lg bg-[#061E3E] dark:bg-[#059669] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                     >
                       <Sparkles size={13} /> Executar OCR autorizado neste documento
                     </button>
@@ -1252,17 +1326,17 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
             </section>
 
             {/* 7-Stage Pipeline Status */}
-            <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+            <section className="sf-card p-5 space-y-4">
               <div className="flex items-center justify-between gap-2">
                 <div>
-                  <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+                  <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
                     Fluxo de processamento
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400">
+                  <p className="text-xs text-[#64748B] dark:text-slate-400">
                     Camada A isolada — nenhuma gravação definitiva até sua aprovação.
                   </p>
                 </div>
-                <ScanSearch size={20} className="text-[#082B5C] dark:text-slate-300 shrink-0" />
+                <ScanSearch size={20} className="text-[#0F172A] dark:text-slate-300 shrink-0" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -1276,25 +1350,25 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                       key={st.id}
                       className={`flex items-start gap-2.5 p-3 rounded-xl border text-xs ${
                         current
-                          ? 'border-[#082B5C] bg-[#082B5C]/5 dark:bg-blue-950/30 dark:border-blue-700'
+                          ? 'border-[#061E3E] bg-[#061E3E]/5 dark:bg-blue-950/30 dark:border-blue-700'
                           : completed
                             ? 'border-emerald-200 dark:border-emerald-900 bg-emerald-50/50 dark:bg-emerald-950/20'
-                            : 'border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30'
+                            : 'border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/5'
                       }`}
                     >
                       {completed ? (
-                        <CheckCircle2 size={16} className="text-[#00A65A] shrink-0 mt-0.5" />
+                        <CheckCircle2 size={16} className="text-[#059669] dark:text-[#10B981] shrink-0 mt-0.5" />
                       ) : (
                         <Circle
                           size={16}
-                          className={`shrink-0 mt-0.5 ${current ? 'text-[#082B5C] dark:text-blue-400' : 'text-slate-400'}`}
+                          className={`shrink-0 mt-0.5 ${current ? 'text-[#0F172A] dark:text-blue-400' : 'text-slate-400'}`}
                         />
                       )}
                       <div>
                         <strong className="block font-bold text-slate-800 dark:text-white">
                           {idx + 1}. {st.title}
                         </strong>
-                        {current && <small className="text-[#00A65A] font-semibold">Etapa atual</small>}
+                        {current && <small className="text-[#059669] dark:text-[#10B981] font-semibold">Etapa atual</small>}
                       </div>
                     </div>
                   );
@@ -1312,9 +1386,9 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
 
           {/* Interactive CSV / XLSX Mapper & Sheet Selector */}
           {lastParsePreview?.tabularPreview && activeBatch && (
-            <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3 text-xs">
+            <section className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-3 text-xs">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="font-bold text-sm text-[#082B5C] dark:text-white">
+                <h3 className="font-bold text-sm text-[#061E3E] dark:text-white">
                   Mapeamento & Prévia da Planilha / CSV
                 </h3>
                 {lastParsePreview.tabularPreview.sheetNames &&
@@ -1467,7 +1541,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
           {sideBySidePreviewUrl &&
             activeBatch &&
             (activeBatch.format === 'IMAGE' || activeBatch.format === 'PDF') && (
-              <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              <section className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                 <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 flex items-center justify-center">
                   {activeBatch.format === 'IMAGE' ? (
                     <img
@@ -1484,7 +1558,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   )}
                 </div>
                 <div className="space-y-3 text-xs">
-                  <h4 className="font-bold text-sm text-[#082B5C] dark:text-white">
+                  <h4 className="font-bold text-sm text-[#061E3E] dark:text-white">
                     Conferência visual lado a lado ({activeBatch.format})
                   </h4>
                   <p className="text-slate-500 dark:text-slate-400">
@@ -1494,7 +1568,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                     <button
                       type="button"
                       onClick={() => setSubTab('review')}
-                      className="min-h-10 px-4 rounded-xl bg-[#082B5C] text-white font-bold cursor-pointer"
+                      className="min-h-10 px-4 rounded-xl bg-[#061E3E] text-white font-bold cursor-pointer"
                     >
                       Ir para Revisão ({activeBatch.movements.length})
                     </button>
@@ -1516,14 +1590,14 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
       {subTab === 'review' && (
         <div className="space-y-5">
           {!activeBatch ? (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center space-y-3">
+            <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center space-y-3">
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 Nenhuma extração selecionada. Importe um arquivo para iniciar a conferência.
               </p>
               <button
                 type="button"
                 onClick={() => setSubTab('overview')}
-                className="min-h-10 px-4 rounded-xl bg-[#082B5C] text-white text-xs font-bold cursor-pointer"
+                className="min-h-10 px-4 rounded-xl bg-[#061E3E] text-white text-xs font-bold cursor-pointer"
               >
                 Importar arquivo
               </button>
@@ -1531,26 +1605,69 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
           ) : (
             <>
               {/* Batch Selector & Account Confirmation Banner */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 space-y-4">
+              <div className="sf-card p-4 sm:p-5 space-y-4">
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                  <div className="space-y-1 min-w-0">
+                  <div className="space-y-1.5 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-sm font-extrabold text-[#082B5C] dark:text-white truncate">
+                      <span className="font-display text-sm font-extrabold text-[#0F172A] dark:text-white truncate">
                         {activeBatch.fileName}
                       </span>
-                      {activeBatch.identifiedAccount.institutionCategory && (
-                        <InstitutionCategoryBadge
-                          category={activeBatch.identifiedAccount.institutionCategory}
-                          compact
-                        />
+                      {activeBatch.identifiedAccount.bankType === 'fisico' && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase bg-slate-100 text-[#0F172A] border-slate-300 dark:bg-blue-950/70 dark:text-blue-200 dark:border-blue-800 shrink-0">
+                          <Landmark size={11} /> Banco Físico
+                        </span>
                       )}
-                      <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[10px] font-bold">
+                      {activeBatch.identifiedAccount.bankType === 'digital' && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[10px] font-bold uppercase bg-indigo-50 text-indigo-800 border-indigo-200 dark:bg-indigo-950/70 dark:text-indigo-200 dark:border-indigo-800 shrink-0">
+                          <Smartphone size={11} /> Banco Digital
+                        </span>
+                      )}
+                      {activeBatch.identifiedAccount.institutionCategory &&
+                        activeBatch.identifiedAccount.bankType !== 'fisico' &&
+                        activeBatch.identifiedAccount.bankType !== 'digital' && (
+                          <InstitutionCategoryBadge
+                            category={activeBatch.identifiedAccount.institutionCategory}
+                            compact
+                          />
+                        )}
+                      {activeBatch.identifiedAccount.detectionConfidence && (
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                            activeBatch.identifiedAccount.detectionConfidence === 'alta'
+                              ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300'
+                              : activeBatch.identifiedAccount.detectionConfidence === 'media'
+                                ? 'bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'
+                                : 'bg-slate-100 text-slate-600 dark:bg-white/10 dark:text-slate-300'
+                          }`}
+                        >
+                          Confiança {activeBatch.identifiedAccount.detectionConfidence}
+                        </span>
+                      )}
+                      <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10 text-[10px] font-bold">
                         {activeBatch.format} · {activeBatch.parseSource}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#64748B] dark:text-slate-300">
+                      {activeBatch.identifiedAccount.bankName && (
+                        <span>
+                          Banco detectado:{' '}
+                          <strong className="text-[#0F172A] dark:text-white">
+                            {activeBatch.identifiedAccount.bankName}
+                          </strong>
+                          {activeBatch.identifiedAccount.bankCode
+                            ? ` (Cód. ${activeBatch.identifiedAccount.bankCode})`
+                            : ''}
+                        </span>
+                      )}
+                      {activeBatch.identifiedAccount.bankIspb && (
+                        <span className="font-mono text-[11px]">
+                          ISPB {activeBatch.identifiedAccount.bankIspb}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-[#64748B] dark:text-slate-400">
                       {activeBatch.identifiedAccount.confirmationReason ||
-                        'Confirme a conta de destino e titularidade CPF/CNPJ antes de aprovar.'}
+                        'Confirme a instituição, conta de destino e titularidade CPF/CNPJ antes de aprovar.'}
                     </p>
                   </div>
 
@@ -1562,7 +1679,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                         setActiveBatchId(e.target.value);
                         setSelectedMovementIds(new Set());
                       }}
-                      className="border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-slate-800 min-h-10"
+                      className="border border-[#E2E8F0] dark:border-white/15 rounded-xl px-3 py-2 text-xs font-semibold bg-white dark:bg-[#0B1252] min-h-10"
                     >
                       {batches.map((b) => (
                         <option key={b.id} value={b.id}>
@@ -1573,17 +1690,46 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   )}
                 </div>
 
-                {/* Account / Card / Entity Binding Row (Never auto-creates account without user confirmation) */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-2 border-t border-slate-100 dark:border-slate-800">
+                {/* Institution / Account / Card / Entity Binding Row (Allows manual override, never auto-creates account) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs pt-2 border-t border-slate-100 dark:border-white/10">
                   <div>
-                    <label className="block font-semibold text-slate-500 mb-1">
+                    <label className="block font-semibold text-[#64748B] dark:text-slate-400 mb-1">
+                      Instituição (pré-preenchida / ajuste manual)
+                    </label>
+                    <select
+                      aria-label="Instituição identificada do extrato"
+                      value={
+                        activeBatch.confirmedInstitutionId ||
+                        activeBatch.identifiedAccount.institutionId ||
+                        ''
+                      }
+                      onChange={(e) => handleBindBatchInstitution(e.target.value)}
+                      className="w-full border border-[#E2E8F0] dark:border-white/15 rounded-xl px-3 py-2 bg-white dark:bg-[#0B1252] min-h-10"
+                    >
+                      <option value="">Selecionar instituição...</option>
+                      {institutions.map((inst) => (
+                        <option key={inst.id} value={inst.id}>
+                          {inst.commercialName}
+                          {inst.code ? ` (${inst.code})` : ''} ·{' '}
+                          {inst.category === 'BANCO_FISICO'
+                            ? 'Físico'
+                            : inst.category === 'BANCO_DIGITAL'
+                              ? 'Digital'
+                              : inst.category}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-[#64748B] dark:text-slate-400 mb-1">
                       Conta vinculada ({activeBatch.identifiedAccount.maskedAccountNumber || 'selecione'})
                     </label>
                     <div className="flex gap-1.5">
                       <select
                         value={activeBatch.confirmedAccountId || ''}
                         onChange={(e) => handleBindBatchAccount(e.target.value)}
-                        className="flex-1 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 bg-white dark:bg-slate-800 min-h-10"
+                        className="flex-1 border border-[#E2E8F0] dark:border-white/15 rounded-xl px-3 py-2 bg-white dark:bg-[#0B1252] min-h-10"
                       >
                         <option value="">Selecionar conta cadastrada...</option>
                         {activeAccounts.map((a) => (
@@ -1599,7 +1745,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                           setNewAccEntity(activeBatch.confirmedEntityId || 'CPF');
                           setCreateAccountPromptOpen(true);
                         }}
-                        className="px-2.5 rounded-xl border border-[#00A65A] text-[#00A65A] font-bold hover:bg-[#00A65A]/10 cursor-pointer shrink-0"
+                        className="px-2.5 rounded-xl border border-[#059669] text-[#059669] dark:text-[#10B981] font-bold hover:bg-[#059669]/10 cursor-pointer shrink-0"
                         title="Cadastrar nova conta com confirmação"
                       >
                         + Nova
@@ -1608,13 +1754,13 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-500 mb-1">
+                    <label className="block font-semibold text-[#64748B] dark:text-slate-400 mb-1">
                       Ou Cartão de Crédito (quando fatura)
                     </label>
                     <select
                       value={activeBatch.confirmedCardId || ''}
                       onChange={(e) => handleBindBatchCard(e.target.value)}
-                      className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 bg-white dark:bg-slate-800 min-h-10"
+                      className="w-full border border-[#E2E8F0] dark:border-white/15 rounded-xl px-3 py-2 bg-white dark:bg-[#0B1252] min-h-10"
                     >
                       <option value="">Nenhum cartão selecionado</option>
                       {creditCards.map((c) => (
@@ -1626,7 +1772,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   </div>
 
                   <div>
-                    <label className="block font-semibold text-slate-500 mb-1">
+                    <label className="block font-semibold text-[#64748B] dark:text-slate-400 mb-1">
                       Titularidade confirmada ({activeBatch.identifiedAccount.maskedDocument || 'Doc. não informado'})
                     </label>
                     <select
@@ -1641,7 +1787,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                           ),
                         }));
                       }}
-                      className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 bg-white dark:bg-slate-800 min-h-10"
+                      className="w-full border border-[#E2E8F0] dark:border-white/15 rounded-xl px-3 py-2 bg-white dark:bg-[#0B1252] min-h-10"
                     >
                       <option value="">Confirmar CPF ou CNPJ...</option>
                       <option value="CPF">Pessoa Física · CPF</option>
@@ -1686,7 +1832,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                       </button>
                       <button
                         type="submit"
-                        className="px-3 py-2 rounded-lg bg-[#00A65A] text-white font-bold cursor-pointer"
+                        className="px-3 py-2 rounded-lg bg-[#059669] text-white font-bold cursor-pointer"
                       >
                         Confirmar cadastro
                       </button>
@@ -1719,7 +1865,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                             type="button"
                             disabled={processing}
                             onClick={() => void handleRunOcrOnActiveBatch()}
-                            className="min-h-9 px-3 rounded-lg bg-[#082B5C] text-white font-bold inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                            className="min-h-9 px-3 rounded-lg bg-[#061E3E] text-white font-bold inline-flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                           >
                             <Sparkles size={13} />{' '}
                             {processing ? 'Processando OCR...' : 'Executar / Reprocessar OCR autorizado'}
@@ -1728,7 +1874,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                       <button
                         type="button"
                         onClick={openManualMovementModal}
-                        className="min-h-9 px-3 rounded-lg bg-[#00A65A] text-white font-bold inline-flex items-center gap-1.5 cursor-pointer"
+                        className="min-h-9 px-3 rounded-lg bg-[#059669] text-white font-bold inline-flex items-center gap-1.5 cursor-pointer"
                       >
                         <Plus size={14} /> Inserir lançamento manual
                       </button>
@@ -1736,7 +1882,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                         <button
                           type="button"
                           onClick={() => setShowSideBySideInReview((v) => !v)}
-                          className="min-h-9 px-3 rounded-lg border border-amber-300 dark:border-amber-700 bg-white dark:bg-slate-900 font-bold text-[#082B5C] dark:text-white cursor-pointer"
+                          className="min-h-9 px-3 rounded-lg border border-amber-300 dark:border-amber-700 bg-white dark:bg-[#11185A] font-bold text-[#061E3E] dark:text-white cursor-pointer"
                         >
                           {showSideBySideInReview ? 'Ocultar documento ao lado' : 'Ver documento ao lado'}
                         </button>
@@ -1750,9 +1896,9 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
               {sideBySidePreviewUrl &&
                 (activeBatch.format === 'PDF' || activeBatch.format === 'IMAGE') &&
                 showSideBySideInReview && (
-                  <section className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-3">
+                  <section className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-3">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <h3 className="text-xs sm:text-sm font-extrabold text-[#082B5C] dark:text-white flex items-center gap-2">
+                      <h3 className="text-xs sm:text-sm font-extrabold text-[#061E3E] dark:text-white flex items-center gap-2">
                         <FileText size={16} /> Conferência visual do documento original ({activeBatch.format})
                       </h3>
                       <div className="flex items-center gap-2 text-xs">
@@ -1809,7 +1955,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                     {needsIdentificationItems.map((m) => (
                       <div
                         key={m.id}
-                        className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                        className="p-3.5 rounded-xl bg-white dark:bg-[#11185A] border border-amber-200 dark:border-amber-800/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                       >
                         <div className="min-w-0 space-y-1">
                           <div className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white break-words">
@@ -1825,7 +1971,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                         </div>
 
                         <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-                          <span className="text-sm font-extrabold tabular-nums text-[#082B5C] dark:text-white">
+                          <span className="text-sm font-extrabold tabular-nums text-[#061E3E] dark:text-white">
                             {hideValues ? '' : m.direction === 'INCOME' ? '+ ' : '− '}
                             {m.currency === 'BRL'
                               ? formatarValor(m.amount, hideValues)
@@ -1837,7 +1983,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                               setEditingMovement(m);
                               setSaveRuleKeyword(m.originalDescription.slice(0, 24));
                             }}
-                            className="min-h-9 px-3 rounded-lg bg-[#082B5C] text-white text-xs font-bold cursor-pointer"
+                            className="min-h-9 px-3 rounded-lg bg-[#061E3E] text-white text-xs font-bold cursor-pointer"
                           >
                             Confirmar identificação
                           </button>
@@ -1849,7 +1995,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
               )}
 
               {/* Filters & Batch Actions */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-3">
+              <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 space-y-3">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
                   <input
                     type="text"
@@ -1929,7 +2075,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                     <button
                       type="button"
                       onClick={openManualMovementModal}
-                      className="min-h-10 px-3.5 rounded-xl border border-[#082B5C] dark:border-blue-400 text-[#082B5C] dark:text-blue-200 text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
+                      className="min-h-10 px-3.5 rounded-xl border border-[#061E3E] dark:border-blue-400 text-[#061E3E] dark:text-blue-200 text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
                     >
                       <Plus size={14} /> Inserir manual
                     </button>
@@ -1946,7 +2092,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                       type="button"
                       disabled={selectedMovementIds.size === 0}
                       onClick={handleBatchApproveSelected}
-                      className="min-h-10 px-4 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] disabled:opacity-40 text-white text-xs font-bold cursor-pointer"
+                      className="min-h-10 px-4 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] disabled:opacity-40 text-white text-xs font-bold cursor-pointer"
                     >
                       Aprovar selecionados ({selectedMovementIds.size})
                     </button>
@@ -1954,7 +2100,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                       type="button"
                       disabled={approvedReadyCount === 0}
                       onClick={handleIntegrateApproved}
-                      className="min-h-10 px-4 rounded-xl bg-[#00A65A] hover:bg-[#00A65A]/90 disabled:opacity-40 text-white text-xs font-bold cursor-pointer"
+                      className="min-h-10 px-4 rounded-xl bg-[#059669] hover:bg-[#059669]/90 disabled:opacity-40 text-white text-xs font-bold cursor-pointer"
                     >
                       Efetivar Aprovados no Sistema ({approvedReadyCount})
                     </button>
@@ -1963,7 +2109,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
               </div>
 
               {/* Movements List (Responsive Card Layout for 320px+, Clean Grid on Desktop) */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden">
+              <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl divide-y divide-slate-100 dark:divide-slate-800 overflow-hidden">
                 {filteredMovements.length === 0 ? (
                   <div className="p-6 text-center space-y-3 text-xs sm:text-sm text-slate-500">
                     <p>
@@ -1976,7 +2122,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                         <button
                           type="button"
                           onClick={openManualMovementModal}
-                          className="min-h-10 px-4 rounded-xl bg-[#00A65A] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
+                          className="min-h-10 px-4 rounded-xl bg-[#059669] text-white text-xs font-bold inline-flex items-center gap-1.5 cursor-pointer"
                         >
                           <Plus size={14} /> Inserir lançamento manualmente
                         </button>
@@ -2004,7 +2150,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                               setSelectedMovementIds(next);
                             }}
                             aria-label={`Selecionar ${m.originalDescription}`}
-                            className="w-5 h-5 accent-[#00A65A] mt-0.5 shrink-0"
+                            className="w-5 h-5 accent-[#059669] mt-0.5 shrink-0"
                           />
                           <div className="min-w-0 flex-1 space-y-1">
                             <div className="flex flex-wrap items-center gap-1.5">
@@ -2077,7 +2223,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                           <span
                             className={`text-sm font-extrabold tabular-nums ${
                               m.direction === 'INCOME'
-                                ? 'text-[#00A65A]'
+                                ? 'text-[#059669]'
                                 : 'text-[#DC3545]'
                             }`}
                           >
@@ -2103,7 +2249,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleUpdateMovementStatus(m.id, 'APROVADO')}
-                                  className="px-2.5 py-1.5 rounded-lg bg-[#00A65A] text-white text-[11px] font-bold inline-flex items-center gap-1 cursor-pointer"
+                                  className="px-2.5 py-1.5 rounded-lg bg-[#059669] text-white text-[11px] font-bold inline-flex items-center gap-1 cursor-pointer"
                                   title="Aprovar manualmente"
                                 >
                                   <Check size={12} /> Aprovar
@@ -2135,7 +2281,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                                     'Origem extraída',
                                 })
                               }
-                              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-[#082B5C] dark:text-slate-200 inline-flex items-center gap-1 cursor-pointer"
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] font-bold text-[#061E3E] dark:text-slate-200 inline-flex items-center gap-1 cursor-pointer"
                             >
                               <Eye size={12} /> Rastrear
                             </button>
@@ -2155,15 +2301,15 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
       {subTab === 'reconcile' && (
         <div className="space-y-5">
           {!activeBatch ? (
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center text-xs sm:text-sm text-slate-500">
+            <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-center text-xs sm:text-sm text-slate-500">
               Selecione ou importe um extrato para realizar a conciliação matemática de saldos.
             </div>
           ) : (
             <>
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+              <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
-                    <h3 className="text-base font-extrabold text-[#082B5C] dark:text-white">
+                    <h3 className="text-base font-extrabold text-[#061E3E] dark:text-white">
                       Conciliação Matemática do Extrato — {activeBatch.fileName}
                     </h3>
                     <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -2199,7 +2345,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                     />
                     <button
                       type="submit"
-                      className="px-3 py-2 rounded-xl bg-[#082B5C] text-white font-bold cursor-pointer"
+                      className="px-3 py-2 rounded-xl bg-[#061E3E] text-white font-bold cursor-pointer"
                     >
                       Recalcular
                     </button>
@@ -2261,12 +2407,12 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   ].map((item) => (
                     <div
                       key={item.label}
-                      className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-[#F4F7FB] dark:bg-slate-800/60"
+                      className="p-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-[#F8FAFC] dark:bg-slate-800/60"
                     >
                       <span className="block text-[10px] font-semibold text-slate-400">
                         {item.label}
                       </span>
-                      <strong className="block text-sm font-extrabold tabular-nums text-[#082B5C] dark:text-white mt-0.5">
+                      <strong className="block text-sm font-extrabold tabular-nums text-[#061E3E] dark:text-white mt-0.5">
                         {item.val}
                       </strong>
                     </div>
@@ -2292,9 +2438,9 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
               </div>
 
               {/* Own-Account Transfers Matching */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3">
-                <h4 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-                  <Link2 size={16} className="text-[#00A65A]" /> Transferências entre contas próprias
+              <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3">
+                <h4 className="text-sm font-bold text-[#061E3E] dark:text-white flex items-center gap-2">
+                  <Link2 size={16} className="text-[#059669]" /> Transferências entre contas próprias
                 </h4>
                 {activeBatch.movements.filter(
                   (m) =>
@@ -2409,9 +2555,9 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
       {subTab === 'history' && (
         <div className="space-y-5">
           {/* Extraction Batches History (Preserved even when cancelled) */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+          <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
             <div className="px-4 sm:px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
-              <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
+              <h3 className="text-sm font-bold text-[#061E3E] dark:text-white flex items-center gap-2">
                 <History size={16} /> Histórico de Lotes de Extração ({batches.length})
               </h3>
             </div>
@@ -2439,7 +2585,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                     >
                       <div className="space-y-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <strong className="text-sm text-[#082B5C] dark:text-white truncate">
+                          <strong className="text-sm text-[#061E3E] dark:text-white truncate">
                             {b.fileName}
                           </strong>
                           <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 font-bold text-[10px]">
@@ -2482,7 +2628,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                             setActiveBatchId(b.id);
                             setSubTab('review');
                           }}
-                          className="px-3 py-1.5 rounded-lg bg-[#082B5C] text-white font-bold cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg bg-[#061E3E] text-white font-bold cursor-pointer"
                         >
                           Abrir revisão
                         </button>
@@ -2495,10 +2641,10 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
           </div>
 
           {/* Reusable Classification Rules */}
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+          <div className="bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4">
             <div>
-              <h3 className="text-sm font-bold text-[#082B5C] dark:text-white flex items-center gap-2">
-                <Tag size={16} className="text-[#00A65A]" /> Regras Aprendidas para Futuras Importações
+              <h3 className="text-sm font-bold text-[#061E3E] dark:text-white flex items-center gap-2">
+                <Tag size={16} className="text-[#059669]" /> Regras Aprendidas para Futuras Importações
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
                 Regras criam sugestões explícitas considerando instituição, padrão e titularidade CPF/CNPJ — nunca aprovam automaticamente.
@@ -2541,7 +2687,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                 </div>
                 <button
                   type="submit"
-                  className="min-h-10 px-4 rounded-xl bg-[#082B5C] text-white font-bold cursor-pointer"
+                  className="min-h-10 px-4 rounded-xl bg-[#061E3E] text-white font-bold cursor-pointer"
                 >
                   Adicionar regra
                 </button>
@@ -2596,9 +2742,9 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
         <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4">
           <form
             onSubmit={handleSaveEditedMovement}
-            className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 text-xs sm:text-sm max-h-[90dvh] overflow-y-auto"
+            className="w-full max-w-lg bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 text-xs sm:text-sm max-h-[90dvh] overflow-y-auto"
           >
-            <h3 className="text-base font-extrabold text-[#082B5C] dark:text-white">
+            <h3 className="text-base font-extrabold text-[#061E3E] dark:text-white">
               Revisar & Classificar Movimentação
             </h3>
 
@@ -2735,7 +2881,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   type="checkbox"
                   checked={saveRuleChecked}
                   onChange={(e) => setSaveRuleChecked(e.target.checked)}
-                  className="accent-[#00A65A]"
+                  className="accent-[#059669]"
                 />
                 <span>Salvar regra para futuras importações</span>
               </label>
@@ -2745,7 +2891,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
                   value={saveRuleKeyword}
                   onChange={(e) => setSaveRuleKeyword(e.target.value)}
                   placeholder="Trecho da descrição para reconhecer..."
-                  className="w-full border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 bg-white dark:bg-slate-900"
+                  className="w-full border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 bg-white dark:bg-[#11185A]"
                 />
               )}
             </div>
@@ -2760,7 +2906,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
               </button>
               <button
                 type="submit"
-                className="flex-1 min-h-10 rounded-xl bg-[#00A65A] text-white font-bold cursor-pointer"
+                className="flex-1 min-h-10 rounded-xl bg-[#059669] text-white font-bold cursor-pointer"
               >
                 Salvar revisão
               </button>
@@ -2774,10 +2920,10 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
         <div className="fixed inset-0 z-50 bg-slate-950/60 flex items-center justify-center p-4">
           <form
             onSubmit={handleCreateManualMovement}
-            className="w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 text-xs sm:text-sm max-h-[90dvh] overflow-y-auto"
+            className="w-full max-w-lg bg-white dark:bg-[#11185A] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-3.5 text-xs sm:text-sm max-h-[90dvh] overflow-y-auto"
           >
             <div>
-              <h3 className="text-base font-extrabold text-[#082B5C] dark:text-white">
+              <h3 className="text-base font-extrabold text-[#061E3E] dark:text-white">
                 Inserir Lançamento Manualmente no Lote
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -2938,7 +3084,7 @@ export const ExtractionsHubView: React.FC<ExtractionsHubViewProps> = ({
               </button>
               <button
                 type="submit"
-                className="flex-1 min-h-10 rounded-xl bg-[#00A65A] text-white font-bold cursor-pointer"
+                className="flex-1 min-h-10 rounded-xl bg-[#059669] text-white font-bold cursor-pointer"
               >
                 Adicionar ao lote
               </button>

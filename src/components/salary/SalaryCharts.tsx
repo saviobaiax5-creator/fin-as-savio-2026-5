@@ -33,7 +33,7 @@ interface SalaryChartsProps {
 }
 
 const CHART_COLORS = [
-  '#00A65A',
+  '#059669',
   '#2563eb',
   '#F5B719',
   '#0d9488',
@@ -60,8 +60,8 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
   const gridStroke = isDark ? '#334155' : '#e2e8f0';
   const tickColor = isDark ? '#94a3b8' : '#64748b';
   const tooltipStyle = {
-    backgroundColor: isDark ? '#061B3B' : '#ffffff',
-    borderColor: isDark ? '#334155' : '#cbd5e1',
+    backgroundColor: isDark ? '#11185A' : '#ffffff',
+    borderColor: isDark ? 'rgba(255,255,255,0.16)' : '#cbd5e1',
     borderRadius: '0.75rem',
     color: isDark ? '#f8fafc' : '#172536',
     fontSize: '12px',
@@ -110,20 +110,20 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
   return (
     <div className="space-y-6">
       {/* Gráfico 1: Evolução Mensal */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
+      <div className="sf-card p-5">
         <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+            <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
               Evolução mensal líquida ({selectedYear})
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
+            <p className="text-xs text-[#64748B] dark:text-slate-400">
               Soma dos salários recebidos separada em renda recorrente vs extraordinária.
             </p>
           </div>
         </div>
 
         {!hasMonthlyValues ? (
-          <div className="h-[260px] flex items-center justify-center rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-xs text-slate-400 px-4 text-center">
+          <div className="h-[260px] flex items-center justify-center rounded-xl border border-dashed border-[#E2E8F0] dark:border-slate-700 text-xs text-[#64748B] px-4 text-center">
             Nenhum rendimento recebido registrado em {selectedYear} para exibir a evolução mensal.
           </div>
         ) : (
@@ -150,7 +150,7 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                   ]}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px' }} />
-                <Bar dataKey="recurring" name="Renda recorrente" stackId="a" fill="#00A65A" radius={[0, 0, 0, 0]} />
+                <Bar dataKey="recurring" name="Renda recorrente" stackId="a" fill="#059669" radius={[0, 0, 0, 0]} />
                 <Bar dataKey="extraordinary" name="13º, Férias e Extras" stackId="a" fill="#2563eb" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="expected" name="Previsto" fill="#94a3b8" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -161,11 +161,11 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
 
       {/* Grid: Chart 2 (Evolução Anual) + Chart 3 (Por Instituição) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
-          <h3 className="text-base font-bold text-[#082B5C] dark:text-white mb-1">
+        <div className="sf-card p-5">
+          <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white mb-1">
             Evolução anual recebida
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          <p className="text-xs text-[#64748B] dark:text-slate-400 mb-4">
             Total consolidado em cada ano cadastrado.
           </p>
 
@@ -191,22 +191,22 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                     'Total recebido',
                   ]}
                 />
-                <Bar dataKey="total" name="Total anual recebido" fill="#082B5C" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="total" name="Total anual recebido" fill={isDark ? '#38bdf8' : '#061E3E'} radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
-          <h3 className="text-base font-bold text-[#082B5C] dark:text-white mb-1">
+        <div className="sf-card p-5">
+          <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white mb-1">
             Participação por instituição ({selectedYear})
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          <p className="text-xs text-[#64748B] dark:text-slate-400 mb-4">
             Representatividade de cada fonte na renda líquida recebida.
           </p>
 
           {institutionShare.length === 0 ? (
-            <div className="h-[260px] flex items-center justify-center rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-xs text-slate-400">
+            <div className="h-[260px] flex items-center justify-center rounded-xl border border-dashed border-[#E2E8F0] dark:border-slate-700 text-xs text-[#64748B]">
               Sem recebimentos confirmados em {selectedYear}.
             </div>
           ) : (
@@ -243,14 +243,14 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                   <div key={item.name} className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">
                       <span
-                        className="w-2.5 h-2.5 rounded-xs shrink-0"
+                        className="w-2.5 h-2.5 rounded-sm shrink-0"
                         style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }}
                       />
                       <span className="truncate text-slate-700 dark:text-slate-200 font-medium">
                         {item.name}
                       </span>
                     </div>
-                    <span className="font-bold text-[#082B5C] dark:text-white tabular-nums shrink-0">
+                    <span className="font-money font-bold text-[#0F172A] dark:text-white shrink-0">
                       {item.pct.toFixed(1)}%
                     </span>
                   </div>
@@ -263,11 +263,11 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
 
       {/* Grid: Chart 4 (Variação Mensal %) + Chart 5 (Comparação Anual Mesmo Período) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5">
-          <h3 className="text-base font-bold text-[#082B5C] dark:text-white mb-1">
+        <div className="sf-card p-5">
+          <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white mb-1">
             Variação mensal (%) em {selectedYear}
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+          <p className="text-xs text-[#64748B] dark:text-slate-400 mb-4">
             Oscilação percentual mês a mês sobre o total líquido recebido.
           </p>
 
@@ -304,13 +304,13 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 space-y-3">
+        <div className="sf-card p-5 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+              <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
                 Comparação entre anos (mesmo período)
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-[#64748B] dark:text-slate-400">
                 Confronto mês a mês destacando diferenças de cobertura.
               </p>
             </div>
@@ -386,7 +386,7 @@ export const SalaryCharts: React.FC<SalaryChartsProps> = ({
                   type="monotone"
                   dataKey="yearBValue"
                   name={String(compareYearB)}
-                  stroke="#00A65A"
+                  stroke="#059669"
                   strokeWidth={2.5}
                 />
               </LineChart>

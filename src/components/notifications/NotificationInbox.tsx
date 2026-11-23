@@ -68,10 +68,10 @@ export const NotificationInbox: React.FC<NotificationInboxProps> = ({
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white">
+          <h2 className="font-display text-xl sm:text-2xl font-bold text-[#0F172A] dark:text-white">
             Central de Notificações Bancárias
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-[#64748B] dark:text-slate-400">
             Revise movimentações capturadas antes de lançá-las no extrato ou na fatura. Nenhum valor é criado automaticamente sem sua confirmação.
           </p>
         </div>
@@ -82,7 +82,7 @@ export const NotificationInbox: React.FC<NotificationInboxProps> = ({
               type="button"
               disabled={syncing}
               onClick={() => void onSyncNow()}
-              className="min-h-11 px-4 rounded-xl bg-[#082B5C] hover:bg-[#061B3B] dark:bg-emerald-600 dark:hover:bg-emerald-700 disabled:opacity-60 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 cursor-pointer"
+              className="min-h-11 px-4 rounded-xl bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] dark:hover:bg-emerald-700 disabled:opacity-60 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 cursor-pointer transition-colors"
             >
               <RefreshCw size={15} className={syncing ? 'animate-spin' : ''} />
               {syncing ? 'Sincronizando...' : 'Sincronizar fila Android'}
@@ -149,21 +149,21 @@ export const NotificationInbox: React.FC<NotificationInboxProps> = ({
 
       {/* Summary KPI strip */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Pendentes de revisão</span>
-          <div className="text-xl sm:text-2xl font-extrabold text-[#082B5C] dark:text-white mt-1 tabular-nums">
+        <div className="sf-card p-4">
+          <span className="text-xs text-[#64748B] dark:text-slate-400">Pendentes de revisão</span>
+          <div className="font-money text-xl sm:text-2xl font-extrabold text-[#0F172A] dark:text-white mt-1">
             {counts.pending}
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Confirmadas</span>
-          <div className="text-xl sm:text-2xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1 tabular-nums">
+        <div className="sf-card p-4">
+          <span className="text-xs text-[#64748B] dark:text-slate-400">Confirmadas</span>
+          <div className="font-money text-xl sm:text-2xl font-extrabold text-[#059669] dark:text-[#10B981] mt-1">
             {counts.confirmed}
           </div>
         </div>
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-2xl">
-          <span className="text-xs text-slate-500 dark:text-slate-400">Descartadas</span>
-          <div className="text-xl sm:text-2xl font-extrabold text-slate-600 dark:text-slate-300 mt-1 tabular-nums">
+        <div className="sf-card p-4">
+          <span className="text-xs text-[#64748B] dark:text-slate-400">Descartadas</span>
+          <div className="font-money text-xl sm:text-2xl font-extrabold text-[#64748B] dark:text-slate-300 mt-1">
             {counts.discarded}
           </div>
         </div>
@@ -185,7 +185,7 @@ export const NotificationInbox: React.FC<NotificationInboxProps> = ({
             onClick={() => setActiveTab(tab.id)}
             className={`min-h-10 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap shrink-0 transition-colors cursor-pointer ${
               activeTab === tab.id
-                ? 'bg-white dark:bg-slate-900 text-[#082B5C] dark:text-white shadow-xs'
+                ? 'bg-white dark:bg-[#11185A] text-[#0F172A] dark:text-white shadow-sm'
                 : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
@@ -205,11 +205,11 @@ export const NotificationInbox: React.FC<NotificationInboxProps> = ({
           onRevokeAndWipe={onRevokeAndWipe}
         />
       ) : filteredItems.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 sm:p-12 text-center space-y-3">
-          <div className="w-12 h-12 mx-auto rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 grid place-items-center">
-            <BellRing size={22} />
+        <div className="sf-card rounded-2xl p-8 sm:p-12 text-center space-y-3">
+          <div className="sf-icon-badge-navy mx-auto">
+            <BellRing size={20} />
           </div>
-          <h3 className="text-base font-bold text-[#082B5C] dark:text-white">
+          <h3 className="font-display text-base font-bold text-[#0F172A] dark:text-white">
             {activeTab === 'PENDING'
               ? 'Nenhuma notificação pendente para revisar'
               : activeTab === 'CONFIRMED'

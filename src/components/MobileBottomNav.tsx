@@ -19,6 +19,8 @@ import {
   TrendingUp,
   Banknote,
   BellRing,
+  ChevronRight,
+  Building2,
 } from 'lucide-react';
 
 import { EntityScope } from '../types';
@@ -49,21 +51,36 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [moreOpen]);
 
-  const modules = [
-    { id: 'salary', label: 'Salários e Rendas', icon: Banknote },
-    { id: 'accounts', label: 'Contas bancárias', icon: Landmark },
-    { id: 'cards', label: 'Cartões de crédito', icon: CreditCard },
-    { id: 'cnpj', label: 'Empresa · CNPJ', icon: Package },
-    { id: 'debts', label: 'Dívidas', icon: Wallet },
-    { id: 'planning', label: 'Planejamento', icon: CalendarDays },
-    { id: 'investments', label: 'Investimentos · CDI', icon: TrendingUp },
-    { id: 'assets', label: 'Patrimônio', icon: Package },
-    { id: 'documents', label: 'Documentos e Scanner', icon: FileText },
-    { id: 'imports', label: 'Extrações Financeiras', icon: Receipt },
-    { id: 'notifications', label: 'Notificações · Banco', icon: BellRing },
-    { id: 'ai', label: 'Inteligência Artificial', icon: Brain },
-    { id: 'reports', label: 'Relatórios', icon: ChartNoAxesCombined },
-    { id: 'settings', label: 'Configurações', icon: Settings },
+  const moduleGroups = [
+    {
+      title: 'Finanças & Contas',
+      items: [
+        { id: 'salary', label: 'Salários e Rendas', icon: Banknote },
+        { id: 'accounts', label: 'Contas bancárias', icon: Landmark },
+        { id: 'cards', label: 'Cartões de crédito', icon: CreditCard },
+        { id: 'cnpj', label: 'Empresa · CNPJ', icon: Building2 },
+        { id: 'debts', label: 'Dívidas e compromissos', icon: Wallet },
+      ],
+    },
+    {
+      title: 'Patrimônio & Planejamento',
+      items: [
+        { id: 'planning', label: 'Planejamento 50/30/20', icon: CalendarDays },
+        { id: 'investments', label: 'Investimentos · CDI', icon: TrendingUp },
+        { id: 'assets', label: 'Patrimônio e ativos', icon: Package },
+      ],
+    },
+    {
+      title: 'Inteligência & Sistema',
+      items: [
+        { id: 'documents', label: 'Documentos e Scanner', icon: FileText },
+        { id: 'imports', label: 'Extrações Financeiras', icon: Receipt },
+        { id: 'notifications', label: 'Notificações · Banco', icon: BellRing },
+        { id: 'ai', label: 'Inteligência Artificial', icon: Brain },
+        { id: 'reports', label: 'Relatórios gerenciais', icon: ChartNoAxesCombined },
+        { id: 'settings', label: 'Configurações', icon: Settings },
+      ],
+    },
   ];
 
   const navigate = (tab: string) => {
@@ -76,7 +93,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   return (
     <>
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 grid grid-cols-5 items-center px-2 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))] shadow-[0_-4px_18px_rgba(0,0,0,0.06)] select-none"
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white dark:bg-[#0B1252] border-t border-[#E2E8F0] dark:border-white/10 grid grid-cols-5 items-center px-2 pt-2 pb-[calc(8px+env(safe-area-inset-bottom))] shadow-[0_-2px_10px_rgba(15,23,42,0.05)] select-none"
         aria-label="Navegação principal"
       >
         <button
@@ -84,12 +101,12 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           onClick={() => navigate('dashboard')}
           className={`min-h-12 flex flex-col items-center justify-center gap-1 cursor-pointer ${
             currentTab === 'dashboard'
-              ? 'text-[#082B5C] dark:text-[#00A65A] font-bold'
-              : 'text-slate-500 dark:text-slate-400'
+              ? 'text-[#059669] dark:text-[#10B981] font-semibold'
+              : 'text-[#64748B] dark:text-slate-300'
           }`}
         >
-          <Home size={22} />
-          <span className="text-xs font-medium">Início</span>
+          <Home size={20} strokeWidth={1.75} />
+          <span className="font-sans text-xs font-medium">Início</span>
         </button>
 
         <button
@@ -97,22 +114,22 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           onClick={() => navigate(movimTarget)}
           className={`min-h-12 flex flex-col items-center justify-center gap-1 cursor-pointer ${
             currentTab === 'cpf' || currentTab === 'cnpj'
-              ? 'text-[#082B5C] dark:text-[#00A65A] font-bold'
-              : 'text-slate-500 dark:text-slate-400'
+              ? 'text-[#059669] dark:text-[#10B981] font-semibold'
+              : 'text-[#64748B] dark:text-slate-300'
           }`}
           title={scope === 'CNPJ' ? 'Movimentações CNPJ' : 'Movimentações CPF'}
         >
-          <ArrowLeftRight size={22} />
-          <span className="text-xs font-medium">Movim.</span>
+          <ArrowLeftRight size={20} strokeWidth={1.75} />
+          <span className="font-sans text-xs font-medium">Movim.</span>
         </button>
 
         <button
           type="button"
           onClick={onOpenNew}
-          className="w-14 h-14 -mt-5 mx-auto rounded-full bg-[#082B5C] hover:bg-[#061B3B] dark:bg-[#00A65A] text-white shadow-lg grid place-items-center active:scale-95 transition cursor-pointer ring-4 ring-white dark:ring-slate-900"
+          className="w-14 h-14 -mt-5 mx-auto rounded-full bg-[#061E3E] hover:bg-[#0F172A] dark:bg-[#059669] text-white shadow-[0_4px_14px_rgba(6,30,62,0.22)] grid place-items-center active:scale-95 transition cursor-pointer ring-4 ring-white dark:ring-[#0B1252]"
           aria-label="Adicionar lançamento"
         >
-          <Plus size={27} />
+          <Plus size={24} strokeWidth={2} />
         </button>
 
         <button
@@ -120,12 +137,12 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           onClick={() => navigate('boletos')}
           className={`min-h-12 flex flex-col items-center justify-center gap-1 cursor-pointer ${
             currentTab === 'boletos'
-              ? 'text-[#082B5C] dark:text-[#00A65A] font-bold'
-              : 'text-slate-500 dark:text-slate-400'
+              ? 'text-[#059669] dark:text-[#10B981] font-semibold'
+              : 'text-[#64748B] dark:text-slate-300'
           }`}
         >
-          <Receipt size={22} />
-          <span className="text-xs font-medium">Boletos</span>
+          <Receipt size={20} strokeWidth={1.75} />
+          <span className="font-sans text-xs font-medium">Boletos</span>
         </button>
 
         <button
@@ -133,14 +150,14 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           onClick={() => setMoreOpen(true)}
           className={`min-h-12 flex flex-col items-center justify-center gap-1 cursor-pointer ${
             moreOpen
-              ? 'text-[#082B5C] dark:text-[#00A65A] font-bold'
-              : 'text-slate-500 dark:text-slate-400'
+              ? 'text-[#059669] dark:text-[#10B981] font-semibold'
+              : 'text-[#64748B] dark:text-slate-300'
           }`}
           aria-label="Abrir outros módulos"
           aria-expanded={moreOpen}
         >
-          <Menu size={22} />
-          <span className="text-xs font-medium">Mais</span>
+          <Menu size={20} strokeWidth={1.75} />
+          <span className="font-sans text-xs font-medium">Mais</span>
         </button>
       </nav>
 
@@ -148,52 +165,80 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
         <div className="md:hidden fixed inset-0 z-50">
           <button
             type="button"
-            className="absolute inset-0 bg-slate-950/50"
+            className="absolute inset-0 bg-slate-950/60"
             onClick={() => setMoreOpen(false)}
             aria-label="Fechar menu"
           />
 
           <section
-            className="absolute bottom-0 inset-x-0 bg-white dark:bg-slate-900 rounded-t-3xl p-5 pb-[calc(24px+env(safe-area-inset-bottom))] max-h-[85dvh] overflow-y-auto overscroll-contain shadow-2xl"
+            className="absolute bottom-0 inset-x-0 bg-[#F8FAFC] dark:bg-[#050B42] rounded-t-3xl p-5 pb-[calc(24px+env(safe-area-inset-bottom))] max-h-[85dvh] overflow-y-auto overscroll-contain shadow-2xl border-t border-[#E2E8F0] dark:border-white/15"
             role="dialog"
             aria-modal="true"
             aria-label="Mais funcionalidades"
           >
             <div className="flex justify-between items-center mb-5">
-              <h2 className="text-lg font-bold text-[#082B5C] dark:text-white">
-                Mais funcionalidades
-              </h2>
+              <div>
+                <h2 className="font-display text-lg font-bold text-[#0F172A] dark:text-white">
+                  Mais funcionalidades
+                </h2>
+                <p className="font-sans text-xs text-[#64748B] dark:text-slate-300">
+                  Módulos e ferramentas do sistema
+                </p>
+              </div>
 
               <button
                 type="button"
                 onClick={() => setMoreOpen(false)}
-                className="min-w-11 min-h-11 grid place-items-center rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="min-w-10 min-h-10 grid place-items-center rounded-full text-[#64748B] dark:text-slate-300 hover:bg-slate-200/60 dark:hover:bg-white/10 cursor-pointer"
                 aria-label="Fechar"
               >
-                <X size={22} />
+                <X size={20} strokeWidth={1.75} />
               </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              {modules.map((module) => {
-                const Icon = module.icon;
-                const active = currentTab === module.id;
-                return (
-                  <button
-                    key={module.id}
-                    type="button"
-                    onClick={() => navigate(module.id)}
-                    className={`min-h-16 p-3 border rounded-xl flex items-center gap-3 text-left transition-all active:scale-[0.98] cursor-pointer ${
-                      active
-                        ? 'border-[#00A65A] bg-[#00A65A]/10 text-[#082B5C] dark:text-[#00A65A] font-semibold'
-                        : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 text-[#061B3B] dark:text-slate-100'
-                    }`}
-                  >
-                    <Icon size={22} className="text-[#00A65A] shrink-0" />
-                    <span className="text-sm font-medium leading-tight">{module.label}</span>
-                  </button>
-                );
-              })}
+            <div className="space-y-5">
+              {moduleGroups.map((group) => (
+                <div key={group.title}>
+                  <h3 className="font-sans text-[11px] font-semibold uppercase tracking-wider text-[#64748B] dark:text-slate-300 px-1 mb-2">
+                    {group.title}
+                  </h3>
+                  <div className="sf-grouped-card sf-grouped-divider">
+                    {group.items.map((module) => {
+                      const Icon = module.icon;
+                      const active = currentTab === module.id;
+                      return (
+                        <button
+                          key={module.id}
+                          type="button"
+                          onClick={() => navigate(module.id)}
+                          className={`w-full min-h-[54px] px-4 py-2.5 flex items-center justify-between gap-3 text-left transition-colors active:bg-slate-50 dark:active:bg-white/5 cursor-pointer ${
+                            active ? 'bg-[#ECFDF5]/60 dark:bg-white/10' : ''
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span className="sf-icon-badge !w-9 !h-9">
+                              <Icon size={18} strokeWidth={1.75} />
+                            </span>
+                            <span className="font-sans text-sm font-semibold text-[#0F172A] dark:text-white truncate">
+                              {module.label}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            {active && (
+                              <span className="w-2 h-2 rounded-full bg-[#059669] dark:bg-[#10B981]" />
+                            )}
+                            <ChevronRight
+                              size={16}
+                              strokeWidth={1.75}
+                              className="text-[#94A3B8] dark:text-slate-400"
+                            />
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </div>
           </section>
         </div>
